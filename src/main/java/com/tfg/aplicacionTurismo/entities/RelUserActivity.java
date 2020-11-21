@@ -1,0 +1,35 @@
+package com.tfg.aplicacionTurismo.entities;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+public class RelUserActivity {
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private int valuation;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RelUserActivity that = (RelUserActivity) o;
+        return Objects.equals(activity, that.activity) &&
+                Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activity, user);
+    }
+}
