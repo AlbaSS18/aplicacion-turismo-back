@@ -19,6 +19,9 @@ public class RelUserActivity {
 
     private int valuation;
 
+    public RelUserActivity() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
