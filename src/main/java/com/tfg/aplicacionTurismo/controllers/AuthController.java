@@ -58,17 +58,17 @@ public class AuthController {
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(usersService.existsByEmail(userDTO.getEmail())){
+        if (usersService.existsByEmail(userDTO.getEmail())) {
             return new ResponseEntity(new Mensaje("Ya existe ese email"), HttpStatus.BAD_REQUEST);
         }
-        if(!userDTO.getPassword().equals(userDTO.getPasswordConfirm())){
+        if (!userDTO.getPassword().equals(userDTO.getPasswordConfirm())) {
             return new ResponseEntity(new Mensaje("Contraseñas no son iguales"), HttpStatus.BAD_REQUEST);
         }
-        User user = new User(userDTO.getEmail(), userDTO.getAge(), userDTO.getGenre(), userDTO.getUserName(),userDTO.getPassword());
+        User user = new User(userDTO.getEmail(), userDTO.getAge(), userDTO.getGenre(), userDTO.getUserName(), userDTO.getPassword());
         // Le añadimos los intereses
         Set<InterestDTO> interestStr = userDTO.getInterest();
         RelUserInterest rel;
-        for(InterestDTO interest: interestStr){
+        for (InterestDTO interest : interestStr) {
             rel = new RelUserInterest();
             rel.setPriority(interest.getPriority());
             System.out.println(interest.getNameInterest());
@@ -98,7 +98,7 @@ public class AuthController {
         user.setRole(roles);
         usersService.addUser(user);
         securityService.autoLogin(userDTO.getEmail(), userDTO.getPassword());
-        for (RelUserInterest reli: user.getPriority()){
+        for (RelUserInterest reli : user.getPriority()) {
             System.out.println(reli.getId());
             System.out.println(reli.getInterest().getNameInterest());
             System.out.println(reli.getUser().getEmail());
