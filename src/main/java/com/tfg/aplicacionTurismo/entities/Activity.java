@@ -25,7 +25,7 @@ public class Activity {
     private String image;
 
     @NotNull @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
-    private Set<RelUserActivity> relUserActivity= new HashSet<>();
+    private Set<RelUserActivity> relUserActivity;
 
     @NotNull
     @ManyToOne
