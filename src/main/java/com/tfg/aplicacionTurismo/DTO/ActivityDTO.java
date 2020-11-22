@@ -18,6 +18,28 @@ public class ActivityDTO {
     @NotEmpty
     private String interest;
 
+    public ActivityDTO() {
+    }
+
+    public ActivityDTO(@NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
+        this.name = name;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.pathImage = pathImage;
+        this.city = city;
+        this.interest = interest;
+    }
+
+    public ActivityDTO(@NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.pathImage = pathImage;
+        this.city = city;
+        this.interest = interest;
+    }
+
     public String getName() {
         return name;
     }

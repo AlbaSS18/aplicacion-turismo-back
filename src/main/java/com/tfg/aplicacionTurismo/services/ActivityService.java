@@ -33,4 +33,8 @@ public class ActivityService {
     public boolean existsById(Long id){
         return activityRepository.existsById(id);
     }
+
+    public boolean existsByName(String name){
+        return activityRepository.existsByName(name);
+    }
 }

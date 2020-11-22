@@ -3,7 +3,6 @@ package com.tfg.aplicacionTurismo.entities;
 import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -15,14 +14,14 @@ public class Activity {
     @Id
     @GeneratedValue
     private long id;
-    @NotEmpty @Column
+    @NotEmpty @Column(unique = true)
     private String name;
-    @NotNull @Column
+    @NotEmpty @Column
     private String description;
     @NotNull @Column
     private Point coordenates;
     @Column
-    private String image;
+    private String pathImage;
 
     @NotNull @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
     private Set<RelUserActivity> relUserActivity= new HashSet<>();
@@ -40,11 +39,11 @@ public class Activity {
     public Activity() {
     }
 
-    public Activity(@NotEmpty String name, @NotNull String description, @NotNull Point coordenates, String image) {
+    public Activity(@NotEmpty String name, @NotEmpty String description, @NotNull Point coordenates, String pathImage) {
         this.name = name;
         this.description = description;
         this.coordenates = coordenates;
-        this.image = image;
+        this.pathImage = pathImage;
     }
 
     public long getId() {
@@ -79,12 +78,12 @@ public class Activity {
         this.coordenates = coordenates;
     }
 
-    public String getImage() {
-        return image;
+    public String getPathImage() {
+        return pathImage;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
     }
 
     public Set<RelUserActivity> getRelUserActivity() {
