@@ -45,6 +45,10 @@ public class UsersService {
         userRepository.save(user);
     }
 
+    public void updateUser (User user){
+        userRepository.save(user);
+    }
+
     public List<User> getUsers (){
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);

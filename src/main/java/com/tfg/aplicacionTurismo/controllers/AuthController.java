@@ -113,13 +113,13 @@ public class AuthController {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
         //logger.error(String.valueOf(loginDTO));
-        //System.out.println(loginDTO.getEmail() + loginDTO.getPassword());
+        System.out.println(loginDTO.getEmail() + loginDTO.getPassword());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
-        //System.out.println(jwt);
+        System.out.println(jwt);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         //System.out.println(userDetails.getUsername());
         JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
