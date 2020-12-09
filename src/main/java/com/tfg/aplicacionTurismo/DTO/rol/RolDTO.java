@@ -1,4 +1,4 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.rol;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

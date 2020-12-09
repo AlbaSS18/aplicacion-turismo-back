@@ -1,5 +1,6 @@
 package com.tfg.aplicacionTurismo.services;
 
+import com.tfg.aplicacionTurismo.entities.Activity;
 import com.tfg.aplicacionTurismo.entities.Interest;
 import com.tfg.aplicacionTurismo.repositories.InterestRepository;
 import com.tfg.aplicacionTurismo.repositories.UserRepository;
@@ -29,5 +30,17 @@ public class InterestService {
 
     public boolean existByName(String name) {
         return interestRepository.existsByNameInterest(name);
+    }
+
+    public void addInterest(Interest interest){
+        interestRepository.save(interest);
+    }
+
+    public boolean existById(Long id){
+        return interestRepository.existsById(id);
+    }
+
+    public void removeInterest(Long id){
+        interestRepository.deleteById(id);
     }
 }

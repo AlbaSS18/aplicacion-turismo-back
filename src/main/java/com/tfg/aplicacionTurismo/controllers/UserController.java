@@ -1,12 +1,12 @@
 package com.tfg.aplicacionTurismo.controllers;
 
-import com.tfg.aplicacionTurismo.DTO.InterestListDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
-import com.tfg.aplicacionTurismo.DTO.UserDTO;
-import com.tfg.aplicacionTurismo.DTO.UserDTOUpdate;
-import com.tfg.aplicacionTurismo.entities.Interest;
+import com.tfg.aplicacionTurismo.DTO.user.UserDTO;
+import com.tfg.aplicacionTurismo.DTO.user.UserDTOUpdate;
+import com.tfg.aplicacionTurismo.entities.Rol;
 import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.mapper.user.UserMapper;
+import com.tfg.aplicacionTurismo.services.RolService;
 import com.tfg.aplicacionTurismo.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,6 +28,9 @@ public class UserController {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private RolService rolService;
 
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
@@ -42,7 +47,12 @@ public class UserController {
         List<User> listUser = usersService.getUsers();
         List<UserDTO> listUserDTO = new ArrayList<>();
         for(User user: listUser){
-            UserDTO u = new UserDTO(user.getId(),user.getAge(),user.getEmail(),user.getGenre(),user.getPassword(),user.getUserName());
+            Set<Rol> roles = user.getRole();
+            Set<String> rolString = new HashSet<>();
+            for (Rol rol: roles){
+                rolString.add(rol.getRolName().name());
+            }
+            UserDTO u = new UserDTO(user.getId(),user.getAge(),user.getEmail(),user.getGenre(),user.getUserName(), rolString);
             listUserDTO.add(u);
         }
         return new ResponseEntity<List<UserDTO>>(listUserDTO, HttpStatus.OK);

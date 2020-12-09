@@ -1,4 +1,4 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.interest;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;

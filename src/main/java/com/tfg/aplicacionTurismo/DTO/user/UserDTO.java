@@ -1,8 +1,10 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 public class UserDTO {
 
@@ -16,20 +18,20 @@ public class UserDTO {
     @NotEmpty
     private String genre;
     @NotEmpty
-    private String password;
-    @NotEmpty
     private String userName;
+    @NotEmpty
+    private Set<String> roles;
 
     public UserDTO() {
     }
 
-    public UserDTO(@NotNull Long id, @NotNull int age, @NotEmpty @Email String email, @NotEmpty String genre, @NotEmpty String password, @NotEmpty String userName) {
+    public UserDTO(@NotNull Long id, @NotNull int age, @NotEmpty @Email String email, @NotEmpty String genre, @NotEmpty String userName, @NotEmpty Set<String> roles) {
         this.id = id;
         this.age = age;
         this.email = email;
         this.genre = genre;
-        this.password = password;
         this.userName = userName;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -64,19 +66,19 @@ public class UserDTO {
         this.genre = genre;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getUserName() {
         return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

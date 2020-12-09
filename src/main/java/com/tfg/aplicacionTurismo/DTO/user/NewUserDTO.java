@@ -1,8 +1,9 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.user;
 
+
+import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;

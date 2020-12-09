@@ -1,8 +1,7 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tfg.aplicacionTurismo.DTO.ActivityDTO;
-import com.tfg.aplicacionTurismo.DTO.CityDTO;
+import com.tfg.aplicacionTurismo.DTO.activity.ActivityDTO;
 import com.tfg.aplicacionTurismo.entities.Activity;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.entities.Interest;
@@ -76,8 +75,8 @@ class ActivityControllerTest {
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         List<ActivityDTO> listActivitiesDTOs = new ArrayList<>();
-        listActivitiesDTOs.add(new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos"));
-        listActivitiesDTOs.add(new ActivityDTO("Catedral de Oviedo","Catedral de estilo gotico", 43.36257, -5.84325, "src/app/img/catedralOviedo.jpg", "Oviedo", "Catedral"));
+        listActivitiesDTOs.add(new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos"));
+        listActivitiesDTOs.add(new ActivityDTO("Catedral de Oviedo","Catedral de estilo gotico", 43.36257, -5.84325, "Oviedo", "Catedral"));
         assertThat(response.getContentAsString()).isEqualTo(jsonActivities.write(listActivitiesDTOs).getJson());
     }
 
@@ -114,7 +113,7 @@ class ActivityControllerTest {
         given(activityService.existsByName("Museo del ferrocarril")).willReturn(true);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -127,7 +126,7 @@ class ActivityControllerTest {
         given(cityService.existByName("Gijon")).willReturn(true);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -137,7 +136,7 @@ class ActivityControllerTest {
     @Test
     public void shouldReturnErrorWhenNotExistCity() throws Exception {
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -151,7 +150,7 @@ class ActivityControllerTest {
         given(interestService.existByName("Museos")).willReturn(true);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -161,7 +160,7 @@ class ActivityControllerTest {
     @Test
     public void shouldReturnExceptionWhenAddActivityNameIsLongCero() throws Exception {
         // when
-        ActivityDTO activityDTO = new ActivityDTO("","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -171,7 +170,7 @@ class ActivityControllerTest {
     @Test
     public void shouldReturnExceptionWhenAddActivityDescriptionIsLongCero() throws Exception {
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -181,7 +180,7 @@ class ActivityControllerTest {
     @Test
     public void shouldReturnExceptionWhenAddActivityCityIsLongCero() throws Exception {
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -194,7 +193,7 @@ class ActivityControllerTest {
         given(cityService.existByName("Gijon")).willReturn(true);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "");
+        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -204,7 +203,7 @@ class ActivityControllerTest {
     @Test
     public void shouldReturnExceptionWhenAddActivityNameIsNull() throws Exception {
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo de trenes", 43.5409, -5.6727, "src/app/img/museodelferrocarril.jpg", "Gijon", "Museos");
+        ActivityDTO activityDTO = new ActivityDTO("Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
         // then
@@ -218,7 +217,6 @@ class ActivityControllerTest {
         activityDTO.setName("Museo del ferrocarril");
         activityDTO.setLatitude(43.5409);
         activityDTO.setLongitude(-5.6727);
-        activityDTO.setPathImage("src/app/img/museodelferrocarril.jpg");
         activityDTO.setCity("Gijon");
         activityDTO.setInterest("Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
@@ -235,7 +233,6 @@ class ActivityControllerTest {
         activityDTO.setDescription("Museo de trenes");
         activityDTO.setLatitude(43.5409);
         activityDTO.setLongitude(-5.6727);
-        activityDTO.setPathImage("src/app/img/museodelferrocarril.jpg");
         activityDTO.setInterest("Museos");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 
@@ -254,7 +251,6 @@ class ActivityControllerTest {
         activityDTO.setDescription("Museo de trenes");
         activityDTO.setLatitude(43.5409);
         activityDTO.setLongitude(-5.6727);
-        activityDTO.setPathImage("src/app/img/museodelferrocarril.jpg");
         activityDTO.setCity("Gijon");
         MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
 

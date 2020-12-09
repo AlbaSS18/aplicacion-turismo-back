@@ -1,14 +1,11 @@
 package com.tfg.aplicacionTurismo.controllers;
 
-import com.tfg.aplicacionTurismo.DTO.ActivityDTO;
-import com.tfg.aplicacionTurismo.DTO.CityDTO;
+import com.tfg.aplicacionTurismo.DTO.city.CityDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
-import com.tfg.aplicacionTurismo.entities.Activity;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

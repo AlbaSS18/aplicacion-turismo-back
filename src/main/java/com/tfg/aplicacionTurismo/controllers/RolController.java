@@ -1,9 +1,7 @@
 package com.tfg.aplicacionTurismo.controllers;
 
-import com.tfg.aplicacionTurismo.DTO.RolDTO;
-import com.tfg.aplicacionTurismo.DTO.UserDTO;
+import com.tfg.aplicacionTurismo.DTO.rol.RolDTO;
 import com.tfg.aplicacionTurismo.entities.Rol;
-import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.mapper.rol.RolMapper;
 import com.tfg.aplicacionTurismo.services.RolService;
 import org.springframework.beans.factory.annotation.Autowired;

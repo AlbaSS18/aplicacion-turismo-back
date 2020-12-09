@@ -1,13 +1,14 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.interest;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
 
-public class InterestDTO {
+public class InterestListDTO {
 
     @NotEmpty
     private String nameInterest;
-    @NotEmpty private int priority;
+    @NotNull
+    private Long id;
 
     public String getNameInterest() {
         return nameInterest;
@@ -17,11 +18,11 @@ public class InterestDTO {
         this.nameInterest = nameInterest;
     }
 
-    public int getPriority() {
-        return priority;
+    public Long getId() {
+        return id;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

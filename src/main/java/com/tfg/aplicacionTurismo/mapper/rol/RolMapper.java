@@ -1,7 +1,6 @@
 package com.tfg.aplicacionTurismo.mapper.rol;
 
-import com.tfg.aplicacionTurismo.DTO.RolDTO;
-import com.tfg.aplicacionTurismo.DTO.UserDTO;
+import com.tfg.aplicacionTurismo.DTO.rol.RolDTO;
 import com.tfg.aplicacionTurismo.entities.Rol;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

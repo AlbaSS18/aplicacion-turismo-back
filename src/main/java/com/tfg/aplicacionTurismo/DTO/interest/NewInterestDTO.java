@@ -1,8 +1,8 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.interest;
 
 import javax.validation.constraints.NotEmpty;
 
-public class InterestListDTO {
+public class NewInterestDTO {
 
     @NotEmpty
     private String nameInterest;

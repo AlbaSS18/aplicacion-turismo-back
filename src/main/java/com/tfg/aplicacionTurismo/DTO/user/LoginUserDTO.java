@@ -1,4 +1,4 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

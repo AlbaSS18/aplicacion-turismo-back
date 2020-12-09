@@ -1,7 +1,7 @@
 package com.tfg.aplicacionTurismo.mapper.user;
 
-import com.tfg.aplicacionTurismo.DTO.UserDTO;
-import com.tfg.aplicacionTurismo.DTO.UserDTOUpdate;
+import com.tfg.aplicacionTurismo.DTO.user.UserDTO;
+import com.tfg.aplicacionTurismo.DTO.user.UserDTOUpdate;
 import com.tfg.aplicacionTurismo.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

@@ -1,4 +1,4 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.city;
 
 import javax.validation.constraints.NotEmpty;
 

@@ -1,15 +1,15 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.tfg.aplicacionTurismo.DTO.*;
+import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
+import com.tfg.aplicacionTurismo.DTO.user.LoginUserDTO;
+import com.tfg.aplicacionTurismo.DTO.user.NewUserDTO;
 import com.tfg.aplicacionTurismo.entities.*;
-import com.tfg.aplicacionTurismo.security.JWT.JwtEntryPoint;
 import com.tfg.aplicacionTurismo.security.JWT.JwtProvider;
 import com.tfg.aplicacionTurismo.services.InterestService;
 import com.tfg.aplicacionTurismo.services.RolService;
 import com.tfg.aplicacionTurismo.services.SecurityService;
 import com.tfg.aplicacionTurismo.services.UsersService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

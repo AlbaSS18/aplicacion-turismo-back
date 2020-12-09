@@ -1,7 +1,7 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tfg.aplicacionTurismo.DTO.CityDTO;
+import com.tfg.aplicacionTurismo.DTO.city.CityDTO;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,14 +10,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
@@ -25,7 +22,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)

@@ -1,8 +1,10 @@
-package com.tfg.aplicacionTurismo.DTO;
+package com.tfg.aplicacionTurismo.DTO.activity;
+
+import org.springframework.core.io.InputStreamResource;
 
 import javax.validation.constraints.NotEmpty;
 
-public class ActivityDTO {
+public class ActivitySendDTO {
 
     @NotEmpty
     private String name;
@@ -18,20 +20,11 @@ public class ActivityDTO {
     @NotEmpty
     private String interest;
 
-    public ActivityDTO() {
+    public ActivitySendDTO() {
     }
 
-    public ActivityDTO(@NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
+    public ActivitySendDTO(@NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
         this.name = name;
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.pathImage = pathImage;
-        this.city = city;
-        this.interest = interest;
-    }
-
-    public ActivityDTO(@NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
