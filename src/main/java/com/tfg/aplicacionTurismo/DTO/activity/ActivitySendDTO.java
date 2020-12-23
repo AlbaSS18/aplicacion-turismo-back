@@ -3,9 +3,12 @@ package com.tfg.aplicacionTurismo.DTO.activity;
 import org.springframework.core.io.InputStreamResource;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class ActivitySendDTO {
 
+    @NotNull
+    private Long id;
     @NotEmpty
     private String name;
     @NotEmpty
@@ -23,7 +26,8 @@ public class ActivitySendDTO {
     public ActivitySendDTO() {
     }
 
-    public ActivitySendDTO(@NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
+    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.latitude = latitude;
@@ -87,5 +91,13 @@ public class ActivitySendDTO {
 
     public void setInterest(String interest) {
         this.interest = interest;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -4,6 +4,7 @@ import com.tfg.aplicacionTurismo.DTO.Mensaje;
 import com.tfg.aplicacionTurismo.DTO.user.UserDTO;
 import com.tfg.aplicacionTurismo.DTO.user.UserDTOUpdate;
 import com.tfg.aplicacionTurismo.entities.Rol;
+import com.tfg.aplicacionTurismo.entities.RolName;
 import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.mapper.user.UserMapper;
 import com.tfg.aplicacionTurismo.services.RolService;
@@ -39,6 +40,13 @@ public class UserController {
         }
         User user = usersService.getUserById(id);
         UserDTO userDTO = UserMapper.INSTANCIA.convertUserToUserDTO(user);
+        // Se añaden los roles a mano porque el mapper no lo hace
+        Set<Rol> roles = user.getRole();
+        Set<String> rolString = new HashSet<>();
+        for (Rol rol: roles){
+            rolString.add(rol.getRolName().name());
+        }
+        userDTO.setRoles(rolString);
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
@@ -81,7 +89,23 @@ public class UserController {
         }*/
         User user = usersService.getUserById(id);
         UserMapper.INSTANCIA.updateUserFromDTO(userDTOUpdate, user);
-
+        // Le añadimos los roles a mano porque el mapper no lo hace
+        Set<String> rolesStr = userDTOUpdate.getRoles();
+        Set<Rol> roles = new HashSet<>();
+        for (String rol : rolesStr) {
+            System.out.println(rol);
+            switch (rol) {
+                case "ROLE_ADMIN":
+                    Rol rolAdmin = rolService.getRolByRolName(RolName.ROLE_ADMIN);
+                    roles.add(rolAdmin);
+                    break;
+                default:
+                    Rol rolUser = rolService.getRolByRolName(RolName.ROLE_USER);
+                    roles.add(rolUser);
+            }
+        }
+        user.setRole(roles);
+        System.out.println(user.getRole());
         usersService.updateUser(user);
         return new ResponseEntity<>(new Mensaje("Usuario actualizado"), HttpStatus.CREATED);
     }

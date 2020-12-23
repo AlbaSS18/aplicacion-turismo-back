@@ -1,7 +1,9 @@
 package com.tfg.aplicacionTurismo.files;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -25,5 +27,10 @@ public class FileUploadUtil {
         } catch (IOException ioe) {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
+    }
+
+    public static void removeFile(String uploadDir, String fileName) throws IOException {
+        Path uploadPath = Paths.get(uploadDir);
+        FileUtils.deleteDirectory(new File(String.valueOf(uploadPath)));
     }
 }

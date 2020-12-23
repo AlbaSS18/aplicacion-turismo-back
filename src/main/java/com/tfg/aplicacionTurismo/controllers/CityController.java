@@ -2,6 +2,7 @@ package com.tfg.aplicacionTurismo.controllers;
 
 import com.tfg.aplicacionTurismo.DTO.city.CityDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
+import com.tfg.aplicacionTurismo.DTO.city.NewCityDTO;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.apache.commons.lang3.StringUtils;
@@ -23,14 +24,14 @@ public class CityController {
     private CityService cityService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addCity(@RequestBody CityDTO cityDTO){
-        if(StringUtils.isBlank(cityDTO.getName())){
+    public ResponseEntity<?> addCity(@RequestBody NewCityDTO newCityDTO){
+        if(StringUtils.isBlank(newCityDTO.getName())){
             return new ResponseEntity<>(new Mensaje("El nombre de la ciudad es obligatorio"), HttpStatus.BAD_REQUEST);
         }
-        if(cityService.existByName(cityDTO.getName())){
+        if(cityService.existByName(newCityDTO.getName())){
             return new ResponseEntity<>(new Mensaje("Ya existe una ciudad con el mismo nombre"), HttpStatus.BAD_REQUEST);
         }
-        City city = new City(cityDTO.getName());
+        City city = new City(newCityDTO.getName());
         cityService.addCity(city);
         return new ResponseEntity<>(new Mensaje("Ciudad creada"), HttpStatus.CREATED);
     }
@@ -50,6 +51,7 @@ public class CityController {
         List<CityDTO> listCitiesDTO = new ArrayList<>();
         for (City c: listCities){
             CityDTO cityDTO = new CityDTO();
+            cityDTO.setId(c.getId());
             cityDTO.setName(c.getNameCity());
             listCitiesDTO.add(cityDTO);
         }

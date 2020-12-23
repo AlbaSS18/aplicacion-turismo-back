@@ -3,6 +3,7 @@ package com.tfg.aplicacionTurismo.DTO.user;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 public class UserDTOUpdate {
 
@@ -12,6 +13,8 @@ public class UserDTOUpdate {
     private String genre;
     @NotEmpty
     private String userName;
+    @NotEmpty
+    private Set<String> roles;
 
     public int getAge() {
         return age;
@@ -35,5 +38,13 @@ public class UserDTOUpdate {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

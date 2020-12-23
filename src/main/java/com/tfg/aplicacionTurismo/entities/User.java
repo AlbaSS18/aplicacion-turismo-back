@@ -30,7 +30,7 @@ public class User {
     )
 
     @NotNull
-    @ManyToMany (cascade = CascadeType.ALL)
+    @ManyToMany
     private Set<Rol> role;
 
     @OneToMany(mappedBy = "user")

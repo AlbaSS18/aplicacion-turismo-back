@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:4200")
@@ -42,7 +44,7 @@ public class ActivityController {
         List<Activity> listActivity = activityService.getActivities();
         List<ActivitySendDTO> listDTO = new ArrayList<>();
         for(Activity activity: listActivity){
-            ActivitySendDTO i = new ActivitySendDTO(activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest());
+            ActivitySendDTO i = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest());
             listDTO.add(i);
         }
         return new ResponseEntity<List<ActivitySendDTO>>(listDTO, HttpStatus.OK);
@@ -72,6 +74,8 @@ public class ActivityController {
             return new ResponseEntity<>(new Mensaje("Ya existe una actividad con el nombre: " + activityDTO.getName()), HttpStatus.BAD_REQUEST);
         }
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        System.out.println(fileName);
+        fileName = stripDiacritics(fileName);
         Activity activity = new Activity(activityDTO.getName(), activityDTO.getDescription(), new Point(activityDTO.getLongitude(), activityDTO.getLatitude()), fileName);
         City city = cityService.getCityByNameCity(activityDTO.getCity());
         activity.setCity(city);
@@ -83,13 +87,26 @@ public class ActivityController {
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }
 
+    public static final Pattern DIACRITICS_AND_FRIENDS
+            = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
+
+    private static String stripDiacritics(String str) {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = DIACRITICS_AND_FRIENDS.matcher(str).replaceAll("");
+        return str;
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteActivity(@PathVariable Long id){
+    public ResponseEntity<?> deleteActivity(@PathVariable Long id) throws IOException {
         if(!activityService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
         //Comprobar que no tiene usuarios asociados
+        Activity activity = activityService.getById(id);
+        String uploadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
+        FileUploadUtil.removeFile(uploadDir,activity.getPathImage());
         activityService.removeActivities(id);
+
         return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
     }
 }
