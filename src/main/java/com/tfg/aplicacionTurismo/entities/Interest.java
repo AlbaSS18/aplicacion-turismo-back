@@ -19,7 +19,7 @@ public class Interest {
     /*@ManyToMany(mappedBy = "interest")
     private Set<User> user;*/
 
-    @OneToMany(mappedBy = "interest")
+    @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
     @NotNull
     Set<RelUserInterest> priority = new HashSet<>();
 

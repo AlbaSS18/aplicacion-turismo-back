@@ -1,5 +1,6 @@
 package com.tfg.aplicacionTurismo.services;
 
+import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.entities.Rol;
 import com.tfg.aplicacionTurismo.entities.RolName;
 import com.tfg.aplicacionTurismo.entities.User;
@@ -25,5 +26,9 @@ public class RolService {
         List<Rol> roles = new ArrayList<>();
         rolRepository.findAll().forEach(roles::add);
         return roles;
+    }
+
+    public void addRole(Rol rol) {
+        rolRepository.save(rol);
     }
 }

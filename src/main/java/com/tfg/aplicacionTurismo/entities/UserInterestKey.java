@@ -10,10 +10,10 @@ import java.util.Objects;
 @Embeddable
 public class UserInterestKey implements Serializable {
 
-    @Column(name = "interest_id",nullable = false)
+    @Column(name = "interest_id")
     private long interestId;
 
-    @Column(name = "user_id",nullable = false)
+    @Column(name = "user_id")
     private long userId;
 
     public UserInterestKey() {

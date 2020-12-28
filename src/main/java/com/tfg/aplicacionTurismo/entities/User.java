@@ -33,7 +33,7 @@ public class User {
     @ManyToMany
     private Set<Rol> role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @NotNull
     Set<RelUserInterest> priority = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class User {
 
     @NotNull @ManyToMany(cascade = CascadeType.ALL) private Set<Interest> interest;*/
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private Set<RelUserActivity> relUserActivity = new HashSet<>();
 
     public User (){

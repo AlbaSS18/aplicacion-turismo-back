@@ -8,7 +8,6 @@ import com.tfg.aplicacionTurismo.entities.*;
 import com.tfg.aplicacionTurismo.security.JWT.JwtProvider;
 import com.tfg.aplicacionTurismo.services.InterestService;
 import com.tfg.aplicacionTurismo.services.RolService;
-import com.tfg.aplicacionTurismo.services.SecurityService;
 import com.tfg.aplicacionTurismo.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +44,6 @@ public class AuthController {
     private RolService rolService;
 
     @Autowired
-    private SecurityService securityService;
-
-    @Autowired
     JwtProvider jwtProvider;
 
     @Autowired
@@ -65,20 +61,18 @@ public class AuthController {
             return new ResponseEntity(new Mensaje("Contraseñas no son iguales"), HttpStatus.BAD_REQUEST);
         }
         User user = new User(userDTO.getEmail(), userDTO.getAge(), userDTO.getGenre(), userDTO.getUserName(), userDTO.getPassword());
+
         // Le añadimos los intereses
         Set<InterestDTO> interestStr = userDTO.getInterest();
         RelUserInterest rel;
         for (InterestDTO interest : interestStr) {
             rel = new RelUserInterest();
             rel.setPriority(interest.getPriority());
-            System.out.println(interest.getNameInterest());
             Interest i = interestService.getInterestByName(interest.getNameInterest());
             rel.setInterest(i);
             rel.setUser(user);
             user.getPriority().add(rel);
             i.getPriority().add(rel);
-            System.out.println("uer" + rel.getUser().getId());
-            System.out.println("interest" + rel.getInterest().getId());
         }
 
         // Le añadimos los roles
@@ -97,13 +91,6 @@ public class AuthController {
         }
         user.setRole(roles);
         usersService.addUser(user);
-        securityService.autoLogin(userDTO.getEmail(), userDTO.getPassword());
-        for (RelUserInterest reli : user.getPriority()) {
-            System.out.println(reli.getId());
-            System.out.println(reli.getInterest().getNameInterest());
-            System.out.println(reli.getUser().getEmail());
-            System.out.println(reli.getPriority());
-        }
         return new ResponseEntity(new Mensaje("Usuario añadido"), HttpStatus.CREATED);
     }
 
@@ -112,7 +99,6 @@ public class AuthController {
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        //logger.error(String.valueOf(loginDTO));
         System.out.println(loginDTO.getEmail() + loginDTO.getPassword());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
@@ -121,7 +107,6 @@ public class AuthController {
         String jwt = jwtProvider.generateToken(authentication);
         System.out.println(jwt);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        //System.out.println(userDetails.getUsername());
         JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
         return new ResponseEntity<JwtDTO>(jwtDTO, HttpStatus.OK);
     }

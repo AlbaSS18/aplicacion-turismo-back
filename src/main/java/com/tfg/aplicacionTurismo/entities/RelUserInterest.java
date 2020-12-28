@@ -2,35 +2,28 @@ package com.tfg.aplicacionTurismo.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "rel_user_interest")
-public class RelUserInterest {
+@IdClass(UserInterestId.class)
+public class RelUserInterest implements Serializable {
 
-    @EmbeddedId
-    private UserInterestKey id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    @JoinColumn(name = "user_id", nullable = false)
+    @Id
+    @ManyToOne
+    //@MapsId("userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("interestId")
-    @JoinColumn(name = "interest_id", nullable = false)
+    @Id
+    @ManyToOne
+    //@MapsId("interestId")
+    @JoinColumn(name = "interest_id", referencedColumnName = "id")
     Interest interest;
 
     int priority;
 
     public RelUserInterest() {
-    }
-
-    public UserInterestKey getId() {
-        return id;
-    }
-
-    public void setId(UserInterestKey id) {
-        this.id = id;
     }
 
     public Interest getInterest() {

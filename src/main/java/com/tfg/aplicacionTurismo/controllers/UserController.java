@@ -73,7 +73,7 @@ public class UserController {
         }
         // Comprobar que elimina tablas intermedias
         usersService.deleteUser(id);
-        return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("Usuario eliminado"), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
