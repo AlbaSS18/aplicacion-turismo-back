@@ -1,10 +1,7 @@
 package com.tfg.aplicacionTurismo.controllers;
 
-import com.tfg.aplicacionTurismo.DTO.city.NewCityDTO;
-import com.tfg.aplicacionTurismo.DTO.rol.NewRolDTO;
 import com.tfg.aplicacionTurismo.DTO.rol.RolDTO;
 import com.tfg.aplicacionTurismo.entities.Rol;
-import com.tfg.aplicacionTurismo.entities.RolName;
 import com.tfg.aplicacionTurismo.mapper.rol.RolMapper;
 import com.tfg.aplicacionTurismo.services.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +30,5 @@ public class RolController {
             rolDTOList.add(rolDTO);
         }
         return new ResponseEntity<List<RolDTO>>(rolDTOList, HttpStatus.OK);
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<?> addRole(@RequestBody NewRolDTO newRolDTO){
-        /*RolName rolName = rolService.getRolByRolName(newRolDTO.getRolName());
-        Rol rol = new Rol(newRolDTO.getRolName());
-        rolService.addRole();*/
-        return null;
     }
 }

@@ -1,13 +1,16 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
+import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.InterestListDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.NewInterestDTO;
-import com.tfg.aplicacionTurismo.DTO.rol.RolDTO;
 import com.tfg.aplicacionTurismo.entities.Interest;
+import com.tfg.aplicacionTurismo.entities.RelUserInterest;
+import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.mapper.interest.InterestMapper;
-import com.tfg.aplicacionTurismo.mapper.rol.RolMapper;
 import com.tfg.aplicacionTurismo.services.InterestService;
+import com.tfg.aplicacionTurismo.services.RelUserInterestService;
+import com.tfg.aplicacionTurismo.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,12 @@ public class InterestController {
 
     @Autowired
     private InterestService interestService;
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private RelUserInterestService relUserInterestService;
 
     @GetMapping("/list")
     public ResponseEntity<List<InterestListDTO>> getListado() {
@@ -64,4 +73,21 @@ public class InterestController {
     }
 
     //Añadir anotación @PreAuthorize("hasRola(''ADMIN)") para aquellas que sólo puedan ser vistas por el admin
+
+    @GetMapping("/list/user/{id}")
+    public ResponseEntity<?> getInterestByUser(@PathVariable Long id) {
+        if(!usersService.existsById(id)){
+            return new ResponseEntity<>(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
+        }
+        User user = usersService.getUserById(id);
+        List<RelUserInterest> listInterestByUser = relUserInterestService.getInterestByUser(user);
+        List<InterestDTO> listInterestDTOByUser = new ArrayList<InterestDTO>();
+        for(RelUserInterest relUserInterest: listInterestByUser){
+            InterestDTO i = new InterestDTO();
+            i.setPriority(relUserInterest.getPriority());
+            i.setNameInterest(relUserInterest.getInterest().getNameInterest());
+            listInterestDTOByUser.add(i);
+        }
+        return new ResponseEntity<List<InterestDTO>>(listInterestDTOByUser, HttpStatus.OK);
+    }
 }

@@ -17,10 +17,6 @@ public class Rol {
     public Rol() {
     }
 
-    public Rol(@NotNull RolName rolName) {
-        this.rolName = rolName;
-    }
-
     public Long getId() {
         return id;
     }

@@ -1,5 +1,7 @@
 package com.tfg.aplicacionTurismo.mapper.interest;
 
+import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
+import com.tfg.aplicacionTurismo.DTO.interest.InterestListDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.NewInterestDTO;
 import com.tfg.aplicacionTurismo.DTO.rol.RolDTO;
 import com.tfg.aplicacionTurismo.entities.Interest;

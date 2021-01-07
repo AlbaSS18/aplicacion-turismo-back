@@ -1,0 +1,23 @@
+package com.tfg.aplicacionTurismo.services;
+
+import com.tfg.aplicacionTurismo.entities.Interest;
+import com.tfg.aplicacionTurismo.entities.RelUserInterest;
+import com.tfg.aplicacionTurismo.entities.User;
+import com.tfg.aplicacionTurismo.repositories.InterestRepository;
+import com.tfg.aplicacionTurismo.repositories.User_Interest_Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class RelUserInterestService {
+
+    @Autowired
+    private User_Interest_Repository user_interest_repository;
+
+    public List<RelUserInterest> getInterestByUser(User user) {
+        return user_interest_repository.findAllByUser(user);
+    }
+}

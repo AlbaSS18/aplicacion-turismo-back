@@ -2,6 +2,7 @@ package com.tfg.aplicacionTurismo.services;
 
 import com.tfg.aplicacionTurismo.entities.Activity;
 import com.tfg.aplicacionTurismo.entities.Interest;
+import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.repositories.InterestRepository;
 import com.tfg.aplicacionTurismo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
