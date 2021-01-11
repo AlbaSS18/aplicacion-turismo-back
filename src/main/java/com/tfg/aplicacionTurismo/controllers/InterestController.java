@@ -1,6 +1,7 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
+import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.InterestListDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.NewInterestDTO;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/interest")
 public class InterestController {
 
@@ -81,13 +82,14 @@ public class InterestController {
         }
         User user = usersService.getUserById(id);
         List<RelUserInterest> listInterestByUser = relUserInterestService.getInterestByUser(user);
-        List<InterestDTO> listInterestDTOByUser = new ArrayList<InterestDTO>();
+        List<InterestByUserDTO> listInterestDTOByUser = new ArrayList<InterestByUserDTO>();
         for(RelUserInterest relUserInterest: listInterestByUser){
-            InterestDTO i = new InterestDTO();
+            InterestByUserDTO i = new InterestByUserDTO();
             i.setPriority(relUserInterest.getPriority());
             i.setNameInterest(relUserInterest.getInterest().getNameInterest());
+            i.setInterestID(relUserInterest.getInterest().getId());
             listInterestDTOByUser.add(i);
         }
-        return new ResponseEntity<List<InterestDTO>>(listInterestDTOByUser, HttpStatus.OK);
+        return new ResponseEntity<List<InterestByUserDTO>>(listInterestDTOByUser, HttpStatus.OK);
     }
 }

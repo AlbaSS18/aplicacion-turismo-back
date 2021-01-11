@@ -1,27 +1,38 @@
 package com.tfg.aplicacionTurismo.DTO.interest;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class InterestByUserDTO {
 
-    @NotEmpty private String user;
+    @NotNull
+    private Long interestID;
     @NotEmpty
-    private Set<InterestDTO> interestByUser;
+    private String nameInterest;
+    @NotEmpty private int priority;
 
-    public String getUser() {
-        return user;
+    public Long getInterestID() {
+        return interestID;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setInterestID(Long interestID) {
+        this.interestID = interestID;
     }
 
-    public Set<InterestDTO> getInterestByUser() {
-        return interestByUser;
+    public String getNameInterest() {
+        return nameInterest;
     }
 
-    public void setInterestByUser(Set<InterestDTO> interestByUser) {
-        this.interestByUser = interestByUser;
+    public void setNameInterest(String nameInterest) {
+        this.nameInterest = nameInterest;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

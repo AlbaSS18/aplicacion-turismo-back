@@ -1,12 +1,13 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
+import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
 import com.tfg.aplicacionTurismo.DTO.user.UserDTO;
 import com.tfg.aplicacionTurismo.DTO.user.UserDTOUpdate;
-import com.tfg.aplicacionTurismo.entities.Rol;
-import com.tfg.aplicacionTurismo.entities.RolName;
-import com.tfg.aplicacionTurismo.entities.User;
+import com.tfg.aplicacionTurismo.entities.*;
 import com.tfg.aplicacionTurismo.mapper.user.UserMapper;
+import com.tfg.aplicacionTurismo.services.InterestService;
+import com.tfg.aplicacionTurismo.services.RelUserInterestService;
 import com.tfg.aplicacionTurismo.services.RolService;
 import com.tfg.aplicacionTurismo.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/user")
 public class UserController {
 
@@ -32,6 +33,12 @@ public class UserController {
 
     @Autowired
     private RolService rolService;
+
+    @Autowired
+    private InterestService interestService;
+
+    @Autowired
+    private RelUserInterestService relUserInterestService;
 
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
@@ -47,6 +54,15 @@ public class UserController {
             rolString.add(rol.getRolName().name());
         }
         userDTO.setRoles(rolString);
+        Set<InterestByUserDTO> interestDTOSet = new HashSet<>();
+        for(RelUserInterest rel: user.getPriority()){
+            InterestByUserDTO interestByUserDTO = new InterestByUserDTO();
+            interestByUserDTO.setNameInterest(rel.getInterest().getNameInterest());
+            interestByUserDTO.setPriority(rel.getPriority());
+            interestByUserDTO.setInterestID(rel.getInterest().getId());
+            interestDTOSet.add(interestByUserDTO);
+        }
+        userDTO.setInterest(interestDTOSet);
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
@@ -105,7 +121,19 @@ public class UserController {
             }
         }
         user.setRole(roles);
-        System.out.println(user.getRole());
+        for(InterestByUserDTO interestPrueba: userDTOUpdate.getInterest().get()){
+            Interest i = interestService.getInterestById(interestPrueba.getInterestID());
+            RelUserInterest rel = new RelUserInterest();
+            if(relUserInterestService.existByUserAndInterest(user,i)){
+                rel = relUserInterestService.getInterestByUserAndInterest(user,i);
+            }
+            else{
+                rel.setUser(user);
+                rel.setInterest(i);
+            }
+            rel.setPriority(interestPrueba.getPriority());
+            user.getPriority().add(rel);
+        }
         usersService.updateUser(user);
         return new ResponseEntity<>(new Mensaje("Usuario actualizado"), HttpStatus.CREATED);
     }

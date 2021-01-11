@@ -1,5 +1,8 @@
 package com.tfg.aplicacionTurismo.DTO.user;
 
+import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
+import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -21,6 +24,8 @@ public class UserDTO {
     private String userName;
     @NotEmpty
     private Set<String> roles;
+
+    @NotEmpty private Set<InterestByUserDTO> interest;
 
     public UserDTO() {
     }
@@ -80,5 +85,13 @@ public class UserDTO {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public Set<InterestByUserDTO> getInterest() {
+        return interest;
+    }
+
+    public void setInterest(Set<InterestByUserDTO> interest) {
+        this.interest = interest;
     }
 }
