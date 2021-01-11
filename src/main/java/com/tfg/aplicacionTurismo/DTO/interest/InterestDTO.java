@@ -1,5 +1,7 @@
 package com.tfg.aplicacionTurismo.DTO.interest;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
@@ -7,7 +9,9 @@ public class InterestDTO {
 
     @NotEmpty
     private String nameInterest;
-    @NotEmpty private int priority;
+    @NotEmpty
+    @Range(min=0,max=10)
+    private int priority;
 
     public String getNameInterest() {
         return nameInterest;

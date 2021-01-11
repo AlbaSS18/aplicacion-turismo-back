@@ -100,9 +100,6 @@ public class UserController {
         if(!usersService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("No existe el usuario con id " + id), HttpStatus.NOT_FOUND);
         }
-        /*if(usersService.existsByEmail(userDTOUpdate.getEmail()) && usersService.getUserByEmail(userDTOUpdate.getEmail()).getId() != id){
-            return new ResponseEntity<>(new Mensaje("Ya existe un usuario con el email " + userDTOUpdate.getEmail()), HttpStatus.NOT_FOUND);
-        }*/
         User user = usersService.getUserById(id);
         UserMapper.INSTANCIA.updateUserFromDTO(userDTOUpdate, user);
         // Le añadimos los roles a mano porque el mapper no lo hace
@@ -121,18 +118,25 @@ public class UserController {
             }
         }
         user.setRole(roles);
-        for(InterestByUserDTO interestPrueba: userDTOUpdate.getInterest().get()){
-            Interest i = interestService.getInterestById(interestPrueba.getInterestID());
-            RelUserInterest rel = new RelUserInterest();
-            if(relUserInterestService.existByUserAndInterest(user,i)){
-                rel = relUserInterestService.getInterestByUserAndInterest(user,i);
+
+        // Añadimos los intereses si es que vienen en el dto
+        if(userDTOUpdate.getInterest() != null){
+            for(InterestByUserDTO interestPrueba: userDTOUpdate.getInterest()){
+                if(!interestService.existById(interestPrueba.getInterestID())){
+                    return new ResponseEntity<>(new Mensaje("No existe el interest con " + id), HttpStatus.NOT_FOUND);
+                }
+                Interest i = interestService.getInterestById(interestPrueba.getInterestID());
+                RelUserInterest rel = new RelUserInterest();
+                if(relUserInterestService.existByUserAndInterest(user,i)){
+                    rel = relUserInterestService.getInterestByUserAndInterest(user,i);
+                }
+                else{
+                    rel.setUser(user);
+                    rel.setInterest(i);
+                }
+                rel.setPriority(interestPrueba.getPriority());
+                user.getPriority().add(rel);
             }
-            else{
-                rel.setUser(user);
-                rel.setInterest(i);
-            }
-            rel.setPriority(interestPrueba.getPriority());
-            user.getPriority().add(rel);
         }
         usersService.updateUser(user);
         return new ResponseEntity<>(new Mensaje("Usuario actualizado"), HttpStatus.CREATED);

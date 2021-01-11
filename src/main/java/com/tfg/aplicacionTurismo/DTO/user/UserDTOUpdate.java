@@ -1,7 +1,9 @@
 package com.tfg.aplicacionTurismo.DTO.user;
 
 import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -10,6 +12,7 @@ import java.util.Set;
 public class UserDTOUpdate {
 
     @NotNull
+    @Range(min=18)
     private int age;
     @NotEmpty
     private String genre;
@@ -18,7 +21,8 @@ public class UserDTOUpdate {
     @NotEmpty
     private Set<String> roles;
 
-    private Optional<Set<InterestByUserDTO>> interest;
+    @Valid
+    private Set<InterestByUserDTO> interest;
 
     public int getAge() {
         return age;
@@ -52,11 +56,11 @@ public class UserDTOUpdate {
         this.roles = roles;
     }
 
-    public Optional<Set<InterestByUserDTO>> getInterest() {
+    public Set<InterestByUserDTO> getInterest() {
         return interest;
     }
 
-    public void setInterest(Optional<Set<InterestByUserDTO>> interest) {
+    public void setInterest(Set<InterestByUserDTO> interest) {
         this.interest = interest;
     }
 }

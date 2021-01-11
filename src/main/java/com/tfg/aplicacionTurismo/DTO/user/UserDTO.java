@@ -2,6 +2,7 @@ package com.tfg.aplicacionTurismo.DTO.user;
 
 import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +15,7 @@ public class UserDTO {
     @NotNull
     private Long id;
     @NotNull
+    @Range(min=18)
     private int age;
     @NotEmpty
     @Email
