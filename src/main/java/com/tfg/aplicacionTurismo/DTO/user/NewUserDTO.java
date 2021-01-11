@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 public class NewUserDTO {
@@ -17,8 +18,10 @@ public class NewUserDTO {
     @NotEmpty
     private String userName;
     @NotEmpty
+    @Size(min=7)
     private String password;
     @NotEmpty
+    @Size(min=7)
     private String passwordConfirm;
     @NotEmpty
     private String genre;
