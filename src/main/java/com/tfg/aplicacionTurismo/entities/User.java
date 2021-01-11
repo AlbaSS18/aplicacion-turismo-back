@@ -1,8 +1,10 @@
 package com.tfg.aplicacionTurismo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import java.util.HashSet;
@@ -14,9 +16,14 @@ public class User {
     @Id @GeneratedValue private Long id;
 
     @NotNull
-    @Column (unique = true) private String email;
+    @Column (unique = true)
+    @Email
+    private String email;
 
-    @NotNull private int age;
+    @NotNull
+    @Range(min=1)
+    private int age;
+
     @NotNull private String genre;
 
     @NotNull private String userName;

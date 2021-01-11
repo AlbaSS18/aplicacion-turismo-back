@@ -123,7 +123,7 @@ public class UserController {
         if(userDTOUpdate.getInterest() != null){
             for(InterestByUserDTO interestPrueba: userDTOUpdate.getInterest()){
                 if(!interestService.existById(interestPrueba.getInterestID())){
-                    return new ResponseEntity<>(new Mensaje("No existe el interest con " + id), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(new Mensaje("No existe el interest con " + interestPrueba.getInterestID()), HttpStatus.NOT_FOUND);
                 }
                 Interest i = interestService.getInterestById(interestPrueba.getInterestID());
                 RelUserInterest rel = new RelUserInterest();

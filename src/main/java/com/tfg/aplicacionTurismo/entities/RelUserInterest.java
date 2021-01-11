@@ -1,5 +1,7 @@
 package com.tfg.aplicacionTurismo.entities;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class RelUserInterest implements Serializable {
     @JoinColumn(name = "interest_id", referencedColumnName = "id")
     Interest interest;
 
+    @Range(min=0,max=10)
     int priority;
 
     public RelUserInterest() {
