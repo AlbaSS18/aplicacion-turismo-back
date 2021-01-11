@@ -17,10 +17,6 @@ public class RelUserInterestService {
     @Autowired
     private User_Interest_Repository user_interest_repository;
 
-    public List<RelUserInterest> getInterestByUser(User user) {
-        return user_interest_repository.findAllByUser(user);
-    }
-
     public RelUserInterest getInterestByUserAndInterest(User user, Interest interest) {
         return user_interest_repository.findByUserAndInterest(user, interest);
     }

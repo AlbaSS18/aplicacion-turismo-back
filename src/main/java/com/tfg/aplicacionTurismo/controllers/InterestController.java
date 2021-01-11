@@ -74,22 +74,4 @@ public class InterestController {
     }
 
     //Añadir anotación @PreAuthorize("hasRola(''ADMIN)") para aquellas que sólo puedan ser vistas por el admin
-
-    @GetMapping("/list/user/{id}")
-    public ResponseEntity<?> getInterestByUser(@PathVariable Long id) {
-        if(!usersService.existsById(id)){
-            return new ResponseEntity<>(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
-        }
-        User user = usersService.getUserById(id);
-        List<RelUserInterest> listInterestByUser = relUserInterestService.getInterestByUser(user);
-        List<InterestByUserDTO> listInterestDTOByUser = new ArrayList<InterestByUserDTO>();
-        for(RelUserInterest relUserInterest: listInterestByUser){
-            InterestByUserDTO i = new InterestByUserDTO();
-            i.setPriority(relUserInterest.getPriority());
-            i.setNameInterest(relUserInterest.getInterest().getNameInterest());
-            i.setInterestID(relUserInterest.getInterest().getId());
-            listInterestDTOByUser.add(i);
-        }
-        return new ResponseEntity<List<InterestByUserDTO>>(listInterestDTOByUser, HttpStatus.OK);
-    }
 }

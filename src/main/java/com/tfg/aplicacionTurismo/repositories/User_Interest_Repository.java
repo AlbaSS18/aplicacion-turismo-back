@@ -10,9 +10,6 @@ import java.util.List;
 
 public interface User_Interest_Repository extends CrudRepository<RelUserInterest, Long> {
 
-    @Query("SELECT r FROM RelUserInterest r WHERE r.user = ?1")
-    List<RelUserInterest> findAllByUser(User user);
-
     @Query("SELECT r FROM RelUserInterest r WHERE r.user = ?1 and r.interest = ?2")
     RelUserInterest findByUserAndInterest(User user, Interest interest);
 
