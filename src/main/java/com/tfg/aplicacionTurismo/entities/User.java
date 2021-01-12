@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 public class User {
 
-    @Id @GeneratedValue private Long id;
+    @Id @GeneratedValue private long id;
 
     @NotNull
     @Column (unique = true)

@@ -95,7 +95,7 @@ public class UserController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@Validated @RequestBody UserDTOUpdate userDTOUpdate, BindingResult result, @PathVariable Long id) {
         if (result.hasErrors()) {
-            return new ResponseEntity(new Mensaje("Rellenar todos los datos"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("Error en el formulario. Compruebe todos los datos"), HttpStatus.BAD_REQUEST);
         }
         if(!usersService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("No existe el usuario con id " + id), HttpStatus.NOT_FOUND);

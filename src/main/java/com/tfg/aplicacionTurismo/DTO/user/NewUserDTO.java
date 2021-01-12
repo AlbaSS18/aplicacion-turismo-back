@@ -4,6 +4,7 @@ package com.tfg.aplicacionTurismo.DTO.user;
 import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -31,7 +32,7 @@ public class NewUserDTO {
 
     @NotEmpty private Set<String> roles;
 
-    @NotEmpty private Set<InterestDTO> interest;
+    @NotEmpty @Valid private Set<InterestDTO> interest;
 
     public String getUserName() {
         return userName;
