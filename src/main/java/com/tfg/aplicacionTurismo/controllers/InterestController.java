@@ -59,6 +59,15 @@ public class InterestController {
             return new ResponseEntity(new Mensaje("Ya hay un interés con ese nombre"), HttpStatus.BAD_REQUEST);
         }
         Interest interest = InterestMapper.INSTANCIA.convertNewInterestInInterest(newInterestDTO);
+        List<User> userList = usersService.getUsers();
+        for(User u: userList){
+            RelUserInterest relUserInterest = new RelUserInterest();
+            relUserInterest.setInterest(interest);
+            relUserInterest.setUser(u);
+            relUserInterest.setPriority(0);
+            interest.getPriority().add(relUserInterest);
+            u.getPriority().add(relUserInterest);
+        }
         interestService.addInterest(interest);
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }
@@ -74,4 +83,20 @@ public class InterestController {
     }
 
     //Añadir anotación @PreAuthorize("hasRola(''ADMIN)") para aquellas que sólo puedan ser vistas por el admin
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@Validated @RequestBody NewInterestDTO newInterestDTO, BindingResult result, @PathVariable("id") Long id) {
+        if(result.hasErrors()){
+            return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
+        }
+        if(!interestService.existById(id))
+            return new ResponseEntity(new Mensaje("El interés con id " + id + " no existe"), HttpStatus.NOT_FOUND);
+        if(interestService.existByName(newInterestDTO.getNameInterest()) && interestService.getInterestByName(newInterestDTO.getNameInterest()).getId() != id){
+            return new ResponseEntity(new Mensaje("Ya hay un interés con ese nombre"), HttpStatus.BAD_REQUEST);
+        }
+        Interest interest = interestService.getInterestById(id);
+        interest.setNameInterest(newInterestDTO.getNameInterest());
+        interestService.updateInterest(interest);
+        return new ResponseEntity(new Mensaje("Interés actualizado"), HttpStatus.CREATED);
+    }
 }

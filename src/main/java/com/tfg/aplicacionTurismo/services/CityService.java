@@ -42,4 +42,12 @@ public class CityService {
         cityRepository.findAll().forEach(cities::add);
         return cities;
     }
+
+    public City getCityById(Long id){
+        return cityRepository.findById(id).get();
+    }
+
+    public void updateCity(City city) {
+        cityRepository.save(city);
+    }
 }

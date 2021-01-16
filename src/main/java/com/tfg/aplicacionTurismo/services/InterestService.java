@@ -48,4 +48,8 @@ public class InterestService {
     public Interest getInterestById (Long id) {
         return interestRepository.findById(id).get();
     }
+
+    public void updateInterest(Interest interest){
+        interestRepository.save(interest);
+    }
 }

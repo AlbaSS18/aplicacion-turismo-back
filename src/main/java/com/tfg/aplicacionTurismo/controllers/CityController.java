@@ -3,13 +3,17 @@ package com.tfg.aplicacionTurismo.controllers;
 import com.tfg.aplicacionTurismo.DTO.city.CityDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
 import com.tfg.aplicacionTurismo.DTO.city.NewCityDTO;
+import com.tfg.aplicacionTurismo.DTO.interest.NewInterestDTO;
 import com.tfg.aplicacionTurismo.entities.City;
+import com.tfg.aplicacionTurismo.entities.Interest;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -56,6 +60,22 @@ public class CityController {
             listCitiesDTO.add(cityDTO);
         }
         return new ResponseEntity<List<CityDTO>>(listCitiesDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@Validated @RequestBody NewCityDTO newCityDTO, BindingResult result, @PathVariable("id") Long id) {
+        if(result.hasErrors()){
+            return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
+        }
+        if(!cityService.existById(id))
+            return new ResponseEntity(new Mensaje("La ciudad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
+        if(cityService.existByName(newCityDTO.getName()) && cityService.getCityByNameCity(newCityDTO.getName()).getId() != id){
+            return new ResponseEntity(new Mensaje("Ya hay una ciudad con ese nombre"), HttpStatus.BAD_REQUEST);
+        }
+        City city = cityService.getCityById(id);
+        city.setNameCity(newCityDTO.getName());
+        cityService.updateCity(city);
+        return new ResponseEntity(new Mensaje("Ciudad actualizada"), HttpStatus.CREATED);
     }
 
 }
