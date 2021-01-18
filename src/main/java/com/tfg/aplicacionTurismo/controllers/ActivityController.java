@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 @Controller
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/activity")
 public class ActivityController {
 
