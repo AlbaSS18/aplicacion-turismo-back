@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -15,13 +16,10 @@ public class UserDTO {
     @NotNull
     private Long id;
     @NotNull
-    @Range(min=18)
-    private int age;
+    private Date dateBirthday;
     @NotEmpty
     @Email
     private String email;
-    @NotEmpty
-    private String genre;
     @NotEmpty
     private String userName;
     @NotEmpty
@@ -32,11 +30,10 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(@NotNull Long id, @NotNull int age, @NotEmpty @Email String email, @NotEmpty String genre, @NotEmpty String userName, @NotEmpty Set<String> roles) {
+    public UserDTO(@NotNull Long id, @NotNull Date dateBirthday, @NotEmpty @Email String email, @NotEmpty String userName, @NotEmpty Set<String> roles) {
         this.id = id;
-        this.age = age;
+        this.dateBirthday = dateBirthday;
         this.email = email;
-        this.genre = genre;
         this.userName = userName;
         this.roles = roles;
     }
@@ -49,12 +46,12 @@ public class UserDTO {
         this.id = id;
     }
 
-    public int getAge() {
-        return age;
+    public Date getDateBirthday() {
+        return dateBirthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDateBirthday(Date dateBirthday) {
+        this.dateBirthday = dateBirthday;
     }
 
     public String getEmail() {
@@ -63,14 +60,6 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 
     public String getUserName() {

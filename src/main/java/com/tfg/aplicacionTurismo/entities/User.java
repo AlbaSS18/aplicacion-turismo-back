@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,10 +23,7 @@ public class User {
     private String email;
 
     @NotNull
-    @Range(min=1)
-    private int age;
-
-    @NotNull private String genre;
+    private Date dateBirthday;
 
     @NotNull private String userName;
 
@@ -59,10 +57,9 @@ public class User {
     public User (){
     }
 
-    public User(@NotNull String email, @NotNull int age, @NotNull String genre, @NotNull String userName, @NotNull String password) {
+    public User(@NotNull @Email String email, @NotNull Date dateBirthday, @NotNull String userName, @NotNull @Size(min = 7) String password) {
         this.email = email;
-        this.age = age;
-        this.genre = genre;
+        this.dateBirthday = dateBirthday;
         this.userName = userName;
         this.password = password;
     }
@@ -83,20 +80,12 @@ public class User {
         this.email = email;
     }
 
-    public int getAge() {
-        return age;
+    public Date getDateBirthday() {
+        return dateBirthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setDateBirthday(Date dateBirthday) {
+        this.dateBirthday = dateBirthday;
     }
 
     public String getPassword() {

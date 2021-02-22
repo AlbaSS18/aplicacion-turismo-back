@@ -22,11 +22,13 @@ public class ActivitySendDTO {
     private String city;
     @NotEmpty
     private String interest;
+    @NotEmpty
+    private String address;
 
     public ActivitySendDTO() {
     }
 
-    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest) {
+    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,6 +37,7 @@ public class ActivitySendDTO {
         this.pathImage = pathImage;
         this.city = city;
         this.interest = interest;
+        this.address = address;
     }
 
     public String getName() {
@@ -99,5 +102,13 @@ public class ActivitySendDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

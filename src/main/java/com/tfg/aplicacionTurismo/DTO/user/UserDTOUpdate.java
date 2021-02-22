@@ -6,16 +6,14 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
 public class UserDTOUpdate {
 
     @NotNull
-    @Range(min=18)
-    private int age;
-    @NotEmpty
-    private String genre;
+    private Date dateBirthday;
     @NotEmpty
     private String userName;
     @NotEmpty
@@ -24,20 +22,12 @@ public class UserDTOUpdate {
     @Valid
     private Set<InterestByUserDTO> interest;
 
-    public int getAge() {
-        return age;
+    public Date getDateBirthday() {
+        return dateBirthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setDateBirthday(Date dateBirthday) {
+        this.dateBirthday = dateBirthday;
     }
 
     public String getUserName() {

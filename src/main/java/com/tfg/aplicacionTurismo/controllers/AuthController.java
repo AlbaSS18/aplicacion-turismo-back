@@ -51,6 +51,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> addUser(@Validated @RequestBody NewUserDTO userDTO, BindingResult result) {
+        System.out.println(userDTO.getDateBirthday());
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
@@ -60,7 +61,7 @@ public class AuthController {
         if (!userDTO.getPassword().equals(userDTO.getPasswordConfirm())) {
             return new ResponseEntity(new Mensaje("Contraseñas no son iguales"), HttpStatus.BAD_REQUEST);
         }
-        User user = new User(userDTO.getEmail(), userDTO.getAge(), userDTO.getGenre(), userDTO.getUserName(), userDTO.getPassword());
+        User user = new User(userDTO.getEmail(), userDTO.getDateBirthday(), userDTO.getUserName(), userDTO.getPassword());
 
         // Le añadimos los intereses
         Set<InterestDTO> interestStr = userDTO.getInterest();

@@ -76,7 +76,7 @@ public class UserController {
             for (Rol rol: roles){
                 rolString.add(rol.getRolName().name());
             }
-            UserDTO u = new UserDTO(user.getId(),user.getAge(),user.getEmail(),user.getGenre(),user.getUserName(), rolString);
+            UserDTO u = new UserDTO(user.getId(),user.getDateBirthday(),user.getEmail(),user.getUserName(), rolString);
             listUserDTO.add(u);
         }
         return new ResponseEntity<List<UserDTO>>(listUserDTO, HttpStatus.OK);
@@ -87,7 +87,7 @@ public class UserController {
         if(!usersService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
-        // Comprobar que elimina tablas intermedias
+        // NOTE: Comprobar que elimina tablas intermedias
         usersService.deleteUser(id);
         return new ResponseEntity<>(new Mensaje("Usuario eliminado"), HttpStatus.OK);
     }

@@ -9,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.Set;
 
 public class NewUserDTO {
@@ -24,11 +25,8 @@ public class NewUserDTO {
     @NotEmpty
     @Size(min=7)
     private String passwordConfirm;
-    @NotEmpty
-    private String genre;
     @NotNull
-    @Range(min=18)
-    private int age;
+    private Date dateBirthday;
 
     @NotEmpty private Set<String> roles;
 
@@ -58,20 +56,12 @@ public class NewUserDTO {
         this.passwordConfirm = passwordConfirm;
     }
 
-    public String getGenre() {
-        return genre;
+    public Date getDateBirthday() {
+        return dateBirthday;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+    public void setDateBirthday(Date dateBirthday) {
+        this.dateBirthday = dateBirthday;
     }
 
     public Set<String> getRoles() {

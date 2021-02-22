@@ -22,6 +22,8 @@ public class Activity {
     private Point coordenates;
     @Column
     private String pathImage;
+    @NotEmpty @Column
+    private String address;
 
     @NotNull @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
     private Set<RelUserActivity> relUserActivity= new HashSet<>();
@@ -39,11 +41,12 @@ public class Activity {
     public Activity() {
     }
 
-    public Activity(@NotEmpty String name, @NotEmpty String description, @NotNull Point coordenates, String pathImage) {
+    public Activity(@NotEmpty String name, @NotEmpty String description, @NotNull Point coordenates, String pathImage, @NotEmpty String address) {
         this.name = name;
         this.description = description;
         this.coordenates = coordenates;
         this.pathImage = pathImage;
+        this.address = address;
     }
 
     public long getId() {
@@ -108,5 +111,13 @@ public class Activity {
 
     public void setInterest(Interest interest) {
         this.interest = interest;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

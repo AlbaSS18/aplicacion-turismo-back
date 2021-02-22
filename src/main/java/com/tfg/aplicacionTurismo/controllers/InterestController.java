@@ -77,12 +77,12 @@ public class InterestController {
         if(!interestService.existById(id)){
             return new ResponseEntity<>(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
-        //Comprobar que no tiene actividades relacionadas
+        //NOTE: Comprobar que no tiene actividades relacionadas
         interestService.removeInterest(id);
         return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
     }
 
-    //Añadir anotación @PreAuthorize("hasRola(''ADMIN)") para aquellas que sólo puedan ser vistas por el admin
+    //NOTE: Añadir anotación @PreAuthorize("hasRola(''ADMIN)") para aquellas que sólo puedan ser vistas por el admin
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@Validated @RequestBody NewInterestDTO newInterestDTO, BindingResult result, @PathVariable("id") Long id) {

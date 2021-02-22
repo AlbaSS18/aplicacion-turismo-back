@@ -16,6 +16,8 @@ public class ActivityDTO {
     private String city;
     @NotEmpty
     private String interest;
+    @NotEmpty
+    private String address;
 
     public ActivityDTO() {
     }
@@ -83,5 +85,13 @@ public class ActivityDTO {
 
     public void setInterest(String interest) {
         this.interest = interest;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

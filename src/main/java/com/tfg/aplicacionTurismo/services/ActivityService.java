@@ -45,4 +45,8 @@ public class ActivityService {
     public void updateActivity(Activity activity){
         activityRepository.save(activity);
     }
+
+    public Activity getActivityByNameActivity(String name){
+        return activityRepository.findByName(name);
+    }
 }
