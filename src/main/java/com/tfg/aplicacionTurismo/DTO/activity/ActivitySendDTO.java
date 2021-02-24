@@ -28,7 +28,7 @@ public class ActivitySendDTO {
     public ActivitySendDTO() {
     }
 
-    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, String pathImage, @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address) {
+    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double longitude, @NotEmpty double latitude, String pathImage, @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address) {
         this.id = id;
         this.name = name;
         this.description = description;

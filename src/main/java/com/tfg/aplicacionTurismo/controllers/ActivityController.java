@@ -164,6 +164,7 @@ public class ActivityController {
         // NOTE: No compruebo las coordenadas porque puede haber coordenadas igual a cero.
 
         Activity activity = activityService.getById(id);
+        activity.setName(activityDTO.getName());
         Interest interest = interestService.getInterestByName(activityDTO.getInterest());
         activity.setInterest(interest);
         activity.setDescription(activityDTO.getDescription());
