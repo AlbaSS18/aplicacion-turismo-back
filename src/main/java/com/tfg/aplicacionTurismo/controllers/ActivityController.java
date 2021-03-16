@@ -3,28 +3,28 @@ package com.tfg.aplicacionTurismo.controllers;
 import com.tfg.aplicacionTurismo.DTO.activity.ActivityDTO;
 import com.tfg.aplicacionTurismo.DTO.activity.ActivitySendDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
+import com.tfg.aplicacionTurismo.DTO.activity.ImageDTO;
 import com.tfg.aplicacionTurismo.entities.*;
 import com.tfg.aplicacionTurismo.files.FileUploadUtil;
 import com.tfg.aplicacionTurismo.services.ActivityService;
 import com.tfg.aplicacionTurismo.services.CityService;
 import com.tfg.aplicacionTurismo.services.InterestService;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -43,24 +43,47 @@ public class ActivityController {
     private InterestService interestService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<ActivitySendDTO>> getListado(){
+    public ResponseEntity<List<ActivitySendDTO>> getListado() throws IOException {
         List<Activity> listActivity = activityService.getActivities();
         List<ActivitySendDTO> listDTO = new ArrayList<>();
         for(Activity activity: listActivity){
-            ActivitySendDTO i = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(), activity.getAddress());
+            ActivitySendDTO i = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity));
+
+            // Add the activity
             listDTO.add(i);
         }
         return new ResponseEntity<List<ActivitySendDTO>>(listDTO, HttpStatus.OK);
     }
 
     @GetMapping("/details/{id}")
-    public ResponseEntity<ActivitySendDTO> getActivity(@PathVariable Long id){
+    public ResponseEntity<ActivitySendDTO> getActivity(@PathVariable Long id) throws IOException {
         if(!activityService.existsById(id)){
             return new ResponseEntity(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
         Activity activity = activityService.getById(id);
-        ActivitySendDTO activitySendDTO = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(), activity.getAddress());
+
+        ActivitySendDTO activitySendDTO = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(), activity.getAddress(), this.getImageFromActivity(activity));
         return new ResponseEntity<ActivitySendDTO>(activitySendDTO, HttpStatus.OK);
+    }
+
+    private ImageDTO getImageFromActivity(Activity activity) throws IOException {
+        // Return the image
+        String[] stringSplitThePathImage = activity.getPathImage().split("\\.");
+        ImageDTO imageDTO = new ImageDTO();
+
+        // Set the fileName
+        imageDTO.setFileName(stringSplitThePathImage[0]);
+
+        // Set the mimeType
+        imageDTO.setMimeType("image/" + stringSplitThePathImage[1]);
+
+        // Set the data
+        String pathName = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
+        byte[] fileContent = FileUtils.readFileToByteArray(new File(pathName));
+        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+        imageDTO.setData(encodedString);
+
+        return imageDTO;
     }
 
     @PostMapping("/add")
@@ -105,9 +128,15 @@ public class ActivityController {
         Interest interest = interestService.getInterestByName(activityDTO.getInterest());
         activity.setInterest(interest);
         activityService.addActivities(activity);
-        String uploadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
+        /*String uploadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
         //String uploadDir = "C:\\Users\\alba-\\Desktop\\Images\\" + activity.getName();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);*/
+
+        String folder = "/Users/alba-/Desktop/photos/";
+        //byte[] bytes = multipartFile.getBytes();
+        //Path path = Paths.get(folder + multipartFile.getOriginalFilename());
+        //Files.write(path, bytes);
+        FileUploadUtil.saveFile(folder, fileName, multipartFile);
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }
 
@@ -127,7 +156,7 @@ public class ActivityController {
         }
         //NOTE: Comprobar que no tiene usuarios asociados
         Activity activity = activityService.getById(id);
-        String uploadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
+        String uploadDir = "/Users/alba-/Desktop/photos/";
         FileUploadUtil.removeFile(uploadDir,activity.getPathImage());
         activityService.removeActivities(id);
 
@@ -188,24 +217,5 @@ public class ActivityController {
         //String uploadDir = "C:\\Users\\alba-\\Desktop\\Images\\" + activity.getName();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         return new ResponseEntity<>(new Mensaje("Actividad actualizada"), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/picture/{id}")
-    public ResponseEntity<byte[]> getArticleImage(@PathVariable Long id) throws IOException {
-
-        // 1. download img from http://internal-picture-db/id.jpg ...
-        Activity activity = activityService.getById(id);
-        String pathName = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName() + "/" + activity.getPathImage();
-        //FileSystemResource imgFile = new FileSystemResource(name);
-
-
-        byte[] image = org.apache.commons.io.FileUtils.readFileToByteArray(new File(pathName));
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        headers.setContentLength(image.length);
-
-
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 }

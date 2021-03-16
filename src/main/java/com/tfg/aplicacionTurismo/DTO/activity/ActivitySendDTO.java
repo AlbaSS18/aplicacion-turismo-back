@@ -1,7 +1,6 @@
 package com.tfg.aplicacionTurismo.DTO.activity;
 
-import org.springframework.core.io.InputStreamResource;
-
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -24,11 +23,15 @@ public class ActivitySendDTO {
     private String interest;
     @NotEmpty
     private String address;
+    @Valid
+    private ImageDTO metadataImage;
 
     public ActivitySendDTO() {
     }
 
-    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double longitude, @NotEmpty double latitude, String pathImage, @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address) {
+    public ActivitySendDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description, @NotEmpty double longitude,
+                           @NotEmpty double latitude, String pathImage, @NotEmpty String city, @NotEmpty String interest,
+                           @NotEmpty String address, @Valid ImageDTO metadataImage) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -38,6 +41,7 @@ public class ActivitySendDTO {
         this.city = city;
         this.interest = interest;
         this.address = address;
+        this.metadataImage = metadataImage;
     }
 
     public String getName() {
@@ -110,5 +114,13 @@ public class ActivitySendDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public ImageDTO getMetadataImage() {
+        return metadataImage;
+    }
+
+    public void setMetadataImage(ImageDTO metadataImage) {
+        this.metadataImage = metadataImage;
     }
 }
