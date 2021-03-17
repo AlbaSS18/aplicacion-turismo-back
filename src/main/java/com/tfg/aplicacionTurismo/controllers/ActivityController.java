@@ -120,7 +120,6 @@ public class ActivityController {
         // NOTE: No compruebo las coordenadas porque puede haber coordenadas igual a cero.
 
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        System.out.println(fileName);
         fileName = stripDiacritics(fileName);
         Activity activity = new Activity(activityDTO.getName(), activityDTO.getDescription(), new Point(activityDTO.getLongitude(), activityDTO.getLatitude()), fileName, activityDTO.getAddress());
         City city = cityService.getCityByNameCity(activityDTO.getCity());
@@ -150,14 +149,14 @@ public class ActivityController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteActivity(@PathVariable Long id) throws IOException {
+    public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
         if(!activityService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
         //NOTE: Comprobar que no tiene usuarios asociados
         Activity activity = activityService.getById(id);
-        String uploadDir = "/Users/alba-/Desktop/photos/";
-        FileUploadUtil.removeFile(uploadDir,activity.getPathImage());
+        String pathImage = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
+        FileUploadUtil.removeFile(pathImage);
         activityService.removeActivities(id);
 
         return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
@@ -193,6 +192,9 @@ public class ActivityController {
         // NOTE: No compruebo las coordenadas porque puede haber coordenadas igual a cero.
 
         Activity activity = activityService.getById(id);
+
+        String previousPath = activity.getPathImage();
+
         activity.setName(activityDTO.getName());
         Interest interest = interestService.getInterestByName(activityDTO.getInterest());
         activity.setInterest(interest);
@@ -203,19 +205,19 @@ public class ActivityController {
         activity.setCity(city);
 
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        System.out.println(fileName);
         fileName = stripDiacritics(fileName);
         activity.setPathImage(fileName);
-        activityService.updateActivity(activity);
 
         //Eliminamos el archivo
-        String downloadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
-        FileUploadUtil.removeFile(downloadDir,activity.getPathImage());
+        String downloadDir = "/Users/alba-/Desktop/photos/" + previousPath;
+        FileUploadUtil.removeFile(downloadDir);
 
         //Añadimos el nuevo archivo
-        String uploadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
-        //String uploadDir = "C:\\Users\\alba-\\Desktop\\Images\\" + activity.getName();
+        String uploadDir = "/Users/alba-/Desktop/photos/";
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+
+        activityService.updateActivity(activity);
+
         return new ResponseEntity<>(new Mensaje("Actividad actualizada"), HttpStatus.CREATED);
     }
 }
