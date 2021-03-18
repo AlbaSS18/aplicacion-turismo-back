@@ -109,6 +109,8 @@ public class AuthController {
         System.out.println(jwt);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
+
+
         return new ResponseEntity<JwtDTO>(jwtDTO, HttpStatus.OK);
     }
 }
