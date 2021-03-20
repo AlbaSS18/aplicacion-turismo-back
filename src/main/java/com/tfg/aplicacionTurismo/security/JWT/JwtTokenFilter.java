@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.tfg.aplicacionTurismo.utils.Constants.HEADER_STRING;
+import static com.tfg.aplicacionTurismo.utils.Constants.TOKEN_PREFIX;
+
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private static  final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
@@ -43,9 +46,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private String getToken(HttpServletRequest request){
-        String authReq = request.getHeader("Authorization");
-        if(authReq != null && authReq.startsWith("Bearer "))
-            return authReq.replace("Bearer ", "");
+        String authReq = request.getHeader(HEADER_STRING);
+        if(authReq != null && authReq.startsWith(TOKEN_PREFIX))
+            return authReq.replace(TOKEN_PREFIX, "");
         return null;
     }
 }
