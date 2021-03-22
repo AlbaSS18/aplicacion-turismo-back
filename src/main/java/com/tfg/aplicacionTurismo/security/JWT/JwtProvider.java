@@ -54,7 +54,8 @@ public class JwtProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(SIGNING_KEY).parseClaimsJws(token); // Se valida el token, sino excepción
+            String signingKeyB64= Base64.getEncoder().encodeToString(SIGNING_KEY.getBytes("utf-8"));
+            Jwts.parser().setSigningKey(signingKeyB64).parseClaimsJws(token); // Se valida el token, sino excepción
             return true;
         } catch (MalformedJwtException e) {
             logger.debug("Badly formed token " +e.getMessage());
@@ -66,6 +67,8 @@ public class JwtProvider {
             logger.debug("Empty token " +e.getMessage());
         } catch (SignatureException e) {
             logger.debug("Error in the signature " +e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            logger.debug("Error in the encoding " +e.getMessage());
         }
         return false;
     }

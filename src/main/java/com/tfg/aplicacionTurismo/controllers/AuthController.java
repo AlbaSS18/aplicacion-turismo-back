@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Controller
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -107,6 +107,8 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         JwtDTO jwtDTO = new JwtDTO(jwt);
+
+        System.out.println(jwtDTO.getToken());
 
         return new ResponseEntity<JwtDTO>(jwtDTO, HttpStatus.OK);
     }
