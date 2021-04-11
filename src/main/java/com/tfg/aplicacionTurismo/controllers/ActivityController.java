@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 
 @Controller
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/activity")
 public class ActivityController {
 
@@ -433,5 +433,28 @@ public class ActivityController {
 
         return new ResponseEntity(new Mensaje("Actividad puntuada"), HttpStatus.CREATED);
     }
+
+    @GetMapping("/ratedActivities/{id}")
+    public ResponseEntity<List<ActivityRecommendationDTO>> getRatedActivities(@PathVariable Long id) throws IOException {
+        if(!usersService.existsById(id)){
+            return new ResponseEntity(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
+        }
+        User user = usersService.getUserById(id);
+        List<RelUserActivity> relUserActivityList = relUserActivityService.getAllValuationByUser(user);
+
+        List<ActivityRecommendationDTO> ratedActivities = new ArrayList<>();
+        for(RelUserActivity relUserActivity: relUserActivityList){
+            Activity activity = relUserActivity.getActivity();
+            ActivityRecommendationDTO activityRecommendationDTO = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
+                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(),
+                    activity.getAddress(), getImageFromActivity(activity), relUserActivity.getValuation());
+
+            ratedActivities.add(activityRecommendationDTO);
+        }
+
+        return new ResponseEntity<List<ActivityRecommendationDTO>>(ratedActivities, HttpStatus.OK);
+    }
+
+
 
 }
