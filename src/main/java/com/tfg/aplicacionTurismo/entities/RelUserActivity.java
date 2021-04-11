@@ -35,4 +35,28 @@ public class RelUserActivity {
     public int hashCode() {
         return Objects.hash(activity, user);
     }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getValuation() {
+        return valuation;
+    }
+
+    public void setValuation(int valuation) {
+        this.valuation = valuation;
+    }
 }

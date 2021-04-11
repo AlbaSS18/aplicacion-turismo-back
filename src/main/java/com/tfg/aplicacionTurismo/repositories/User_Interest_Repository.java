@@ -15,4 +15,7 @@ public interface User_Interest_Repository extends CrudRepository<RelUserInterest
 
     @Query("select case when count(r)> 0 then true else false end from RelUserInterest r where r.user = ?1 and r.interest = ?2")
     boolean existsByUserAndInterest(User user, Interest interest);
+
+    @Query("SELECT r FROM RelUserInterest r WHERE r.user = ?1")
+    List<RelUserInterest> findByUser(User user);
 }

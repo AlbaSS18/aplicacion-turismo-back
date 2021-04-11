@@ -1,14 +1,13 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.tfg.aplicacionTurismo.DTO.activity.ActivityDTO;
+import com.tfg.aplicacionTurismo.DTO.activity.ActivityRecommendation;
 import com.tfg.aplicacionTurismo.DTO.activity.ActivitySendDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
 import com.tfg.aplicacionTurismo.DTO.activity.ImageDTO;
 import com.tfg.aplicacionTurismo.entities.*;
 import com.tfg.aplicacionTurismo.files.FileUploadUtil;
-import com.tfg.aplicacionTurismo.services.ActivityService;
-import com.tfg.aplicacionTurismo.services.CityService;
-import com.tfg.aplicacionTurismo.services.InterestService;
+import com.tfg.aplicacionTurismo.services.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +17,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import weka.core.*;
+import weka.core.neighboursearch.LinearNNSearch;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
+
 
 @Controller
 @CrossOrigin(origins = "http://localhost:4200")
@@ -40,7 +39,16 @@ public class ActivityController {
     private CityService cityService;
 
     @Autowired
+    private UsersService usersService;
+
+    @Autowired
     private InterestService interestService;
+
+    @Autowired
+    private RelUserActivityService relUserActivityService;
+
+    @Autowired
+    private RelUserInterestService relUserInterestService;
 
     @GetMapping("/list")
     public ResponseEntity<List<ActivitySendDTO>> getListado() throws IOException {
@@ -219,5 +227,177 @@ public class ActivityController {
         activityService.updateActivity(activity);
 
         return new ResponseEntity<>(new Mensaje("Actividad actualizada"), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/recommedation/{id}")
+    public ResponseEntity<List<ActivityRecommendation>> getRecommendedActivities(@PathVariable Long id) throws IOException {
+        if(!usersService.existsById(id)){
+            return new ResponseEntity(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
+        }
+        User user = usersService.getUserById(id);
+
+        // Data userRatings
+        List<Activity> listActivities = activityService.getActivities();
+
+        ArrayList<Attribute> attributesUser = new ArrayList<Attribute>();
+
+        for(Activity activity: listActivities){
+            attributesUser.add(new Attribute(activity.getName()));
+        }
+
+        Instances dataUser = new Instances("User - activity rating", attributesUser, 0);
+
+        double[] vals = new double[dataUser.numAttributes()];
+        int i = 0;
+        for(Activity activity: listActivities){
+
+            RelUserActivity relUserActivity = relUserActivityService.getValuationByUserAndActivity(user, activity);
+
+            if(relUserActivity != null){
+                vals[i] = relUserActivity.getValuation();
+            }
+            else{
+                vals[i] = 0;
+            }
+            i++;
+        }
+        dataUser.add(new DenseInstance(1.0, vals));
+
+        Instance userData = dataUser.firstInstance();
+
+        //System.out.println(userData); ---> 0,0,0,0,0
+
+        // Data activityRatings
+
+        ArrayList<Attribute> attributesAllRatingActivities = new ArrayList<Attribute>();
+
+        for(Activity activity: listActivities){
+            attributesAllRatingActivities.add(new Attribute(activity.getName()));
+        }
+
+        Instances dataRatingActivities = new Instances("Users - activity rating", attributesAllRatingActivities, 0);
+
+        List<User> userList = usersService.getUsers();
+        double[] valsUsers = new double[dataRatingActivities.numAttributes()];
+        for(User userDB: userList){
+            int instanceIndex = 0;
+            for(Activity activity: listActivities){
+                RelUserActivity relUserActivity = relUserActivityService.getValuationByUserAndActivity(userDB, activity);
+                if(relUserActivity != null){
+                    valsUsers[instanceIndex] = relUserActivity.getValuation();
+                }
+                else{
+                    valsUsers[instanceIndex] = 0;
+                }
+                instanceIndex++;
+            }
+            dataRatingActivities.add(new DenseInstance(1.0, valsUsers));
+        }
+
+        //System.out.println(dataRatingActivities.toString());
+
+
+        LinearNNSearch kNN = new LinearNNSearch(dataRatingActivities);
+        Instances neighbors = null;
+        double[] distances = null;
+        try {
+            neighbors = kNN.kNearestNeighbours(userData, 5);
+            distances = kNN.getDistances();
+            //System.out.println(neighbors); --> Instancias
+            /*for(double d: distances){
+                System.out.println(d); --> 0.0
+            }*/
+        }
+        catch (Exception e){
+            return new ResponseEntity(new Mensaje("Neighbors could not be found"), HttpStatus.NOT_FOUND);
+        }
+
+        double[] similarities = new double[distances.length];
+        try{
+            for(int index = 0; index < distances.length; index++){
+                similarities[index] = 1.0 / distances[index];
+                //System.out.println(similarities[index]); Al ser cero arriba, aquí da infinity
+                if (similarities[index] == Double.POSITIVE_INFINITY || similarities[index]== Double.NEGATIVE_INFINITY)
+                    throw new ArithmeticException();
+            }
+        }catch (ArithmeticException e){
+            return recommedationForNewUser(user);
+        }
+
+        Enumeration nInstances = neighbors.enumerateInstances();
+        Map<String, List<Integer>> recommedations = new HashMap<String, List<Integer>>();
+
+        for(int indexNeighbors = 0; indexNeighbors < neighbors.numInstances(); indexNeighbors++){
+            Instance currNeighBor = neighbors.get(indexNeighbors);
+
+            for(int j = 0; j < currNeighBor.numAttributes(); j++){
+                if(userData.value(j) < 1){
+                    String attrName = userData.attribute(j).name();
+                    List<Integer> lst = new ArrayList<Integer>();
+                    if(recommedations.containsKey(attrName)){
+                        lst = recommedations.get(attrName);
+                    }
+                    lst.add((int)currNeighBor.value(j));
+                    recommedations.put(attrName, lst);
+                }
+            }
+        }
+
+        List<ActivityRecommendation> finalRanks = new ArrayList<ActivityRecommendation>();
+
+        Iterator<String> it = recommedations.keySet().iterator();
+        while(it.hasNext()){
+            String atrName = it.next();
+            double totalImpact = 0;
+            double weightedSum = 0;
+            List<Integer> ranks = recommedations.get(atrName);
+            for(int indexRanks = 0; indexRanks < ranks.size(); indexRanks++){
+                int val = ranks.get(indexRanks);
+                totalImpact += similarities[indexRanks];
+                weightedSum += (double) similarities[indexRanks] * val;
+            }
+
+            Activity activity = activityService.getActivityByNameActivity(atrName);
+
+            ActivityRecommendation activityRecommendation = new ActivityRecommendation(activity.getId(), activity.getName(), activity.getDescription(),
+                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
+                    activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity),weightedSum/totalImpact);
+
+            finalRanks.add(activityRecommendation);
+        }
+        Collections.sort(finalRanks);
+
+        System.out.println(finalRanks.get(0));
+        System.out.println(finalRanks.get(1));
+        System.out.println(finalRanks.get(2));
+
+
+        return new ResponseEntity<List<ActivityRecommendation>>(finalRanks, HttpStatus.OK);
+    }
+
+    ResponseEntity<List<ActivityRecommendation>> recommedationForNewUser(User user) throws IOException {
+        List<RelUserInterest> relUserInterests = relUserInterestService.getAllPriorityByUser(user);
+        List<Activity> activityList = activityService.getActivities();
+
+        List<ActivityRecommendation> finalRanks = new ArrayList<>();
+        for(Activity activity: activityList ){
+            relUserInterests.contains(activity);
+
+            // get the priority of activity
+            RelUserInterest priorityFromUserToInterestOfActivity = relUserInterests.stream()
+                    .filter(relUsInt -> activity.getInterest().getId() == relUsInt.getInterest().getId())
+                    .findAny()
+                    .orElse(null);
+
+            // create the ActivityRecommendation with score with the priority
+            ActivityRecommendation activityRecommendation = new ActivityRecommendation(activity.getId(), activity.getName(), activity.getDescription(),
+                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
+                    activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity), priorityFromUserToInterestOfActivity.getPriority());
+
+            //add to the list
+            finalRanks.add(activityRecommendation);
+        }
+        Collections.sort(finalRanks);
+        return new ResponseEntity<List<ActivityRecommendation>>(finalRanks, HttpStatus.OK);
     }
 }

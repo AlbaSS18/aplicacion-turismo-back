@@ -24,4 +24,8 @@ public class RelUserInterestService {
     public boolean existByUserAndInterest(User user, Interest interest) {
         return user_interest_repository.existsByUserAndInterest(user, interest);
     }
+
+    public List<RelUserInterest> getAllPriorityByUser(User user) {
+        return user_interest_repository.findByUser(user);
+    }
 }
