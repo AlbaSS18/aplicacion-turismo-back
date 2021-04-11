@@ -4,7 +4,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class ActivityRecommendation implements Comparable<ActivityRecommendation> {
+public class ActivityRecommendationDTO implements Comparable<ActivityRecommendationDTO> {
 
     @NotNull
     private Long id;
@@ -29,13 +29,13 @@ public class ActivityRecommendation implements Comparable<ActivityRecommendation
     @NotEmpty
     private double score;
 
-    public ActivityRecommendation() {
+    public ActivityRecommendationDTO() {
     }
 
-    public ActivityRecommendation(@NotNull Long id, @NotEmpty String name, @NotEmpty String description,
-                                  @NotEmpty double longitude, @NotEmpty double latitude, String pathImage,
-                                  @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address,
-                                  @Valid ImageDTO metadataImage, @NotEmpty double score) {
+    public ActivityRecommendationDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description,
+                                     @NotEmpty double longitude, @NotEmpty double latitude, String pathImage,
+                                     @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address,
+                                     @Valid ImageDTO metadataImage, @NotEmpty double score) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -138,7 +138,7 @@ public class ActivityRecommendation implements Comparable<ActivityRecommendation
     }
 
     @Override
-    public int compareTo(ActivityRecommendation o) {
+    public int compareTo(ActivityRecommendationDTO o) {
         if(this.score > o.score)
             return -1;
         if(this.score < o.score)

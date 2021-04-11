@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/user")
 public class UserController {
 

@@ -1,10 +1,7 @@
 package com.tfg.aplicacionTurismo.controllers;
 
-import com.tfg.aplicacionTurismo.DTO.activity.ActivityDTO;
-import com.tfg.aplicacionTurismo.DTO.activity.ActivityRecommendation;
-import com.tfg.aplicacionTurismo.DTO.activity.ActivitySendDTO;
+import com.tfg.aplicacionTurismo.DTO.activity.*;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
-import com.tfg.aplicacionTurismo.DTO.activity.ImageDTO;
 import com.tfg.aplicacionTurismo.entities.*;
 import com.tfg.aplicacionTurismo.files.FileUploadUtil;
 import com.tfg.aplicacionTurismo.services.*;
@@ -28,7 +25,7 @@ import java.util.regex.Pattern;
 
 
 @Controller
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/activity")
 public class ActivityController {
 
@@ -230,7 +227,7 @@ public class ActivityController {
     }
 
     @GetMapping("/recommedation/{id}")
-    public ResponseEntity<List<ActivityRecommendation>> getRecommendedActivities(@PathVariable Long id) throws IOException {
+    public ResponseEntity<List<ActivityRecommendationDTO>> getRecommendedActivities(@PathVariable Long id) throws IOException {
         if(!usersService.existsById(id)){
             return new ResponseEntity(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
@@ -316,7 +313,7 @@ public class ActivityController {
         try{
             for(int index = 0; index < distances.length; index++){
                 similarities[index] = 1.0 / distances[index];
-                //System.out.println(similarities[index]); Al ser cero arriba, aquí da infinity
+                System.out.println(similarities[index]); //Al ser cero arriba, aquí da infinity
                 if (similarities[index] == Double.POSITIVE_INFINITY || similarities[index]== Double.NEGATIVE_INFINITY)
                     throw new ArithmeticException();
             }
@@ -343,7 +340,7 @@ public class ActivityController {
             }
         }
 
-        List<ActivityRecommendation> finalRanks = new ArrayList<ActivityRecommendation>();
+        List<ActivityRecommendationDTO> finalRanks = new ArrayList<ActivityRecommendationDTO>();
 
         Iterator<String> it = recommedations.keySet().iterator();
         while(it.hasNext()){
@@ -359,7 +356,7 @@ public class ActivityController {
 
             Activity activity = activityService.getActivityByNameActivity(atrName);
 
-            ActivityRecommendation activityRecommendation = new ActivityRecommendation(activity.getId(), activity.getName(), activity.getDescription(),
+            ActivityRecommendationDTO activityRecommendation = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
                     activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
                     activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity),weightedSum/totalImpact);
 
@@ -372,32 +369,69 @@ public class ActivityController {
         System.out.println(finalRanks.get(2));
 
 
-        return new ResponseEntity<List<ActivityRecommendation>>(finalRanks, HttpStatus.OK);
+        return new ResponseEntity<List<ActivityRecommendationDTO>>(finalRanks, HttpStatus.OK);
     }
 
-    ResponseEntity<List<ActivityRecommendation>> recommedationForNewUser(User user) throws IOException {
+    ResponseEntity<List<ActivityRecommendationDTO>> recommedationForNewUser(User user) throws IOException {
+        List<RelUserActivity> relUserActivity = relUserActivityService.getAllValuationByUser(user);
         List<RelUserInterest> relUserInterests = relUserInterestService.getAllPriorityByUser(user);
+
         List<Activity> activityList = activityService.getActivities();
 
-        List<ActivityRecommendation> finalRanks = new ArrayList<>();
+        List<ActivityRecommendationDTO> finalRanks = new ArrayList<>();
         for(Activity activity: activityList ){
-            relUserInterests.contains(activity);
 
-            // get the priority of activity
-            RelUserInterest priorityFromUserToInterestOfActivity = relUserInterests.stream()
-                    .filter(relUsInt -> activity.getInterest().getId() == relUsInt.getInterest().getId())
+            // search if the activity already is evaluated
+            RelUserActivity activityRate = relUserActivity.stream()
+                    .filter(relUsAct -> activity.getId() == relUsAct.getActivity().getId())
                     .findAny()
                     .orElse(null);
 
-            // create the ActivityRecommendation with score with the priority
-            ActivityRecommendation activityRecommendation = new ActivityRecommendation(activity.getId(), activity.getName(), activity.getDescription(),
-                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
-                    activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity), priorityFromUserToInterestOfActivity.getPriority());
+            if(activityRate == null){
+                // get the priority of activity
+                RelUserInterest priorityFromUserToInterestOfActivity = relUserInterests.stream()
+                        .filter(relUsInt -> activity.getInterest().getId() == relUsInt.getInterest().getId())
+                        .findAny()
+                        .orElse(null);
 
-            //add to the list
-            finalRanks.add(activityRecommendation);
+                // create the ActivityRecommendation with score with the priority
+                ActivityRecommendationDTO activityRecommendation = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
+                        activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
+                        activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity), priorityFromUserToInterestOfActivity.getPriority());
+
+                //add to the list
+                finalRanks.add(activityRecommendation);
+            }
+
         }
         Collections.sort(finalRanks);
-        return new ResponseEntity<List<ActivityRecommendation>>(finalRanks, HttpStatus.OK);
+        return new ResponseEntity<List<ActivityRecommendationDTO>>(finalRanks, HttpStatus.OK);
     }
+
+    @PostMapping("/rate")
+    public ResponseEntity<?> rateActivity(@RequestBody ActivityRateByUserDTO activityRateByUserDTO) {
+        if(!usersService.existsByEmail(activityRateByUserDTO.getEmail_user())){
+            return new ResponseEntity(new Mensaje("El usuario con email " + activityRateByUserDTO.getEmail_user() + " no existe"), HttpStatus.NOT_FOUND);
+        }
+        if(!activityService.existsById(activityRateByUserDTO.getActivity_id())){
+            return new ResponseEntity(new Mensaje("La actividad con id " + activityRateByUserDTO.getActivity_id() + " no existe"), HttpStatus.NOT_FOUND);
+        }
+
+        User user = usersService.getUserByEmail(activityRateByUserDTO.getEmail_user());
+        Activity activity = activityService.getById(activityRateByUserDTO.getActivity_id());
+
+        RelUserActivity relUserActivity = new RelUserActivity();
+
+        relUserActivity.setActivity(activity);
+        relUserActivity.setUser(user);
+        relUserActivity.setValuation(activityRateByUserDTO.getRate());
+
+        user.getRelUserActivity().add(relUserActivity);
+        activity.getRelUserActivity().add(relUserActivity);
+
+        usersService.updateUser(user);
+
+        return new ResponseEntity(new Mensaje("Actividad puntuada"), HttpStatus.CREATED);
+    }
+
 }
