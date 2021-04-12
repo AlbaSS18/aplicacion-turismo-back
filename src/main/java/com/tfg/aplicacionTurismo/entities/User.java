@@ -51,7 +51,7 @@ public class User {
 
     @NotNull @ManyToMany(cascade = CascadeType.ALL) private Set<Interest> interest;*/
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<RelUserActivity> relUserActivity = new HashSet<>();
 
     public User (){

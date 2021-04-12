@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 
 @Controller
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/activity")
 public class ActivityController {
 
@@ -427,7 +427,6 @@ public class ActivityController {
         relUserActivity.setValuation(activityRateByUserDTO.getRate());
 
         user.getRelUserActivity().add(relUserActivity);
-        activity.getRelUserActivity().add(relUserActivity);
 
         usersService.updateUser(user);
 
