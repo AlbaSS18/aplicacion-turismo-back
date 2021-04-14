@@ -263,6 +263,7 @@ public class ActivityController {
         Instance userData = dataUser.firstInstance();
 
         //System.out.println(userData); ---> 0,0,0,0,0
+        //System.out.println(dataUser);
 
         // Data activityRatings
 
@@ -275,22 +276,26 @@ public class ActivityController {
         Instances dataRatingActivities = new Instances("Users - activity rating", attributesAllRatingActivities, 0);
 
         List<User> userList = usersService.getUsers();
-        double[] valsUsers = new double[dataRatingActivities.numAttributes()];
+
         for(User userDB: userList){
-            int instanceIndex = 0;
-            for(Activity activity: listActivities){
-                RelUserActivity relUserActivity = relUserActivityService.getValuationByUserAndActivity(userDB, activity);
-                if(relUserActivity != null){
-                    valsUsers[instanceIndex] = relUserActivity.getValuation();
+            if(userDB.getId() != id){
+                int instanceIndex = 0;
+                double[] valsUsers = new double[dataRatingActivities.numAttributes()];
+                for(Activity activity: listActivities){
+                    RelUserActivity relUserActivity = relUserActivityService.getValuationByUserAndActivity(userDB, activity);
+                    if(relUserActivity != null){
+                        valsUsers[instanceIndex] = relUserActivity.getValuation();
+                    }
+                    else{
+                        valsUsers[instanceIndex] = 0;
+                    }
+                    instanceIndex++;
                 }
-                else{
-                    valsUsers[instanceIndex] = 0;
-                }
-                instanceIndex++;
+                dataRatingActivities.add(new DenseInstance(1.0, valsUsers));
             }
-            dataRatingActivities.add(new DenseInstance(1.0, valsUsers));
         }
 
+        //System.out.println(dataRatingActivities.toString());
         //System.out.println(dataRatingActivities.toString());
 
 
@@ -302,7 +307,7 @@ public class ActivityController {
             distances = kNN.getDistances();
             //System.out.println(neighbors); --> Instancias
             /*for(double d: distances){
-                System.out.println(d); --> 0.0
+                System.out.println(d); //--> 0.0
             }*/
         }
         catch (Exception e){
@@ -313,7 +318,7 @@ public class ActivityController {
         try{
             for(int index = 0; index < distances.length; index++){
                 similarities[index] = 1.0 / distances[index];
-                System.out.println(similarities[index]); //Al ser cero arriba, aquí da infinity
+                //System.out.println(similarities[index]); //Al ser cero arriba, aquí da infinity. Este caso se da cuando no hay vecinos suficientes (mín. 4) y hay algún vecino que no tiene valoraciones
                 if (similarities[index] == Double.POSITIVE_INFINITY || similarities[index]== Double.NEGATIVE_INFINITY)
                     throw new ArithmeticException();
             }
@@ -364,9 +369,9 @@ public class ActivityController {
         }
         Collections.sort(finalRanks);
 
-        System.out.println(finalRanks.get(0));
-        System.out.println(finalRanks.get(1));
-        System.out.println(finalRanks.get(2));
+        System.out.println(finalRanks.get(0).getName());
+        System.out.println(finalRanks.get(1).getName());
+        System.out.println(finalRanks.get(2).getName());
 
 
         return new ResponseEntity<List<ActivityRecommendationDTO>>(finalRanks, HttpStatus.OK);
