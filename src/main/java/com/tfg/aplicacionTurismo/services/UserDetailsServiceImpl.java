@@ -24,6 +24,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = usersRepository.findByEmail(email);
+        if (user == null){
+            throw new UsernameNotFoundException("Bad credentials");
+        }
         Set<GrantedAuthority> grantedAuthorities = user.getRole().stream().map(rol -> new SimpleGrantedAuthority(rol.getRolName().name())).collect(Collectors.toSet());
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(), grantedAuthorities);
