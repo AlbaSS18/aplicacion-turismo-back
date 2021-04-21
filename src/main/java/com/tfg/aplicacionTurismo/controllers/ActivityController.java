@@ -379,8 +379,7 @@ public class ActivityController {
         System.out.println(finalRanks.get(1).getName());
         System.out.println(finalRanks.get(2).getName());
 
-
-        return new ResponseEntity<List<ActivityRecommendationDTO>>(finalRanks, HttpStatus.OK);
+        return getSubListRecommedation(finalRanks);
     }
 
     ResponseEntity<List<ActivityRecommendationDTO>> recommedationForNewUser(User user) throws IOException {
@@ -416,7 +415,21 @@ public class ActivityController {
 
         }
         Collections.sort(finalRanks);
-        return new ResponseEntity<List<ActivityRecommendationDTO>>(finalRanks, HttpStatus.OK);
+
+        return getSubListRecommedation(finalRanks);
+
+    }
+
+    private ResponseEntity<List<ActivityRecommendationDTO>> getSubListRecommedation(List<ActivityRecommendationDTO> finalRanks) {
+        List<ActivityRecommendationDTO> activitiesRecommended;
+        try{
+            activitiesRecommended = finalRanks.subList(0,9);
+        }
+        catch (Exception e){
+            return new ResponseEntity<List<ActivityRecommendationDTO>>(finalRanks, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<List<ActivityRecommendationDTO>>(activitiesRecommended, HttpStatus.OK);
     }
 
     @PostMapping("/rate")

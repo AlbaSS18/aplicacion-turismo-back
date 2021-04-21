@@ -68,7 +68,6 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> listUser = usersService.getUsers();
         List<UserDTO> listUserDTO = new ArrayList<>();
