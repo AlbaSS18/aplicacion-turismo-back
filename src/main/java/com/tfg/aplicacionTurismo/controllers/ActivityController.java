@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,6 +49,7 @@ public class ActivityController {
     private RelUserInterestService relUserInterestService;
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ActivitySendDTO>> getListado() throws IOException {
         List<Activity> listActivity = activityService.getActivities();
         List<ActivitySendDTO> listDTO = new ArrayList<>();
@@ -61,6 +63,7 @@ public class ActivityController {
     }
 
     @GetMapping("/details/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ActivitySendDTO> getActivity(@PathVariable Long id) throws IOException {
         if(!activityService.existsById(id)){
             return new ResponseEntity(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
@@ -92,6 +95,7 @@ public class ActivityController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addActivity(@RequestParam(name="image", required = false) MultipartFile multipartFile, ActivityDTO activityDTO ) throws IOException {
         if(multipartFile == null ){
             return new ResponseEntity<>(new Mensaje("El archivo de imagen es obligatorio"), HttpStatus.BAD_REQUEST);
@@ -154,6 +158,7 @@ public class ActivityController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
         if(!activityService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
@@ -168,6 +173,7 @@ public class ActivityController {
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateActivity(@RequestParam("image") MultipartFile multipartFile, ActivityDTO activityDTO, @PathVariable Long id) throws IOException {
         if(activityService.existsByName(activityDTO.getName()) && activityService.getActivityByNameActivity(activityDTO.getName()).getId() != id){
             return new ResponseEntity(new Mensaje("Ya hay una actividad con ese nombre"), HttpStatus.BAD_REQUEST);
