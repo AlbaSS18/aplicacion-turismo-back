@@ -136,14 +136,8 @@ public class ActivityController {
         Interest interest = interestService.getInterestByName(activityDTO.getInterest());
         activity.setInterest(interest);
         activityService.addActivities(activity);
-        /*String uploadDir = "aplicacionTurismo/src/main/resources/static/images/" + activity.getName();
-        //String uploadDir = "C:\\Users\\alba-\\Desktop\\Images\\" + activity.getName();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);*/
 
         String folder = "/Users/alba-/Desktop/photos/";
-        //byte[] bytes = multipartFile.getBytes();
-        //Path path = Paths.get(folder + multipartFile.getOriginalFilename());
-        //Files.write(path, bytes);
         FileUploadUtil.saveFile(folder, fileName, multipartFile);
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }

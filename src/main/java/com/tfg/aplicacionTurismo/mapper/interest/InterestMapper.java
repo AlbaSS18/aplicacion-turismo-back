@@ -13,5 +13,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface InterestMapper {
     InterestMapper INSTANCIA = Mappers.getMapper(InterestMapper.class);
-    Interest convertNewInterestInInterest (NewInterestDTO newInterestDTO);
+
+    Interest convertNewInterestToInterest (NewInterestDTO newInterestDTO);
+    InterestListDTO convertInterestToInterestListDTO (Interest interest);
 }

@@ -6,6 +6,7 @@ import com.tfg.aplicacionTurismo.DTO.city.NewCityDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.NewInterestDTO;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.entities.Interest;
+import com.tfg.aplicacionTurismo.mapper.city.CityMapper;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +59,7 @@ public class CityController {
         List<City> listCities = cityService.getCities();
         List<CityDTO> listCitiesDTO = new ArrayList<>();
         for (City c: listCities){
-            CityDTO cityDTO = new CityDTO();
-            cityDTO.setId(c.getId());
-            cityDTO.setName(c.getNameCity());
+            CityDTO cityDTO = CityMapper.INSTANCIA.convertCityToCityDTO(c);
             listCitiesDTO.add(cityDTO);
         }
         return new ResponseEntity<List<CityDTO>>(listCitiesDTO, HttpStatus.OK);

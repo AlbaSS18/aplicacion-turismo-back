@@ -34,18 +34,13 @@ public class InterestController {
     @Autowired
     private UsersService usersService;
 
-    @Autowired
-    private RelUserInterestService relUserInterestService;
-
     @GetMapping("/list")
     public ResponseEntity<List<InterestListDTO>> getListado() {
         List<Interest> list = interestService.getInterests();
-        System.out.println(list);
         List<InterestListDTO> listDTO = new ArrayList<>();
+
         for(Interest interest: list){
-            InterestListDTO i = new InterestListDTO();
-            i.setNameInterest(interest.getNameInterest());
-            i.setId(interest.getId());
+            InterestListDTO i = InterestMapper.INSTANCIA.convertInterestToInterestListDTO(interest);
             listDTO.add(i);
         }
         return new ResponseEntity<List<InterestListDTO>>(listDTO, HttpStatus.OK);
@@ -60,7 +55,7 @@ public class InterestController {
         if(interestService.existByName(newInterestDTO.getNameInterest())){
             return new ResponseEntity(new Mensaje("Ya hay un interés con ese nombre"), HttpStatus.BAD_REQUEST);
         }
-        Interest interest = InterestMapper.INSTANCIA.convertNewInterestInInterest(newInterestDTO);
+        Interest interest = InterestMapper.INSTANCIA.convertNewInterestToInterest(newInterestDTO);
         List<User> userList = usersService.getUsers();
         for(User u: userList){
             RelUserInterest relUserInterest = new RelUserInterest();
