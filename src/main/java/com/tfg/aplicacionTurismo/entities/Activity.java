@@ -14,13 +14,15 @@ public class Activity {
     @Id
     @GeneratedValue
     private long id;
-    @NotEmpty @Column(unique = true)
+    @NotEmpty
+    @Column(unique = true)
     private String name;
     @NotEmpty @Column(name="description",columnDefinition="LONGTEXT")
     private String description;
-    @NotNull @Column
-    private Point coordenates;
+    @NotNull
     @Column
+    private Point coordenates;
+    @NotEmpty @Column
     private String pathImage;
     @NotEmpty @Column
     private String address;

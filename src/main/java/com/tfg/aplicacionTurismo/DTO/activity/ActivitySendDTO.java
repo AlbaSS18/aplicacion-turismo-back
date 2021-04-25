@@ -16,6 +16,7 @@ public class ActivitySendDTO {
     private double latitude;
     @NotEmpty
     private double longitude;
+    @NotEmpty
     private String pathImage;
     @NotEmpty
     private String city;

@@ -89,7 +89,6 @@ public class UserController {
         if(!usersService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
-        // NOTE: Comprobar que elimina tablas intermedias
         usersService.deleteUser(id);
         return new ResponseEntity<>(new Mensaje("Usuario eliminado"), HttpStatus.OK);
     }
