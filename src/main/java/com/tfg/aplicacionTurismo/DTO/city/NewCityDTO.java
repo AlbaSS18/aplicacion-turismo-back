@@ -1,11 +1,10 @@
 package com.tfg.aplicacionTurismo.DTO.city;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class NewCityDTO {
 
-    @NotEmpty
+    @NotBlank
     private String name;
 
     public String getName() {

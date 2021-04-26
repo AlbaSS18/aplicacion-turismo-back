@@ -52,7 +52,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> addUser(@Validated @RequestBody NewUserDTO userDTO, BindingResult result) {
-        System.out.println(userDTO.getDateBirthday());
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }

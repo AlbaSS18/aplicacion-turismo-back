@@ -2,13 +2,13 @@ package com.tfg.aplicacionTurismo.DTO.activity;
 
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class ActivityRateByUserDTO {
     @NotNull
     private Long activity_id;
-    @NotEmpty
+    @NotBlank
     private String email_user;
     @NotNull
     @Range(min=0,max=5)

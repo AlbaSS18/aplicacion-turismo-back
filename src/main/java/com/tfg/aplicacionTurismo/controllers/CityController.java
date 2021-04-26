@@ -31,9 +31,9 @@ public class CityController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addCity(@RequestBody NewCityDTO newCityDTO){
-        if(StringUtils.isBlank(newCityDTO.getName())){
-            return new ResponseEntity<>(new Mensaje("El nombre de la ciudad es obligatorio"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> addCity(@Validated @RequestBody NewCityDTO newCityDTO, BindingResult result){
+        if(result.hasErrors()){
+            return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
         if(cityService.existByName(newCityDTO.getName())){
             return new ResponseEntity<>(new Mensaje("Ya existe una ciudad con el mismo nombre"), HttpStatus.BAD_REQUEST);

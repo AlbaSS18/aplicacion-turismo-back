@@ -1,28 +1,29 @@
 package com.tfg.aplicacionTurismo.DTO.activity;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ActivityDTO {
 
-    @NotEmpty
+    @NotBlank
     private String name;
-    @NotEmpty
+    @NotBlank
     private String description;
-    @NotEmpty
+    @NotNull
     private double latitude;
-    @NotEmpty
+    @NotNull
     private double longitude;
-    @NotEmpty
+    @NotBlank
     private String city;
-    @NotEmpty
+    @NotBlank
     private String interest;
-    @NotEmpty
+    @NotBlank
     private String address;
 
     public ActivityDTO() {
     }
 
-    public ActivityDTO(@NotEmpty String name, @NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, @NotEmpty String city, @NotEmpty String interest) {
+    public ActivityDTO(@NotBlank String name, @NotBlank String description, @NotNull double latitude, @NotNull double longitude, @NotBlank String city, @NotBlank String interest) {
         this.name = name;
         this.description = description;
         this.latitude = latitude;
@@ -31,7 +32,7 @@ public class ActivityDTO {
         this.interest = interest;
     }
 
-    public ActivityDTO(@NotEmpty String description, @NotEmpty double latitude, @NotEmpty double longitude, @NotEmpty String city, @NotEmpty String interest) {
+    public ActivityDTO(@NotBlank String description, @NotNull double latitude, @NotNull double longitude, @NotBlank String city, @NotBlank String interest) {
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;

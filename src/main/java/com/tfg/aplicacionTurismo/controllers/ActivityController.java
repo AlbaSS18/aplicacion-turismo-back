@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import weka.core.*;
@@ -96,31 +98,18 @@ public class ActivityController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addActivity(@RequestParam(name="image", required = false) MultipartFile multipartFile, ActivityDTO activityDTO ) throws IOException {
+    public ResponseEntity<?> addActivity(@RequestParam(name="image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO, BindingResult result) throws IOException {
         if(multipartFile == null ){
             return new ResponseEntity<>(new Mensaje("El archivo de imagen es obligatorio"), HttpStatus.BAD_REQUEST);
         }
-        System.out.println(activityDTO.getAddress());
-        if(StringUtils.isEmpty(activityDTO.getName())){
-            return new ResponseEntity<>(new Mensaje("El nombre de la actividad es obligatorio"), HttpStatus.BAD_REQUEST);
-        }
-        if(StringUtils.isEmpty(activityDTO.getDescription())){
-            return new ResponseEntity<>(new Mensaje("La descripción es obligatoria"), HttpStatus.BAD_REQUEST);
-        }
-        if(StringUtils.isEmpty(activityDTO.getCity())){
-            return new ResponseEntity<>(new Mensaje("El nombre de la ciudad es obligatorio"), HttpStatus.BAD_REQUEST);
+        if (result.hasErrors()) {
+            return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
         if(!cityService.existByName(activityDTO.getCity())){
             return new ResponseEntity<>(new Mensaje("La ciudad no existe"), HttpStatus.NOT_FOUND);
         }
-        if(StringUtils.isEmpty(activityDTO.getInterest())){
-            return new ResponseEntity<>(new Mensaje("El nombre del interés es obligatorio"), HttpStatus.BAD_REQUEST);
-        }
         if(!interestService.existByName(activityDTO.getInterest())){
             return new ResponseEntity<>(new Mensaje("El interés no existe"), HttpStatus.NOT_FOUND);
-        }
-        if(StringUtils.isEmpty(activityDTO.getAddress())){
-            return new ResponseEntity<>(new Mensaje("La dirección es obligatoria"), HttpStatus.BAD_REQUEST);
         }
         if(activityService.existsByName(activityDTO.getName())){
             return new ResponseEntity<>(new Mensaje("Ya existe una actividad con el nombre: " + activityDTO.getName()), HttpStatus.BAD_REQUEST);
@@ -168,30 +157,21 @@ public class ActivityController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateActivity(@RequestParam("image") MultipartFile multipartFile, ActivityDTO activityDTO, @PathVariable Long id) throws IOException {
+    public ResponseEntity<?> updateActivity(@RequestParam(name = "image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO,BindingResult result, @PathVariable Long id) throws IOException {
+        if(multipartFile == null ){
+            return new ResponseEntity<>(new Mensaje("El archivo de imagen es obligatorio"), HttpStatus.BAD_REQUEST);
+        }
         if(activityService.existsByName(activityDTO.getName()) && activityService.getActivityByNameActivity(activityDTO.getName()).getId() != id){
             return new ResponseEntity(new Mensaje("Ya hay una actividad con ese nombre"), HttpStatus.BAD_REQUEST);
         }
-        if(StringUtils.isEmpty(activityDTO.getName())){
-            return new ResponseEntity<>(new Mensaje("El nombre de la actividad es obligatorio"), HttpStatus.BAD_REQUEST);
-        }
-        if(StringUtils.isEmpty(activityDTO.getDescription())){
-            return new ResponseEntity<>(new Mensaje("La descripción de la actividad es obligatoria"), HttpStatus.BAD_REQUEST);
-        }
-        if(StringUtils.isEmpty(activityDTO.getCity())){
-            return new ResponseEntity<>(new Mensaje("La ciudad es obligatoria"), HttpStatus.BAD_REQUEST);
+        if (result.hasErrors()) {
+            return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
         if(!cityService.existByName(activityDTO.getCity())){
             return new ResponseEntity<>(new Mensaje("La ciudad no existe"), HttpStatus.NOT_FOUND);
         }
-        if(StringUtils.isEmpty(activityDTO.getInterest())){
-            return new ResponseEntity<>(new Mensaje("El nombre del interés es obligatorio"), HttpStatus.BAD_REQUEST);
-        }
         if(!interestService.existByName(activityDTO.getInterest())){
             return new ResponseEntity<>(new Mensaje("El interés no existe"), HttpStatus.NOT_FOUND);
-        }
-        if(StringUtils.isEmpty(activityDTO.getAddress())){
-            return new ResponseEntity<>(new Mensaje("La dirección es obligatoria"), HttpStatus.BAD_REQUEST);
         }
 
         // NOTE: No compruebo las coordenadas porque puede haber coordenadas igual a cero.
@@ -427,7 +407,10 @@ public class ActivityController {
     }
 
     @PostMapping("/rate")
-    public ResponseEntity<?> rateActivity(@RequestBody ActivityRateByUserDTO activityRateByUserDTO) {
+    public ResponseEntity<?> rateActivity(@Validated @RequestBody ActivityRateByUserDTO activityRateByUserDTO, BindingResult result) {
+        if(result.hasErrors()){
+            return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
+        }
         if(!usersService.existsByEmail(activityRateByUserDTO.getEmail_user())){
             return new ResponseEntity(new Mensaje("El usuario con email " + activityRateByUserDTO.getEmail_user() + " no existe"), HttpStatus.NOT_FOUND);
         }

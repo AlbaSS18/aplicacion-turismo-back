@@ -1,10 +1,10 @@
 package com.tfg.aplicacionTurismo.DTO.interest;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 public class NewInterestDTO {
 
-    @NotEmpty
+    @NotBlank
     private String nameInterest;
 
     public String getNameInterest() {

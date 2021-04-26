@@ -1,13 +1,13 @@
 package com.tfg.aplicacionTurismo.DTO.activity;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 public class ImageDTO {
-    @NotEmpty
+    @NotBlank
     private String fileName;
-    @NotEmpty
+    @NotBlank
     private String mimeType;
-    @NotEmpty
+    @NotBlank
     private String data;
 
     public String getData() {

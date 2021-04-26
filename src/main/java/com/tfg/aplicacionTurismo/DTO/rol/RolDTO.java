@@ -1,12 +1,13 @@
 package com.tfg.aplicacionTurismo.DTO.rol;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class RolDTO {
     @NotNull
     private Long id;
-    @NotEmpty
+    @NotBlank
     private String rolName;
 
     public Long getId() {
