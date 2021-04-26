@@ -49,7 +49,11 @@ public class CityController {
         if(!cityService.existById(id)){
             return new ResponseEntity(new Mensaje("No existe una ciudad con el id " + id), HttpStatus.NOT_FOUND);
         }
-        cityService.deleteCity(id);
+        try {
+            cityService.deleteCity(id);
+        }catch (Exception e){
+            return new ResponseEntity(new Mensaje("La ciudad tiene actividades asociadas"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity(new Mensaje("Ciudad eliminada"), HttpStatus.OK);
     }
 

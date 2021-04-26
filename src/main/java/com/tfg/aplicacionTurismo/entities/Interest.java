@@ -64,4 +64,11 @@ public class Interest {
     public void setActivities(Set<Activity> activities) {
         this.activities = activities;
     }
+
+    @PreRemove
+    public void checkActivityBeforeRemove() {
+        if(!this.activities.isEmpty()){
+            throw new RuntimeException("Can't remove a interest that has activities");
+        }
+    }
 }

@@ -46,4 +46,12 @@ public class City {
     public void setActivityList(Set<Activity> activityList) {
         this.activityList = activityList;
     }
+
+    @PreRemove
+    public void checkActivityBeforeRemove() {
+        if(!this.activityList.isEmpty()){
+            throw new RuntimeException("Can't remove a city that has activities");
+        }
+    }
+
 }

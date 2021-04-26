@@ -75,9 +75,13 @@ public class InterestController {
         if(!interestService.existById(id)){
             return new ResponseEntity<>(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
-        //NOTE: Comprobar que no tiene actividades relacionadas
-        interestService.removeInterest(id);
-        return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
+
+        try {
+            interestService.removeInterest(id);
+        }catch (Exception e){
+            return new ResponseEntity(new Mensaje("El interés tiene actividades asociadas"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(new Mensaje("Interés eliminado"), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
