@@ -2,27 +2,22 @@ package com.tfg.aplicacionTurismo.DTO.user;
 
 
 import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
-import org.hibernate.validator.constraints.Range;
-
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.Set;
 
 public class NewUserDTO {
 
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
-    @NotEmpty
+    @NotBlank
     private String userName;
-    @NotEmpty
+    @NotBlank
     @Size(min=7)
     private String password;
-    @NotEmpty
+    @NotBlank
     @Size(min=7)
     private String passwordConfirm;
     @NotNull
