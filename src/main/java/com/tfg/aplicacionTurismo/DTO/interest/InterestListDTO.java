@@ -1,11 +1,12 @@
 package com.tfg.aplicacionTurismo.DTO.interest;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class InterestListDTO {
 
-    @NotEmpty
+    @NotBlank
     private String nameInterest;
     @NotNull
     private Long id;
