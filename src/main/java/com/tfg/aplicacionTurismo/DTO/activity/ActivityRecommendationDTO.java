@@ -1,6 +1,7 @@
 package com.tfg.aplicacionTurismo.DTO.activity;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -8,35 +9,34 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
 
     @NotNull
     private Long id;
-    @NotEmpty
+    @NotBlank
     private String name;
-    @NotEmpty
+    @NotBlank
     private String description;
     @NotEmpty
     private double latitude;
     @NotEmpty
     private double longitude;
-    @NotEmpty
+    @NotBlank
     private String pathImage;
-    @NotEmpty
+    @NotBlank
     private String city;
-    @NotEmpty
+    @NotBlank
     private String interest;
-    @NotEmpty
+    @NotBlank
     private String address;
-    @Valid
+    @NotNull @Valid
     private ImageDTO metadataImage;
-
     @NotEmpty
     private double score;
 
     public ActivityRecommendationDTO() {
     }
 
-    public ActivityRecommendationDTO(@NotNull Long id, @NotEmpty String name, @NotEmpty String description,
-                                     @NotEmpty double longitude, @NotEmpty double latitude, String pathImage,
-                                     @NotEmpty String city, @NotEmpty String interest, @NotEmpty String address,
-                                     @Valid ImageDTO metadataImage, @NotEmpty double score) {
+    public ActivityRecommendationDTO(@NotNull Long id, @NotBlank String name, @NotBlank String description,
+                                     @NotEmpty double longitude, @NotEmpty double latitude, @NotBlank String pathImage,
+                                     @NotBlank String city, @NotBlank String interest, @NotBlank String address,
+                                     @NotNull @Valid ImageDTO metadataImage, @NotEmpty double score) {
         this.id = id;
         this.name = name;
         this.description = description;
