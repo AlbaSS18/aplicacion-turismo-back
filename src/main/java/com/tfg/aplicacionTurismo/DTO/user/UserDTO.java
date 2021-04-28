@@ -4,7 +4,9 @@ import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
 import com.tfg.aplicacionTurismo.DTO.interest.InterestDTO;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -17,15 +19,16 @@ public class UserDTO {
     private Long id;
     @NotNull
     private Date dateBirthday;
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
-    @NotEmpty
+    @NotBlank
     private String userName;
     @NotEmpty
     private Set<String> roles;
 
-    @NotEmpty private Set<InterestByUserDTO> interest;
+    @NotEmpty @Valid
+    private Set<InterestByUserDTO> interest;
 
     public UserDTO() {
     }

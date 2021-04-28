@@ -4,6 +4,7 @@ import com.tfg.aplicacionTurismo.DTO.interest.InterestByUserDTO;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -14,12 +15,12 @@ public class UserDTOUpdate {
 
     @NotNull
     private Date dateBirthday;
-    @NotEmpty
+    @NotBlank
     private String userName;
     @NotEmpty
     private Set<String> roles;
 
-    @Valid
+    @NotEmpty @Valid
     private Set<InterestByUserDTO> interest;
 
     public Date getDateBirthday() {
