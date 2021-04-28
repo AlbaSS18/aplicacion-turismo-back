@@ -13,9 +13,9 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
     private String name;
     @NotBlank
     private String description;
-    @NotEmpty
+    @NotNull
     private double latitude;
-    @NotEmpty
+    @NotNull
     private double longitude;
     @NotBlank
     private String pathImage;
@@ -27,16 +27,16 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
     private String address;
     @NotNull @Valid
     private ImageDTO metadataImage;
-    @NotEmpty
+    @NotNull
     private double score;
 
     public ActivityRecommendationDTO() {
     }
 
     public ActivityRecommendationDTO(@NotNull Long id, @NotBlank String name, @NotBlank String description,
-                                     @NotEmpty double longitude, @NotEmpty double latitude, @NotBlank String pathImage,
+                                     @NotNull double longitude, @NotNull double latitude, @NotBlank String pathImage,
                                      @NotBlank String city, @NotBlank String interest, @NotBlank String address,
-                                     @NotNull @Valid ImageDTO metadataImage, @NotEmpty double score) {
+                                     @NotNull @Valid ImageDTO metadataImage, @NotNull double score) {
         this.id = id;
         this.name = name;
         this.description = description;
