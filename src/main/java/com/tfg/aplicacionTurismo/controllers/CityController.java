@@ -51,7 +51,7 @@ public class CityController {
         }
         try {
             cityService.deleteCity(id);
-        }catch (Exception e){
+        }catch (RuntimeException e){
             return new ResponseEntity(new Mensaje("La ciudad tiene actividades asociadas"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity(new Mensaje("Ciudad eliminada"), HttpStatus.OK);

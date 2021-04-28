@@ -78,7 +78,7 @@ public class InterestController {
 
         try {
             interestService.removeInterest(id);
-        }catch (Exception e){
+        }catch (RuntimeException e){
             return new ResponseEntity(new Mensaje("El interés tiene actividades asociadas"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(new Mensaje("Interés eliminado"), HttpStatus.OK);
