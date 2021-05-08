@@ -29,6 +29,8 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
     private ImageDTO metadataImage;
     @NotNull
     private double score;
+    @NotNull
+    private double average;
 
     public ActivityRecommendationDTO() {
     }
@@ -36,7 +38,7 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
     public ActivityRecommendationDTO(@NotNull Long id, @NotBlank String name, @NotBlank String description,
                                      @NotNull double longitude, @NotNull double latitude, @NotBlank String pathImage,
                                      @NotBlank String city, @NotBlank String interest, @NotBlank String address,
-                                     @NotNull @Valid ImageDTO metadataImage, @NotNull double score) {
+                                     @NotNull @Valid ImageDTO metadataImage, @NotNull double score, @NotNull double average) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -48,6 +50,7 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
         this.address = address;
         this.metadataImage = metadataImage;
         this.score = score;
+        this.average = average;
     }
 
     public Long getId() {
@@ -136,6 +139,14 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
 
     public void setScore(double score) {
         this.score = score;
+    }
+
+    public double getAverage() {
+        return average;
+    }
+
+    public void setAverage(double average) {
+        this.average = average;
     }
 
     @Override

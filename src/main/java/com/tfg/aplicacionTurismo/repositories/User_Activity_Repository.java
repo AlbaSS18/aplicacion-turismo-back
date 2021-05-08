@@ -13,4 +13,7 @@ public interface User_Activity_Repository extends CrudRepository<RelUserActivity
 
     @Query("SELECT r FROM RelUserActivity r WHERE r.user = ?1")
     List<RelUserActivity> findByUser(User user);
+
+    @Query("SELECT r FROM RelUserActivity r WHERE r.activity = ?1")
+    List<RelUserActivity> findByActivity(Activity activity);
 }

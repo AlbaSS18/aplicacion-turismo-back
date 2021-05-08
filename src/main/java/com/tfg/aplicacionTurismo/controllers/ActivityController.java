@@ -343,7 +343,7 @@ public class ActivityController {
 
             ActivityRecommendationDTO activityRecommendation = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
                     activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
-                    activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity),weightedSum/totalImpact);
+                    activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity),weightedSum/totalImpact, getAverageFromActivity(activity));
 
             finalRanks.add(activityRecommendation);
         }
@@ -378,10 +378,10 @@ public class ActivityController {
                         .findAny()
                         .orElse(null);
 
-                // create the ActivityRecommendation with score with the priority
+                // create the ActivityRecommendation with score with the priority and average
                 ActivityRecommendationDTO activityRecommendation = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
                         activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
-                        activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity), priorityFromUserToInterestOfActivity.getPriority());
+                        activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity), priorityFromUserToInterestOfActivity.getPriority(), getAverageFromActivity(activity));
 
                 //add to the list
                 finalRanks.add(activityRecommendation);
@@ -445,9 +445,10 @@ public class ActivityController {
         List<ActivityRecommendationDTO> ratedActivities = new ArrayList<>();
         for(RelUserActivity relUserActivity: relUserActivityList){
             Activity activity = relUserActivity.getActivity();
+
             ActivityRecommendationDTO activityRecommendationDTO = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
                     activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(),
-                    activity.getAddress(), getImageFromActivity(activity), relUserActivity.getValuation());
+                    activity.getAddress(), getImageFromActivity(activity), relUserActivity.getValuation(), getAverageFromActivity(activity));
 
             ratedActivities.add(activityRecommendationDTO);
         }
@@ -455,6 +456,15 @@ public class ActivityController {
         return new ResponseEntity<List<ActivityRecommendationDTO>>(ratedActivities, HttpStatus.OK);
     }
 
+    private double getAverageFromActivity(Activity activity){
+        List<RelUserActivity> ratingsActivity = relUserActivityService.getAllValuationByActivity(activity);
+        try{
 
+            return Math.floor(ratingsActivity.stream().mapToDouble(RelUserActivity::getValuation).average().getAsDouble() * 100) / 100;
+        }catch (NoSuchElementException e){
+            return 0;
+        }
+
+    }
 
 }

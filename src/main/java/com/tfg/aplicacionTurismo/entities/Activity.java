@@ -22,7 +22,7 @@ public class Activity {
     @NotNull
     @Column
     private Point coordenates;
-    @NotEmpty @Column
+    @NotEmpty @Column(nullable = false)
     private String pathImage;
     @NotEmpty @Column
     private String address;

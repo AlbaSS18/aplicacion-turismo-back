@@ -22,4 +22,8 @@ public class RelUserActivityService {
     public List<RelUserActivity> getAllValuationByUser(User user) {
         return user_activity_repository.findByUser(user);
     }
+
+    public List<RelUserActivity> getAllValuationByActivity(Activity activity) {
+        return user_activity_repository.findByActivity(activity);
+    }
 }
