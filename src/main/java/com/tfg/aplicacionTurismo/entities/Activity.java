@@ -24,7 +24,7 @@ public class Activity {
     private Point coordenates;
     @NotEmpty @Column(nullable = false)
     private String pathImage;
-    @NotEmpty @Column
+    @NotEmpty
     private String address;
 
     @NotNull @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
