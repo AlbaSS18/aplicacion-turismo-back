@@ -47,6 +47,7 @@ public class CityService {
         return cityRepository.findById(id).get();
     }
 
+
     public void updateCity(City city) {
         cityRepository.save(city);
     }
