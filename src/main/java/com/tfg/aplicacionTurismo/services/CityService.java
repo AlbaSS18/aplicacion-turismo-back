@@ -50,4 +50,5 @@ public class CityService {
     public void updateCity(City city) {
         cityRepository.save(city);
     }
+
 }
