@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -86,5 +86,22 @@ class UserControllerTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());*/
+    }
+
+    @Test
+    public void shouldGetUsers() throws Exception {
+
+    }
+
+    @Test
+    public void shouldDeleteUser() throws Exception {
+
+    }
+
+
+    @Test
+    public void shouldUpdateUser() throws Exception {
+        // when
+
     }
 }
