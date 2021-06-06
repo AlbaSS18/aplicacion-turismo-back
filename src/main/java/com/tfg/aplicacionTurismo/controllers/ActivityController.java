@@ -1,5 +1,6 @@
 package com.tfg.aplicacionTurismo.controllers;
 
+import com.microsoft.azure.storage.StorageException;
 import com.tfg.aplicacionTurismo.DTO.activity.*;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
 import com.tfg.aplicacionTurismo.entities.*;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ import weka.core.neighboursearch.LinearNNSearch;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -50,9 +54,12 @@ public class ActivityController {
     @Autowired
     private RelUserInterestService relUserInterestService;
 
+    @Autowired
+    private BlobStorageService blobStorageService;
+
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<ActivitySendDTO>> getListado() throws IOException {
+    public ResponseEntity<List<ActivitySendDTO>> getListado() throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<Activity> listActivity = activityService.getActivities();
         List<ActivitySendDTO> listDTO = new ArrayList<>();
         for(Activity activity: listActivity){
@@ -66,7 +73,7 @@ public class ActivityController {
 
     @GetMapping("/details/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ActivitySendDTO> getActivity(@PathVariable Long id) throws IOException {
+    public ResponseEntity<ActivitySendDTO> getActivity(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if(!activityService.existsById(id)){
             return new ResponseEntity(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
@@ -76,7 +83,7 @@ public class ActivityController {
         return new ResponseEntity<ActivitySendDTO>(activitySendDTO, HttpStatus.OK);
     }
 
-    private ImageDTO getImageFromActivity(Activity activity) throws IOException {
+    private ImageDTO getImageFromActivity(Activity activity) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         // Return the image
         String[] stringSplitThePathImage = activity.getPathImage().split("\\.");
         ImageDTO imageDTO = new ImageDTO();
@@ -90,15 +97,18 @@ public class ActivityController {
         // Set the data
         String pathName = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
         byte[] fileContent = FileUtils.readFileToByteArray(new File(pathName));
+        /*byte[] fileContent = blobStorageService.getFile(activity.getPathImage()).toByteArray();*/
         String encodedString = Base64.getEncoder().encodeToString(fileContent);
         imageDTO.setData(encodedString);
+
+
 
         return imageDTO;
     }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addActivity(@RequestParam(name="image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO, BindingResult result) throws IOException {
+    public ResponseEntity<?> addActivity(@RequestParam(name="image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO, BindingResult result) throws IOException, URISyntaxException, StorageException, InvalidKeyException {
         if(multipartFile == null ){
             return new ResponseEntity<>(new Mensaje("El archivo de imagen es obligatorio"), HttpStatus.BAD_REQUEST);
         }
@@ -118,7 +128,11 @@ public class ActivityController {
         // NOTE: No compruebo las coordenadas porque puede haber coordenadas igual a cero.
 
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        // Remove the accent
         fileName = stripDiacritics(fileName);
+        // Remove the whitespaces
+        fileName = fileName.toLowerCase().replaceAll(" ", "-");
+
         Activity activity = new Activity(activityDTO.getName(), activityDTO.getDescription(), new Point(activityDTO.getLongitude(), activityDTO.getLatitude()), fileName, activityDTO.getAddress());
         City city = cityService.getCityByNameCity(activityDTO.getCity());
         activity.setCity(city);
@@ -128,6 +142,8 @@ public class ActivityController {
 
         String folder = "/Users/alba-/Desktop/photos/";
         FileUploadUtil.saveFile(folder, fileName, multipartFile);
+        //blobStorageService.upload(fileName, multipartFile.getInputStream(), multipartFile.getSize());
+
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }
 
@@ -142,7 +158,7 @@ public class ActivityController {
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
+    public ResponseEntity<?> deleteActivity(@PathVariable Long id) throws InvalidKeyException, StorageException, URISyntaxException {
         if(!activityService.existsById(id)){
             return new ResponseEntity<>(new Mensaje("La actividad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
@@ -150,6 +166,7 @@ public class ActivityController {
         Activity activity = activityService.getById(id);
         String pathImage = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
         FileUploadUtil.removeFile(pathImage);
+        /*blobStorageService.deleteFile(activity.getPathImage());*/
         activityService.removeActivities(id);
 
         return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
@@ -157,7 +174,7 @@ public class ActivityController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateActivity(@RequestParam(name = "image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO,BindingResult result, @PathVariable Long id) throws IOException {
+    public ResponseEntity<?> updateActivity(@RequestParam(name = "image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO,BindingResult result, @PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if(multipartFile == null ){
             return new ResponseEntity<>(new Mensaje("El archivo de imagen es obligatorio"), HttpStatus.BAD_REQUEST);
         }
@@ -190,16 +207,21 @@ public class ActivityController {
         activity.setCity(city);
 
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        // Remove the accent
         fileName = stripDiacritics(fileName);
+        // Remove the whitespaces
+        fileName = fileName.toLowerCase().replaceAll(" ", "-");
         activity.setPathImage(fileName);
 
         //Eliminamos el archivo
         String downloadDir = "/Users/alba-/Desktop/photos/" + previousPath;
         FileUploadUtil.removeFile(downloadDir);
+        //blobStorageService.deleteFile(previousPath);
 
         //Añadimos el nuevo archivo
         String uploadDir = "/Users/alba-/Desktop/photos/";
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        //blobStorageService.upload(fileName, multipartFile.getInputStream(), multipartFile.getSize());
 
         activityService.updateActivity(activity);
 
@@ -207,7 +229,7 @@ public class ActivityController {
     }
 
     @GetMapping("/recommedation/{id}")
-    public ResponseEntity<List<ActivityRecommendationDTO>> getRecommendedActivities(@PathVariable Long id) throws IOException {
+    public ResponseEntity<List<ActivityRecommendationDTO>> getRecommendedActivities(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if(!usersService.existsById(id)){
             return new ResponseEntity(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
@@ -349,14 +371,14 @@ public class ActivityController {
         }
         Collections.sort(finalRanks);
 
-        System.out.println(finalRanks.get(0).getName());
+        /*System.out.println(finalRanks.get(0).getName());
         System.out.println(finalRanks.get(1).getName());
-        System.out.println(finalRanks.get(2).getName());
+        System.out.println(finalRanks.get(2).getName());*/
 
         return getSubListRecommedation(finalRanks);
     }
 
-    ResponseEntity<List<ActivityRecommendationDTO>> recommedationForNewUser(User user) throws IOException {
+    ResponseEntity<List<ActivityRecommendationDTO>> recommedationForNewUser(User user) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<RelUserActivity> relUserActivity = relUserActivityService.getAllValuationByUser(user);
         List<RelUserInterest> relUserInterests = relUserInterestService.getAllPriorityByUser(user);
 
@@ -435,7 +457,7 @@ public class ActivityController {
     }
 
     @GetMapping("/ratedActivities/{id}")
-    public ResponseEntity<List<ActivityRecommendationDTO>> getRatedActivities(@PathVariable Long id) throws IOException {
+    public ResponseEntity<List<ActivityRecommendationDTO>> getRatedActivities(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if(!usersService.existsById(id)){
             return new ResponseEntity(new Mensaje("El usuario con id " + id + " no existe"), HttpStatus.NOT_FOUND);
         }
