@@ -15,6 +15,14 @@ public class InterestDTO {
     @Range(min=0,max=10)
     private int priority;
 
+    public InterestDTO() {
+    }
+
+    public InterestDTO(@NotBlank String nameInterest, @NotNull @Range(min = 0, max = 10) int priority) {
+        this.nameInterest = nameInterest;
+        this.priority = priority;
+    }
+
     public String getNameInterest() {
         return nameInterest;
     }

@@ -13,6 +13,14 @@ public class LoginUserDTO {
     @Size(min=7)
     private String password;
 
+    public LoginUserDTO() {
+    }
+
+    public LoginUserDTO(@NotBlank @Email String email, @NotBlank @Size(min = 7) String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }

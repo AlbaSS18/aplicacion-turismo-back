@@ -1,263 +1,144 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tfg.aplicacionTurismo.DTO.activity.ActivityDTO;
+import com.tfg.aplicacionTurismo.DTO.activity.ActivityRateByUserDTO;
 import com.tfg.aplicacionTurismo.entities.Activity;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.entities.Interest;
+import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.services.ActivityService;
-import com.tfg.aplicacionTurismo.services.CityService;
-import com.tfg.aplicacionTurismo.services.InterestService;
+import com.tfg.aplicacionTurismo.services.UsersService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.geo.Point;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class ActivityControllerTest {
 
+    @Autowired
     private MockMvc mvc;
 
-    @Mock
+    @MockBean
     private ActivityService activityService;
 
-    @Mock
-    private CityService cityService;
+    @MockBean
+    private UsersService usersService;
 
-    @Mock
-    private InterestService interestService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    @InjectMocks
-    private ActivityController activityController;
-
-    private JacksonTester<List<ActivityDTO>> jsonActivities;
-    private JacksonTester<ActivityDTO> jsonActivity;
+    List<Activity> activityList;
 
     @BeforeEach
     void setUp() {
-        JacksonTester.initFields(this, new ObjectMapper());
-        mvc = MockMvcBuilders.standaloneSetup(activityController).build();
-    }
-
-    @Test
-    public void shouldFetchAllActivities() throws Exception {
-        /*// given
-        List<Activity> activities = new ArrayList<>();
-        Activity activity1 = new Activity("Museo del ferrocarril", "Museo de trenes", new Point(43.5409, -5.6727), "src/app/img/museodelferrocarril.jpg");
+        activityList = new ArrayList<>();
+        Activity activity1 = new Activity("Museo del ferrocarril", "Museo de trenes", new Point(43.5409, -5.6727), "actividad1.jpg", "Plaza Estación del Nte., s/n, 33212 Gijón, Asturias");
         activity1.setCity(new City("Gijon"));
         activity1.setInterest(new Interest("Museos"));
-        activities.add(activity1);
-        Activity activity2 = new Activity("Catedral de Oviedo", "Catedral de estilo gotico", new Point(43.36257, -5.84325), "src/app/img/catedralOviedo.jpg");
+        activityList.add(activity1);
+        Activity activity2 = new Activity("Catedral de Oviedo", "Catedral de estilo gotico", new Point(43.36257, -5.84325), "actividad2.jpg", "Pl. Alfonso II el Casto, s/n, 33003 Oviedo, Asturias");
         activity2.setCity(new City("Oviedo"));
         activity2.setInterest(new Interest("Catedral"));
-        activities.add(activity2);
-        given(activityService.getActivities()).willReturn(activities);
-
-        // when
-        MockHttpServletResponse response = mvc.perform(get("/api/activity/list").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        List<ActivityDTO> listActivitiesDTOs = new ArrayList<>();
-        listActivitiesDTOs.add(new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos"));
-        listActivitiesDTOs.add(new ActivityDTO("Catedral de Oviedo","Catedral de estilo gotico", 43.36257, -5.84325, "Oviedo", "Catedral"));
-        assertThat(response.getContentAsString()).isEqualTo(jsonActivities.write(listActivitiesDTOs).getJson());*/
+        activityList.add(activity2);
     }
 
     @Test
+    @WithMockUser(username="alba@email.com",roles={"USER", "ADMIN"}, password = "1234567")
     public void shouldDeleteActivity() throws Exception {
-        /*// given
-        given(activityService.existsById((long) 1)).willReturn(true);
+        given(activityService.existsById(1L)).willReturn(true);
+        given(activityService.getById(1L)).willReturn(activityList.get(0));
+
+        mvc.perform(delete("/api/activity/delete/{id}", 1L))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles={"USER", "ADMIN"}, password = "1234567")
+    public void shouldDeleteActivity_ActivityNotExist() throws Exception {
+        given(activityService.existsById(1L)).willReturn(false);
+
+        mvc.perform(delete("/api/activity/delete/{id}", 1L))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles="USER", password = "1234567")
+    public void shouldRateActivity() throws Exception {
+
+        ActivityRateByUserDTO activityRateByUserDTO = new ActivityRateByUserDTO(1L, "alba@email.com", 4);
+
+        given(usersService.existsByEmail(activityRateByUserDTO.getEmail_user())).willReturn(true);
+        given(activityService.existsById(activityRateByUserDTO.getActivity_id())).willReturn(true);
+
+        User user = new User("alba@email.com", new SimpleDateFormat("dd-MM-yyyy").parse("18-12-1998"), "Alba", "1234567" );
+        given(usersService.getUserByEmail(activityRateByUserDTO.getEmail_user())).willReturn(user);
+        given(activityService.getById(1L)).willReturn(activityList.get(0));
 
         // when
-        MockHttpServletResponse response = mvc.perform(delete("/api/activity/delete/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());*/
+        mvc.perform(post("/api/activity/rate")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(activityRateByUserDTO)))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    public void shouldReturnErrorWhenDeleteActivityNotExist() throws Exception {
-       /* // when
-        MockHttpServletResponse response = mvc.perform(delete("/api/activity/delete/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
+    @WithMockUser(username="alba@email.com",roles="USER", password = "1234567")
+    public void shouldRateActivity_FormInvalid() throws Exception {
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());*/
-    }
-
-    @Test
-    public void shouldReturnErrorWhenExistsActivitySameName() throws Exception {
-        /*// get
-        given(cityService.existByName("Gijon")).willReturn(true);
-        given(interestService.existByName("Museos")).willReturn(true);
-        given(activityService.existsByName("Museo del ferrocarril")).willReturn(true);
+        ActivityRateByUserDTO activityRateByUserDTO = new ActivityRateByUserDTO(1L, null, 4);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
+        mvc.perform(post("/api/activity/rate")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(activityRateByUserDTO)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldReturnErrorWhenNotExistInterest() throws Exception {
-        /*// get
-        given(cityService.existByName("Gijon")).willReturn(true);
+    @WithMockUser(username="alba@email.com",roles="USER", password = "1234567")
+    public void shouldRateActivity_UserNotExist() throws Exception {
+
+        ActivityRateByUserDTO activityRateByUserDTO = new ActivityRateByUserDTO(1L, "alba@email.com", 4);
+        given(usersService.existsByEmail(activityRateByUserDTO.getEmail_user())).willReturn(false);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());*/
+        mvc.perform(post("/api/activity/rate")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(activityRateByUserDTO)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    public void shouldReturnErrorWhenNotExistCity() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
+    @WithMockUser(username="alba@email.com",roles="USER", password = "1234567")
+    public void shouldRateActivity_ActivityNotExist() throws Exception {
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());*/
-    }
-
-    @Test
-    public void shouldAddActivity() throws Exception {
-        /*// get
-        given(cityService.existByName("Gijon")).willReturn(true);
-        given(interestService.existByName("Museos")).willReturn(true);
+        ActivityRateByUserDTO activityRateByUserDTO = new ActivityRateByUserDTO(1L, "alba@email.com", 4);
+        given(usersService.existsByEmail(activityRateByUserDTO.getEmail_user())).willReturn(true);
+        given(activityService.existsById(activityRateByUserDTO.getActivity_id())).willReturn(false);
 
         // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());*/
+        mvc.perform(post("/api/activity/rate")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(activityRateByUserDTO)))
+                .andExpect(status().isNotFound());
     }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityNameIsLongCero() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO("","Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityDescriptionIsLongCero() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityCityIsLongCero() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityInterestIsLongCero() throws Exception {
-        /*// get
-        given(cityService.existByName("Gijon")).willReturn(true);
-
-        // when
-        ActivityDTO activityDTO = new ActivityDTO("Museo del ferrocarril","Museo de trenes", 43.5409, -5.6727, "Gijon", "");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityNameIsNull() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO("Museo de trenes", 43.5409, -5.6727, "Gijon", "Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityDescriptionIsNull() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO();
-        activityDTO.setName("Museo del ferrocarril");
-        activityDTO.setLatitude(43.5409);
-        activityDTO.setLongitude(-5.6727);
-        activityDTO.setCity("Gijon");
-        activityDTO.setInterest("Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityCityIsNull() throws Exception {
-        /*// when
-        ActivityDTO activityDTO = new ActivityDTO();
-        activityDTO.setName("Museo del ferrocarril");
-        activityDTO.setDescription("Museo de trenes");
-        activityDTO.setLatitude(43.5409);
-        activityDTO.setLongitude(-5.6727);
-        activityDTO.setInterest("Museos");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-    @Test
-    public void shouldReturnExceptionWhenAddActivityInterestIsNull() throws Exception {
-        /*// get
-        given(cityService.existByName("Gijon")).willReturn(true);
-
-        // when
-        ActivityDTO activityDTO = new ActivityDTO();
-        activityDTO.setName("Museo del ferrocarril");
-        activityDTO.setDescription("Museo de trenes");
-        activityDTO.setLatitude(43.5409);
-        activityDTO.setLongitude(-5.6727);
-        activityDTO.setCity("Gijon");
-        MockHttpServletResponse response = mvc.perform(post("/api/activity/add").contentType(MediaType.APPLICATION_JSON).content(jsonActivity.write(activityDTO).getJson())).andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
-    }
-
-
 
 }

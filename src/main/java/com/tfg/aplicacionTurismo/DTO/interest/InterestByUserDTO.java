@@ -17,6 +17,15 @@ public class InterestByUserDTO {
     @Range(min=0,max=10)
     private int priority;
 
+    public InterestByUserDTO() {
+    }
+
+    public InterestByUserDTO(@NotNull Long interestID, @NotBlank String nameInterest, @NotNull @Range(min = 0, max = 10) int priority) {
+        this.interestID = interestID;
+        this.nameInterest = nameInterest;
+        this.priority = priority;
+    }
+
     public Long getInterestID() {
         return interestID;
     }

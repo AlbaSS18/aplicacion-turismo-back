@@ -27,6 +27,19 @@ public class NewUserDTO {
 
     @NotEmpty @Valid private Set<InterestDTO> interest;
 
+    public NewUserDTO() {
+    }
+
+    public NewUserDTO(@NotBlank @Email String email, @NotBlank String userName, @NotBlank @Size(min = 7) String password, @NotBlank @Size(min = 7) String passwordConfirm, @NotNull Date dateBirthday, @NotEmpty Set<String> roles, @NotEmpty @Valid Set<InterestDTO> interest) {
+        this.email = email;
+        this.userName = userName;
+        this.password = password;
+        this.passwordConfirm = passwordConfirm;
+        this.dateBirthday = dateBirthday;
+        this.roles = roles;
+        this.interest = interest;
+    }
+
     public String getUserName() {
         return userName;
     }

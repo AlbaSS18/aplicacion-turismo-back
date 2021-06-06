@@ -45,7 +45,7 @@ public class RolControllerTest {
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void testGetRoles() throws Exception {
+    public void testGetRolesByRolAdmin() throws Exception {
         // Given
         given(rolService.getRoles()).willReturn(listRoles);
 
@@ -61,5 +61,17 @@ public class RolControllerTest {
                     String name2 = JsonPath.parse(json).read("$[1].rolName").toString();
                     assertThat(name2).isEqualTo("ROLE_USER");
                 });
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles="USER", password = "1234567")
+    public void testGetRolesByRolUser() throws Exception {
+        // Given
+        given(rolService.getRoles()).willReturn(listRoles);
+
+        // When
+        mvc.perform(
+                get("/api/rol/list"))
+                .andExpect(status().is(403));
     }
 }

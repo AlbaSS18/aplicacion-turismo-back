@@ -7,6 +7,13 @@ public class NewInterestDTO {
     @NotBlank
     private String nameInterest;
 
+    public NewInterestDTO() {
+    }
+
+    public NewInterestDTO(@NotBlank String nameInterest) {
+        this.nameInterest = nameInterest;
+    }
+
     public String getNameInterest() {
         return nameInterest;
     }

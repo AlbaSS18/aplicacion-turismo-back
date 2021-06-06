@@ -1,21 +1,21 @@
 package com.tfg.aplicacionTurismo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import com.tfg.aplicacionTurismo.DTO.city.CityDTO;
+import com.tfg.aplicacionTurismo.DTO.city.NewCityDTO;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,110 +23,178 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class CityControllerTest {
 
+    @Autowired
     private MockMvc mvc;
 
-    @Mock
-    private CityService cityService;
+    @MockBean
+    CityService cityService;
 
-    @InjectMocks
-    private CityController cityController;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private JacksonTester<List<CityDTO>> jsonCities;
-    private JacksonTester<CityDTO> jsonCity;
+    List<City> cities;
 
     @BeforeEach
-    public void setUp(){
-        JacksonTester.initFields(this, new ObjectMapper());
-        mvc = MockMvcBuilders.standaloneSetup(cityController).build();
+    void setUp() {
+        cities = new ArrayList<>();
+        City city1 = new City("Gijon");
+        city1.setId(1);
+        cities.add(city1);
+        City city2 = new City("Oviedo");
+        city2.setId(2);
+        cities.add(city2);
     }
+
     @Test
-    public void shouldFetchAllCities() throws Exception {
-        /*// given
-        List<City> cities = new ArrayList<>();
-        cities.add(new City("Gijon"));
-        cities.add(new City("Oviedo"));
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldCreate() throws Exception {
+        // when
+        CityDTO cityDTO = new CityDTO();
+        cityDTO.setName("Oviedo");
+
+        mvc.perform(post("/api/city/add")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(cityDTO)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldCreate_FormInvalid() throws Exception {
+        // when
+        CityDTO cityDTO = new CityDTO();
+        cityDTO.setName(null);
+
+        mvc.perform(post("/api/city/add")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(cityDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldCreate_NameCityRepeated() throws Exception {
+        // given
+        CityDTO cityDTO = new CityDTO();
+        cityDTO.setName("Oviedo");
+        given(cityService.existByName(cityDTO.getName())).willReturn(true);
+
+        // when
+        mvc.perform(post("/api/city/add")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(cityDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldDeleteCity () throws Exception {
+        //given
+        given(cityService.existById(5L)).willReturn(true);
+
+        // when
+        mvc.perform(delete("/api/city/delete/{id}",5L)
+                .contentType("application/json"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldDeleteCity_CityNotExist() throws Exception {
+        //given
+        given(cityService.existById(5L)).willReturn(false);
+
+        // when
+        mvc.perform(delete("/api/city/delete/{id}",5L)
+                .contentType("application/json"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldGetAllCities() throws Exception {
         given(cityService.getCities()).willReturn(cities);
 
-        // when
-        MockHttpServletResponse response = mvc.perform(get("/api/city/list").accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        mvc.perform(
+                get("/api/city/list"))
+                .andExpect(status().isOk())
+                .andDo(result -> {
+                    String json = result.getResponse().getContentAsString();
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        List<CityDTO> listCityDTOs = new ArrayList<>();
-        CityDTO cityDTO = new CityDTO();
-        cityDTO.setName("Gijon");
-        listCityDTOs.add(cityDTO);
-        CityDTO city2DTO = new CityDTO();
-        city2DTO.setName("Oviedo");
-        listCityDTOs.add(city2DTO);
-        assertThat(response.getContentAsString()).isEqualTo(jsonCities.write(listCityDTOs).getJson());*/
+                    String nameCity1 = JsonPath.parse(json).read("$[0].name").toString();
+                    assertThat(nameCity1).isEqualTo("Gijon");
+
+                    String nameCity2 = JsonPath.parse(json).read("$[1].name").toString();
+                    assertThat(nameCity2).isEqualTo("Oviedo");
+                });
     }
 
     @Test
-    public void shouldCreateCity() throws Exception {
-        /*// when
-        CityDTO cityDTO = new CityDTO();
-        cityDTO.setName("Oviedo");
-        MockHttpServletResponse response = mvc.perform(post("/api/city/add").contentType(MediaType.APPLICATION_JSON).content(jsonCity.write(cityDTO).getJson())).andReturn().getResponse();
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldUpdateCity() throws Exception {
+        given(cityService.existById(1L)).willReturn(true);
+        given(cityService.getCityById(1L)).willReturn(cities.get(0));
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());*/
+        NewCityDTO newCityDTO = new NewCityDTO();
+        newCityDTO.setName("Gij");
+
+        mvc.perform(put("/api/city/update/{id}", 1L)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    public void shouldReturnErrorWhenAddCityExist() throws Exception {
-        /*// given
-        List<City> cities = new ArrayList<>();
-        cities.add(new City("Gijon"));
-        cities.add(new City("Oviedo"));
-        given(cityService.existByName("Oviedo")).willReturn(true);
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldUpdateCity_CityNotExist() throws Exception {
+        given(cityService.existById(5L)).willReturn(false);
 
-        // when
-        CityDTO cityDTO = new CityDTO();
-        cityDTO.setName("Oviedo");
-        MockHttpServletResponse response = mvc.perform(post("/api/city/add").contentType(MediaType.APPLICATION_JSON).content(jsonCity.write(cityDTO).getJson())).andReturn().getResponse();
+        NewCityDTO newCityDTO = new NewCityDTO();
+        newCityDTO.setName("Gij");
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
+        mvc.perform(put("/api/city/update/{id}", 5L)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    public void shouldReturnErrorWhenAddNotHaveName() throws Exception {
-        /*// when
-        CityDTO cityDTO = new CityDTO();
-        MockHttpServletResponse response = mvc.perform(post("/api/city/add").contentType(MediaType.APPLICATION_JSON).content(jsonCity.write(cityDTO).getJson())).andReturn().getResponse();
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldUpdateCity_FormInvalid() throws Exception {
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());*/
+        NewCityDTO newCityDTO = new NewCityDTO();
+        newCityDTO.setName(null);
+
+        mvc.perform(put("/api/city/update/{id}", 5L)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldDeleteCity() throws Exception {
-        /*// given
-        given(cityService.existById((long) 1)).willReturn(true);
+    @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
+    public void shouldUpdateCity_NameRepeated() throws Exception {
 
-        // when
-        MockHttpServletResponse response = mvc.perform(delete("/api/city/delete/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
+        given(cityService.existById(2L)).willReturn(true);
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());*/
+        NewCityDTO newCityDTO = new NewCityDTO();
+        newCityDTO.setName("Gijon");
+
+        given(cityService.existByName(newCityDTO.getName())).willReturn(true);
+        given(cityService.getCityByNameCity(newCityDTO.getName())).willReturn(cities.get(0));
+        System.out.println(cities.get(0).getId());
+        System.out.println(cities.get(0).getNameCity());
+
+        mvc.perform(put("/api/city/update/{id}", 2L)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .andExpect(status().isBadRequest());
     }
-
-    @Test
-    public void shouldReturnErrorWhenDeleteCityNotExist() throws Exception {
-        /*// when
-        MockHttpServletResponse response = mvc.perform(delete("/api/city/delete/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());*/
-    }
-
 }

@@ -14,6 +14,15 @@ public class ActivityRateByUserDTO {
     @Range(min=0,max=5)
     private int rate;
 
+    public ActivityRateByUserDTO() {
+    }
+
+    public ActivityRateByUserDTO(@NotNull Long activity_id, @NotBlank String email_user, @NotNull @Range(min = 0, max = 5) int rate) {
+        this.activity_id = activity_id;
+        this.email_user = email_user;
+        this.rate = rate;
+    }
+
     public Long getActivity_id() {
         return activity_id;
     }

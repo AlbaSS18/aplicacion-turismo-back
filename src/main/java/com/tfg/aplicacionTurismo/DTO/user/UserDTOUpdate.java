@@ -23,6 +23,16 @@ public class UserDTOUpdate {
     @NotEmpty @Valid
     private Set<InterestByUserDTO> interest;
 
+    public UserDTOUpdate() {
+    }
+
+    public UserDTOUpdate(@NotNull Date dateBirthday, @NotBlank String userName, @NotEmpty Set<String> roles, @NotEmpty @Valid Set<InterestByUserDTO> interest) {
+        this.dateBirthday = dateBirthday;
+        this.userName = userName;
+        this.roles = roles;
+        this.interest = interest;
+    }
+
     public Date getDateBirthday() {
         return dateBirthday;
     }
