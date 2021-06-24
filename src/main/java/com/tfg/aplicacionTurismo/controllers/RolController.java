@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que responde a las acciones relacionadas con los roles.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/rol")
@@ -22,6 +28,10 @@ public class RolController {
     @Autowired
     private RolService rolService;
 
+    /**
+     * Método que devuelve la lista de roles.
+     * @return la respuesta HTTP con la lista de roles.
+     */
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RolDTO>> getListRol(){
