@@ -4,6 +4,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
+/**
+ * Clase que representa la localidad donde se encuentra situada una actividad.
+ */
 @Entity
 public class City {
 
@@ -16,9 +19,16 @@ public class City {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
     private Set<Activity> activityList;
 
+    /**
+     * Constructor de la clase City
+     */
     public City() {
     }
 
+    /**
+     * Constructor de la clase City
+     * @param nameCity nombre de la localidad
+     */
     public City(@NotEmpty String nameCity) {
         this.nameCity = nameCity;
     }

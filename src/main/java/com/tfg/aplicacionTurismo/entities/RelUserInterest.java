@@ -6,6 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * Clase que representa las puntuaciones dadas por los usuarios a los distintos interés.
+ */
 @Entity
 @Table(name = "rel_user_interest")
 @IdClass(UserInterestId.class)
@@ -26,6 +29,9 @@ public class RelUserInterest implements Serializable {
     @Range(min=0,max=10)
     int priority;
 
+    /**
+     * Constructor de la clase RelUserInterest
+     */
     public RelUserInterest() {
     }
 

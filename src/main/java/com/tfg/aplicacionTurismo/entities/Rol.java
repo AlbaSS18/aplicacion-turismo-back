@@ -3,6 +3,9 @@ package com.tfg.aplicacionTurismo.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Clase que representa el tipo de rol web.
+ */
 @Entity
 public class Rol {
 
@@ -14,9 +17,16 @@ public class Rol {
     @NotNull
     private RolName rolName;
 
+    /**
+     * Constructor de la clase Rol
+     */
     public Rol() {
     }
 
+    /**
+     * Constructor de la clase Rol
+     * @param rolName nombre del rol
+     */
     public Rol(@NotNull RolName rolName) {
         this.rolName = rolName;
     }

@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Clase que representa un usuario.
+ */
 @Entity
 public class User {
 
@@ -54,9 +57,19 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<RelUserActivity> relUserActivity = new HashSet<>();
 
+    /**
+     * Constructor de la clase User
+     */
     public User (){
     }
 
+    /**
+     * Constructor de la clase User
+     * @param email email del usuario
+     * @param dateBirthday fecha de nacimiento del usuario
+     * @param userName nombre de usuario
+     * @param password contraseña del usuario
+     */
     public User(@NotNull @Email String email, @NotNull Date dateBirthday, @NotNull String userName, @NotNull @Size(min = 7) String password) {
         this.email = email;
         this.dateBirthday = dateBirthday;

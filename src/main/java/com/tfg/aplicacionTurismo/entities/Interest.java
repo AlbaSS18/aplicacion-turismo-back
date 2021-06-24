@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Clase que representa el tipo de interés al que está asociado una actividad.
+ */
 @Entity
 public class Interest {
     @Id
@@ -26,9 +29,16 @@ public class Interest {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "interest")
     private Set<Activity> activities;
 
+    /**
+     * Constructor de la clase Interest
+     */
     public Interest() {
     }
 
+    /**
+     * Constructor de la clase Interest
+     * @param nameInterest nombre del interés
+     */
     public Interest(String nameInterest) {
         this.nameInterest = nameInterest;
     }

@@ -8,6 +8,9 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Clase que representa las actividades que pueden ser recomendadas a un usuario.
+ */
 @Entity
 public class Activity {
 
@@ -40,9 +43,20 @@ public class Activity {
     @JoinColumn(name = "interest_id")
     private Interest interest;
 
+    /**
+     * Constructor de la clase Activity
+     */
     public Activity() {
     }
 
+    /**
+     * Constructor de la clase Activity
+     * @param name nombre de la actividad
+     * @param description descripción de la actividad
+     * @param coordenates coordenadas de la actividad
+     * @param pathImage ruta dónde se encuentra almacenada la imagen asociada a la actividad.
+     * @param address dirección de la actividad
+     */
     public Activity(@NotEmpty String name, @NotEmpty String description, @NotNull Point coordenates, String pathImage, @NotEmpty String address) {
         this.name = name;
         this.description = description;

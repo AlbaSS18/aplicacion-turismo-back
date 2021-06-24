@@ -3,6 +3,9 @@ package com.tfg.aplicacionTurismo.entities;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Clase que representa las valoraciones dadas por los usuarios a las distintas actividades recomendadas.
+ */
 @Entity
 public class RelUserActivity {
     @Id
@@ -19,6 +22,9 @@ public class RelUserActivity {
 
     private int valuation;
 
+    /**
+     * Constructor de la clase RelUserActivity
+     */
     public RelUserActivity() {
     }
 
