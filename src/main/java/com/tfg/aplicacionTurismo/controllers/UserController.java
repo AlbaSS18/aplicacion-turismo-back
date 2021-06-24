@@ -116,7 +116,7 @@ public class UserController {
 
     /**
      * Método que modifica la información de un usuario a través de su identificador.
-     * @param userDTOUpdate, objeto DTO que contiene la información necesaria para actualizar un usuario.
+     * @param userDTOUpdate objeto DTO que contiene la información necesaria para actualizar un usuario.
      * @param result parámetro que permite validar los errores en el objeto dto.
      * @param id identificador del usuario cuya información se quiere actualizar.
      * @return la respuesta HTTP que contiene un mensaje indicando que el usuario se ha actualizado con éxito o

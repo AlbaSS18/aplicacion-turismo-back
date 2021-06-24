@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que responde a las acciones relacionadas con los intereses.
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/interest")
@@ -35,6 +38,10 @@ public class InterestController {
     @Autowired
     private UsersService usersService;
 
+    /**
+     * Método que devuelve la lista de intereses.
+     * @return la respuesta HTTP con la lista de intereses.
+     */
     @GetMapping("/list")
     public ResponseEntity<List<InterestListDTO>> getListado() {
         List<Interest> list = interestService.getInterests();
@@ -47,6 +54,13 @@ public class InterestController {
         return new ResponseEntity<List<InterestListDTO>>(listDTO, HttpStatus.OK);
     }
 
+    /**
+     * Método que añade un nuevo interés.
+     * @param newInterestDTO objeto DTO que contiene la información necesaria para añadir un nuevo interés.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @return la respuesta HTTP que contiene un mensaje indicando que el nuevo interés se ha creado con éxito
+     * o la respuesta HTTP que contiene un mensaje de error si los datos no son correctos o si ya existe un interés con el nombre del nuevo interés.
+     */
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addInterest(@Validated @RequestBody NewInterestDTO newInterestDTO, BindingResult result) {
@@ -70,6 +84,12 @@ public class InterestController {
         return new ResponseEntity<>(new Mensaje("Interés creado"), HttpStatus.CREATED);
     }
 
+    /**
+     * Método que elimina un interés a través de su identificador.
+     * @param id identificador del interés que se quiere eliminar.
+     * @return la respuesta HTTP que contiene un mensaje indicando que el interés se ha eliminado con éxito
+     * o la respuesta HTTP que contiene un mensaje de error si no existe un interés con ese identificador.
+     */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteInterest(@PathVariable Long id){
@@ -85,6 +105,15 @@ public class InterestController {
         return new ResponseEntity<>(new Mensaje("Interés eliminado"), HttpStatus.OK);
     }
 
+    /**
+     * Método que modifica la información de un interés a través de su identificador.
+     * @param newInterestDTO objeto DTO que contiene la información necesaria para actualiar un interés.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @param id identificador del interés cuya información se quiere actualizar.
+     * @return respuesta HTTP que contiene un mensaje indicando que el interés se ha actualizado con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si los datos no son correctos, si no existe un interés con ese identificador
+     * o si ya existe un interés con el nuevo nombre.
+     */
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@Validated @RequestBody NewInterestDTO newInterestDTO, BindingResult result, @PathVariable("id") Long id) {
