@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que responde a las acciones relacionadas con las localidades.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/city")
@@ -29,6 +35,13 @@ public class CityController {
     @Autowired
     private CityService cityService;
 
+    /**
+     * Método que añade una nueva localidad.
+     * @param newCityDTO objeto DTO que contiene la información necesaria para añadir una nueva localidad.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @return la respuesta HTTP que contiene un mensaje indicando que la nueva localidad se ha creado con éxito
+     * o la respuesta HTTP que contiene un mensaje de error si los datos no son correctos o si ya existe una localidad con el nombre de la nueva localidad.
+     */
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addCity(@Validated @RequestBody NewCityDTO newCityDTO, BindingResult result){
@@ -43,6 +56,12 @@ public class CityController {
         return new ResponseEntity<>(new Mensaje("Ciudad creada"), HttpStatus.CREATED);
     }
 
+    /**
+     * Método que elimina una localidad a través de su identificador.
+     * @param id identificador de la localidad que se quiere eliminar.
+     * @return la respuesta HTTP que contiene un mensaje indicando que la localidad se ha eliminado con éxito
+     * o la respuesta HTTP que contiene un mensaje de error si no existe una localidad con ese identificador o si tiene actividades asociadas.
+     */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteCity(@PathVariable Long id){
@@ -57,6 +76,10 @@ public class CityController {
         return new ResponseEntity(new Mensaje("Ciudad eliminada"), HttpStatus.OK);
     }
 
+    /**
+     * Método que devuelve la lista de localidades.
+     * @return la respuesta HTTP con la lista de localidades.
+     */
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CityDTO>> getCities(){
@@ -69,6 +92,15 @@ public class CityController {
         return new ResponseEntity<List<CityDTO>>(listCitiesDTO, HttpStatus.OK);
     }
 
+    /**
+     * Método que modifica la información de una localidad a través de su identificador.
+     * @param newCityDTO objeto DTO que contiene la información necesaria para actualizar una localidad.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @param id indentificador de la localidad cuya información se quiere actualizar.
+     * @return respuesta HTTP que contiene un mensaje indicando que la localidad se ha actualizado con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si los datos no son correctos, si no existe una localidad con ese identificador
+     * o si ya existe una localidad con el nuevo nombre.
+     */
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@Validated @RequestBody NewCityDTO newCityDTO, BindingResult result, @PathVariable("id") Long id) {

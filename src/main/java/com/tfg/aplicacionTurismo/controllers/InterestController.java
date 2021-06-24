@@ -26,6 +26,9 @@ import java.util.List;
 
 /**
  * Clase que responde a las acciones relacionadas con los intereses.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Controller
 @CrossOrigin(origins = "*")
@@ -88,7 +91,7 @@ public class InterestController {
      * Método que elimina un interés a través de su identificador.
      * @param id identificador del interés que se quiere eliminar.
      * @return la respuesta HTTP que contiene un mensaje indicando que el interés se ha eliminado con éxito
-     * o la respuesta HTTP que contiene un mensaje de error si no existe un interés con ese identificador.
+     * o la respuesta HTTP que contiene un mensaje de error si no existe un interés con ese identificador o si tiene actividades asociadas.
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
