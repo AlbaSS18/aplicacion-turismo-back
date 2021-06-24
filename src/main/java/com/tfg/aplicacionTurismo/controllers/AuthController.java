@@ -30,6 +30,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Clase que responde a las acciones relacionadas con la autenticación y el registro.
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/auth")
@@ -50,6 +53,14 @@ public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    /**
+     * Método que registra a un usuario en la aplicación web.
+     * @param userDTO objeto DTO que contiene la información necesaria para registrar a un usuario.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @return respuesta HTTP que contiene un mensaje indicando que el usuario se ha registrado con éxito
+     * o la respuesta HTTP que contiene un mensaje de error si los datos no son correctos, si ya existe un usuario utilizando ese email
+     * o si las contraseñas no son iguales.
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> addUser(@Validated @RequestBody NewUserDTO userDTO, BindingResult result) {
         if (result.hasErrors()) {
@@ -95,6 +106,13 @@ public class AuthController {
         return new ResponseEntity(new Mensaje("Usuario añadido"), HttpStatus.CREATED);
     }
 
+    /**
+     * Método que autentica a un usuario en la aplicación web.
+     * @param loginDTO objeto DTO que contiene la información necesaria para autenticar a un usuario en la aplicación web.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @return la respuesta HTTP que contiene el token.
+     * @throws UnsupportedEncodingException si el formato de codificación de caracteres no es soportado.
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@Validated @RequestBody LoginUserDTO loginDTO, BindingResult result) throws UnsupportedEncodingException {
         if (result.hasErrors()) {
