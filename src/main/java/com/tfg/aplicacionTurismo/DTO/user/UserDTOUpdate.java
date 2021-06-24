@@ -11,6 +11,9 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Clase que define los atributos del objeto que se utiliza para actualizar la información de un usuario.
+ */
 public class UserDTOUpdate {
 
     @NotNull
@@ -23,9 +26,19 @@ public class UserDTOUpdate {
     @NotEmpty @Valid
     private Set<InterestByUserDTO> interest;
 
+    /**
+     * Constructor de la clase UserDTOUpdate
+     */
     public UserDTOUpdate() {
     }
 
+    /**
+     * Constructor de la clase UserDTOUpdate
+     * @param dateBirthday fecha de nacimiento
+     * @param userName nombre de usuario
+     * @param roles lista de roles del usuario
+     * @param interest lista de puntuaciones dadas por el usuario a los distintos tipos de intereses
+     */
     public UserDTOUpdate(@NotNull Date dateBirthday, @NotBlank String userName, @NotEmpty Set<String> roles, @NotEmpty @Valid Set<InterestByUserDTO> interest) {
         this.dateBirthday = dateBirthday;
         this.userName = userName;

@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Clase que define los atributos del objeto que se utiliza para obtener interes/es.
+ */
 public class InterestListDTO {
 
     @NotBlank

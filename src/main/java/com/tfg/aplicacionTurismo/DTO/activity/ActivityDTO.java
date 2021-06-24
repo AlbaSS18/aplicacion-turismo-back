@@ -3,6 +3,9 @@ package com.tfg.aplicacionTurismo.DTO.activity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Clase que define los atributos del objeto que se utiliza para crear una nueva actividad.
+ */
 public class ActivityDTO {
 
     @NotBlank
@@ -20,24 +23,10 @@ public class ActivityDTO {
     @NotBlank
     private String address;
 
+    /**
+     * Constructor de la clase ActivityDTO
+     */
     public ActivityDTO() {
-    }
-
-    public ActivityDTO(@NotBlank String name, @NotBlank String description, @NotNull double latitude, @NotNull double longitude, @NotBlank String city, @NotBlank String interest) {
-        this.name = name;
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.city = city;
-        this.interest = interest;
-    }
-
-    public ActivityDTO(@NotBlank String description, @NotNull double latitude, @NotNull double longitude, @NotBlank String city, @NotBlank String interest) {
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.city = city;
-        this.interest = interest;
     }
 
     public String getName() {

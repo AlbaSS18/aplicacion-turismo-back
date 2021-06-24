@@ -7,6 +7,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
+/**
+ * Clase que define los atributos del objeto que se utiliza para obtener la puntuaciones realizadas por un usuario o para puntuar los tipos de interés.
+ */
 public class InterestByUserDTO {
 
     @NotNull
@@ -17,9 +20,18 @@ public class InterestByUserDTO {
     @Range(min=0,max=10)
     private int priority;
 
+    /**
+     * Constructor de la clase InterestByUserDTO
+     */
     public InterestByUserDTO() {
     }
 
+    /**
+     * Constructor de la clase InterestByUserDTO
+     * @param interestID identificador del tipo de interés
+     * @param nameInterest nombre del tipo de interés
+     * @param priority puntuación dada
+     */
     public InterestByUserDTO(@NotNull Long interestID, @NotBlank String nameInterest, @NotNull @Range(min = 0, max = 10) int priority) {
         this.interestID = interestID;
         this.nameInterest = nameInterest;

@@ -2,11 +2,17 @@ package com.tfg.aplicacionTurismo.DTO.interest;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Clase que define los atributos del objeto que se utiliza para añadir o actualizar la información de los tipos de interés.
+ */
 public class NewInterestDTO {
 
     @NotBlank
     private String nameInterest;
 
+    /**
+     * Constructor de la clase NewInterestDTO
+     */
     public NewInterestDTO() {
     }
 

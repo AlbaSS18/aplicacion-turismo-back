@@ -7,6 +7,9 @@ import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ *  Clase que define los atributos del objeto que se utiliza para registrar a un usuario.
+ */
 public class NewUserDTO {
 
     @NotBlank
@@ -27,9 +30,22 @@ public class NewUserDTO {
 
     @NotEmpty @Valid private Set<InterestDTO> interest;
 
+    /**
+     * Constructor de la clase NewUserDTO
+     */
     public NewUserDTO() {
     }
 
+    /**
+     * Constructor de la clase NewUserDTO
+     * @param email email del usuario
+     * @param userName nombre de usuario
+     * @param password contraseña
+     * @param passwordConfirm contraseña confirmada
+     * @param dateBirthday fecha de nacimiento
+     * @param roles lista de roles del usuario
+     * @param interest lista de puntuaciones dadas por el usuario a los tipos de interés
+     */
     public NewUserDTO(@NotBlank @Email String email, @NotBlank String userName, @NotBlank @Size(min = 7) String password, @NotBlank @Size(min = 7) String passwordConfirm, @NotNull Date dateBirthday, @NotEmpty Set<String> roles, @NotEmpty @Valid Set<InterestDTO> interest) {
         this.email = email;
         this.userName = userName;

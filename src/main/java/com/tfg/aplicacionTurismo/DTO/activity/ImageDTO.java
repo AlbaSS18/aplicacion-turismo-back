@@ -2,6 +2,9 @@ package com.tfg.aplicacionTurismo.DTO.activity;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Clase que define los atributos del objeto que se utiliza para transmitir el metadata de una imagen.
+ */
 public class ImageDTO {
     @NotBlank
     private String fileName;
