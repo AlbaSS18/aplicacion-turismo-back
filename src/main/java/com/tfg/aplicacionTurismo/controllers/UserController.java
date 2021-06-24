@@ -24,6 +24,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Clase que responde a las acciones relacionadas con los usuarios.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/user")
@@ -41,6 +47,11 @@ public class UserController {
     @Autowired
     private RelUserInterestService relUserInterestService;
 
+    /**
+     * Método que devuelve la información de un usuario.
+     * @param id identificador del usuario
+     * @return la respuesta HTTP con la información del usuario.
+     */
     @GetMapping("/details/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         if(!usersService.existsById(id)){
@@ -67,6 +78,10 @@ public class UserController {
         return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
+    /**
+     * Método que devuelve la lista de usuarios.
+     * @return la respuesta HTTP con la lista de usuarios.
+     */
     @GetMapping("/list")
     public ResponseEntity<List<UserDTO>> getUsers() {
         List<User> listUser = usersService.getUsers();
@@ -83,6 +98,12 @@ public class UserController {
         return new ResponseEntity<List<UserDTO>>(listUserDTO, HttpStatus.OK);
     }
 
+    /**
+     * Método que elimina un usuario a través de su identificador.
+     * @param id identificador del usuario que se quiere eliminar.
+     * @return la respuesta HTTP que contiene un mensaje indicando que el usuario se ha eliminado con éxito
+     * o la respuesta HTTP que contiene un mensaje de error si no existe un usuario con ese identificador
+     */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
@@ -93,6 +114,14 @@ public class UserController {
         return new ResponseEntity<>(new Mensaje("Usuario eliminado"), HttpStatus.OK);
     }
 
+    /**
+     * Método que modifica la información de un usuario a través de su identificador.
+     * @param userDTOUpdate, objeto DTO que contiene la información necesaria para actualizar un usuario.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @param id identificador del usuario cuya información se quiere actualizar.
+     * @return la respuesta HTTP que contiene un mensaje indicando que el usuario se ha actualizado con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si no existe un usuario con ese identificador o si los datos no son correctos.
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@Validated @RequestBody UserDTOUpdate userDTOUpdate, BindingResult result, @PathVariable Long id) {
         if (result.hasErrors()) {
