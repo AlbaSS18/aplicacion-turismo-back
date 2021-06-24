@@ -57,6 +57,9 @@ public class City {
         this.activityList = activityList;
     }
 
+    /**
+     * Método que comprueba si hay actividades asociadas a la localidad antes de eliminarla
+     */
     @PreRemove
     public void checkActivityBeforeRemove() {
         if(!this.activityList.isEmpty()){

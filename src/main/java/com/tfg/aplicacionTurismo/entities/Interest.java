@@ -75,6 +75,9 @@ public class Interest {
         this.activities = activities;
     }
 
+    /**
+     * Método que comprueba si hay actividades asociadas al interés antes de eliminarlo
+     */
     @PreRemove
     public void checkActivityBeforeRemove() {
         if(!this.activities.isEmpty()){
