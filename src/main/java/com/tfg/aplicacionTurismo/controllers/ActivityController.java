@@ -65,10 +65,10 @@ public class ActivityController {
     /**
      * Método que devuelve la lista de actividades.
      * @return la respuesta HTTP con la lista de actividades.
-     * @throws IOException
-     * @throws StorageException
-     * @throws InvalidKeyException
-     * @throws URISyntaxException
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      */
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
@@ -89,10 +89,10 @@ public class ActivityController {
      * @param id identificador de la actividad.
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha añadido con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no existe una actividad con ese identificador.
-     * @throws IOException
-     * @throws StorageException
-     * @throws InvalidKeyException
-     * @throws URISyntaxException
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      */
     @GetMapping("/details/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -146,10 +146,10 @@ public class ActivityController {
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha añadido con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no incluye una imagen, si ya existe una actividad con el nombre de la nueva actividad,
      * si los datos no son correctos, si la ciudad no existe o si el tipo de interés no existe.
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws StorageException
-     * @throws InvalidKeyException
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
      */
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
@@ -211,9 +211,9 @@ public class ActivityController {
      * @param id identificador de la actividad que se quiere eliminar.
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha eliminado con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no existe una actividad con ese identificador.
-     * @throws InvalidKeyException
-     * @throws StorageException
-     * @throws URISyntaxException
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -240,10 +240,10 @@ public class ActivityController {
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha actualizado con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no incluye una imagen, si ya existe una actividad con el nuevo nombre,
      * si los datos no son correctos, si la ciudad no existe o si el tipo de interés no existe.
-     * @throws IOException
-     * @throws StorageException
-     * @throws InvalidKeyException
-     * @throws URISyntaxException
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      */
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -306,10 +306,10 @@ public class ActivityController {
      * @param id identificador del usuario.
      * @return respuesta HTTP con la lista de actividades recomendadas
      * o la respuesta HTTP que contiene un mensaje de error si el usuario no existe.
-     * @throws IOException
-     * @throws StorageException
-     * @throws InvalidKeyException
-     * @throws URISyntaxException
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      */
     @GetMapping("/recommedation/{id}")
     public ResponseEntity<List<ActivityRecommendationDTO>> getRecommendedActivities(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
@@ -566,10 +566,10 @@ public class ActivityController {
      * @param id identificador del usuario.
      * @return respuesta HTTP con la lista de actividades valoradas por el usuario
      * o la respuesta HTTP que contiene un mensaje de error si los datos no son correctos.
-     * @throws IOException
-     * @throws StorageException
-     * @throws InvalidKeyException
-     * @throws URISyntaxException
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      */
     @GetMapping("/ratedActivities/{id}")
     public ResponseEntity<List<ActivityRecommendationDTO>> getRatedActivities(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {

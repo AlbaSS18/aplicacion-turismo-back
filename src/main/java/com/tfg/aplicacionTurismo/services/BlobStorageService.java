@@ -31,10 +31,10 @@ public class BlobStorageService {
      * @param filename nombre del archivo.
      * @param content flujo de entrada de bytes del archivo de imagen.
      * @param length tamaño de la imagen.
-     * @throws URISyntaxException
-     * @throws StorageException
-     * @throws IOException
-     * @throws InvalidKeyException
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
+     * @throws InvalidKeyException si la key es inválida.
      */
     public void upload(String filename, InputStream content, long length) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
@@ -48,9 +48,9 @@ public class BlobStorageService {
      * Método que se utiliza para obtener un archivo del contenedor de Azure.
      * @param filename nombre del archivo.
      * @return flujo de salida en el que los datos se escriben en una matriz de bytes.
-     * @throws URISyntaxException
-     * @throws StorageException
-     * @throws InvalidKeyException
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
+     * @throws InvalidKeyException si la key es inválida.
      */
     public ByteArrayOutputStream getFile(String filename) throws URISyntaxException, StorageException, InvalidKeyException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
@@ -65,9 +65,9 @@ public class BlobStorageService {
     /**
      * Método que se utiliza para eliminar una imagen del contenedor de Azure.
      * @param filename nombre del archivo.
-     * @throws URISyntaxException
-     * @throws InvalidKeyException
-     * @throws StorageException
+     * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
+     * @throws InvalidKeyException si la key es inválida.
+     * @throws StorageException excepción del servicio de almacenamiento de Azure.
      */
     public void deleteFile(String filename) throws URISyntaxException, InvalidKeyException, StorageException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
