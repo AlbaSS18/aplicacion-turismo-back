@@ -31,7 +31,7 @@ public class ActivityService {
     }
 
     /**
-     * Método que añade una actividad a través del repositorio.
+     * Método que añade una nueva actividad a través del repositorio.
      * @param activity nueva actividad
      */
     public void addActivities(Activity activity){
@@ -65,7 +65,7 @@ public class ActivityService {
     }
 
     /**
-     * Método que obtiene una actividad a través del repositorio utilizando su id.
+     * Método que obtiene una actividad concreto a través del repositorio utilizando su id.
      * @param id identificador de la actividad.
      * @return la actividad.
      */
@@ -82,7 +82,7 @@ public class ActivityService {
     }
 
     /**
-     * Método que obtiene una actividad a través del repositorio utilizando su nombre.
+     * Método que obtiene una actividad concreta a través del repositorio utilizando su nombre.
      * @param name nombre de la actividad.
      * @return la actividad.
      */
