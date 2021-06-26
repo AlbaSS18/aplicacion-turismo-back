@@ -30,7 +30,12 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 
-
+/**
+ * Clase que responde a las acciones relacionadas con las actividades.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
+ */
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/activity")
@@ -57,6 +62,14 @@ public class ActivityController {
     @Autowired
     private BlobStorageService blobStorageService;
 
+    /**
+     * Método que devuelve la lista de actividades.
+     * @return la respuesta HTTP con la lista de actividades.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ActivitySendDTO>> getListado() throws IOException, StorageException, InvalidKeyException, URISyntaxException {
@@ -71,6 +84,16 @@ public class ActivityController {
         return new ResponseEntity<List<ActivitySendDTO>>(listDTO, HttpStatus.OK);
     }
 
+    /**
+     * Método que devuelve la información de una actividad.
+     * @param id identificador de la actividad.
+     * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha añadido con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si no existe una actividad con ese identificador.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     @GetMapping("/details/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ActivitySendDTO> getActivity(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
@@ -83,6 +106,15 @@ public class ActivityController {
         return new ResponseEntity<ActivitySendDTO>(activitySendDTO, HttpStatus.OK);
     }
 
+    /**
+     * Método que obtiene la imagen de una actividad.
+     * @param activity la actividad.
+     * @return objeto DTO con la información de la imagen.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     private ImageDTO getImageFromActivity(Activity activity) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         // Return the image
         String[] stringSplitThePathImage = activity.getPathImage().split("\\.");
@@ -106,6 +138,19 @@ public class ActivityController {
         return imageDTO;
     }
 
+    /**
+     * Método que añade una nueva actividad.
+     * @param multipartFile la imagen.
+     * @param activityDTO objeto DTO que contiene la información necesaria para añadir una nueva actividad.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha añadido con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si no incluye una imagen, si ya existe una actividad con el nombre de la nueva actividad,
+     * si los datos no son correctos, si la ciudad no existe o si el tipo de interés no existe.
+     * @throws IOException
+     * @throws URISyntaxException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     */
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addActivity(@RequestParam(name="image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO, BindingResult result) throws IOException, URISyntaxException, StorageException, InvalidKeyException {
@@ -150,12 +195,26 @@ public class ActivityController {
     public static final Pattern DIACRITICS_AND_FRIENDS
             = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
 
+    /**
+     * Método que elimina los acentos de un texto.
+     * @param str el texto
+     * @return el texto sin acentos.
+     */
     private static String stripDiacritics(String str) {
         str = Normalizer.normalize(str, Normalizer.Form.NFD);
         str = DIACRITICS_AND_FRIENDS.matcher(str).replaceAll("");
         return str;
     }
 
+    /**
+     * Método qye elimina una actividad a través de su identificador.
+     * @param id identificador de la actividad que se quiere eliminar.
+     * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha eliminado con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si no existe una actividad con ese identificador.
+     * @throws InvalidKeyException
+     * @throws StorageException
+     * @throws URISyntaxException
+     */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) throws InvalidKeyException, StorageException, URISyntaxException {
@@ -172,6 +231,20 @@ public class ActivityController {
         return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
     }
 
+    /**
+     * Método que modifica la información de una actividad a través de su identificador.
+     * @param multipartFile la imagen
+     * @param activityDTO objeto DTO que contiene la información necesaria para actualizar una actividad.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @param id identificador de la actividad.
+     * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha actualizado con éxito o
+     * la respuesta HTTP que contiene un mensaje de error si no incluye una imagen, si ya existe una actividad con el nuevo nombre,
+     * si los datos no son correctos, si la ciudad no existe o si el tipo de interés no existe.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateActivity(@RequestParam(name = "image", required = false) MultipartFile multipartFile, @Validated ActivityDTO activityDTO,BindingResult result, @PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
@@ -228,6 +301,16 @@ public class ActivityController {
         return new ResponseEntity<>(new Mensaje("Actividad actualizada"), HttpStatus.CREATED);
     }
 
+    /**
+     * Método que devuelve la lista de actividades recomendadas a un usuario.
+     * @param id identificador del usuario.
+     * @return respuesta HTTP con la lista de actividades recomendadas
+     * o la respuesta HTTP que contiene un mensaje de error si el usuario no existe.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     @GetMapping("/recommedation/{id}")
     public ResponseEntity<List<ActivityRecommendationDTO>> getRecommendedActivities(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if(!usersService.existsById(id)){
@@ -378,6 +461,15 @@ public class ActivityController {
         return getSubListRecommedation(finalRanks);
     }
 
+    /**
+     * Método que obtiene actividades recomendadas para un nuevo usuario.
+     * @param user usuario.
+     * @return lista de actividades recomendadas.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     ResponseEntity<List<ActivityRecommendationDTO>> recommedationForNewUser(User user) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         List<RelUserActivity> relUserActivity = relUserActivityService.getAllValuationByUser(user);
         List<RelUserInterest> relUserInterests = relUserInterestService.getAllPriorityByUser(user);
@@ -416,6 +508,11 @@ public class ActivityController {
 
     }
 
+    /**
+     * Método que devuelve una sublista de la lista de actividades recomendadas.
+     * @param finalRanks lista de actividades recomendadas.
+     * @return sublista de las actividades recomendadas.
+     */
     private ResponseEntity<List<ActivityRecommendationDTO>> getSubListRecommedation(List<ActivityRecommendationDTO> finalRanks) {
         List<ActivityRecommendationDTO> activitiesRecommended;
         try{
@@ -428,6 +525,14 @@ public class ActivityController {
         return new ResponseEntity<List<ActivityRecommendationDTO>>(activitiesRecommended, HttpStatus.OK);
     }
 
+    /**
+     * Método que añade una nueva valoración a una actividad.
+     * @param activityRateByUserDTO objeto DTO que contiene la información necesaria para valorar una actividad.
+     * @param result parámetro que permite validar los errores en el objeto dto.
+     * @return respuesta HTTP con un mensaje indicando que la actividad se ha valorado con éxito o
+     * o la respuesta HTTP que contiene un mensaje de error si los datos no son correctos, si no existe el usuario
+     * o si la actividad no existe.
+     */
     @PostMapping("/rate")
     public ResponseEntity<?> rateActivity(@Validated @RequestBody ActivityRateByUserDTO activityRateByUserDTO, BindingResult result) {
         if(result.hasErrors()){
@@ -456,6 +561,16 @@ public class ActivityController {
         return new ResponseEntity(new Mensaje("Actividad puntuada"), HttpStatus.CREATED);
     }
 
+    /**
+     * Método que obtiene la lista de actividades valoradas por un usuario.
+     * @param id identificador del usuario.
+     * @return respuesta HTTP con la lista de actividades valoradas por el usuario
+     * o la respuesta HTTP que contiene un mensaje de error si los datos no son correctos.
+     * @throws IOException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     * @throws URISyntaxException
+     */
     @GetMapping("/ratedActivities/{id}")
     public ResponseEntity<List<ActivityRecommendationDTO>> getRatedActivities(@PathVariable Long id) throws IOException, StorageException, InvalidKeyException, URISyntaxException {
         if(!usersService.existsById(id)){
@@ -478,6 +593,11 @@ public class ActivityController {
         return new ResponseEntity<List<ActivityRecommendationDTO>>(ratedActivities, HttpStatus.OK);
     }
 
+    /**
+     * Método que calcula la media de las valoraciones dadas a una actividad.
+     * @param activity actividad
+     * @return media de las valoraciones de una actividad.
+     */
     private double getAverageFromActivity(Activity activity){
         List<RelUserActivity> ratingsActivity = relUserActivityService.getAllValuationByActivity(activity);
         try{
