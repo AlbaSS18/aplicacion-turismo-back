@@ -5,16 +5,16 @@ import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import com.microsoft.azure.storage.blob.ListBlobItem;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Convert;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
+/**
+ * Servicio que se utiliza para conectar la aplicación con el contenedor de archivos almacenado en el servicio de Azure.
+ */
 @Service
 public class BlobStorageService {
 
@@ -26,6 +26,16 @@ public class BlobStorageService {
 
     private CloudBlobClient blobClient;
 
+    /**
+     * Método que se utiliza para subir una imagen al contenedor de Azure.
+     * @param filename nombre del archivo.
+     * @param content flujo de entrada de bytes del archivo de imagen.
+     * @param length tamaño de la imagen.
+     * @throws URISyntaxException
+     * @throws StorageException
+     * @throws IOException
+     * @throws InvalidKeyException
+     */
     public void upload(String filename, InputStream content, long length) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
         blobClient = storageAccount.createCloudBlobClient();
@@ -34,7 +44,15 @@ public class BlobStorageService {
         blob.upload(content, length);
     }
 
-    public ByteArrayOutputStream getFile(String filename) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
+    /**
+     * Método que se utiliza para obtener un archivo del contenedor de Azure.
+     * @param filename nombre del archivo.
+     * @return flujo de salida en el que los datos se escriben en una matriz de bytes.
+     * @throws URISyntaxException
+     * @throws StorageException
+     * @throws InvalidKeyException
+     */
+    public ByteArrayOutputStream getFile(String filename) throws URISyntaxException, StorageException, InvalidKeyException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
         blobClient = storageAccount.createCloudBlobClient();
         CloudBlobContainer container = blobClient.getContainerReference("activities");
@@ -44,6 +62,13 @@ public class BlobStorageService {
         return os;
     }
 
+    /**
+     * Método que se utiliza para eliminar una imagen del contenedor de Azure.
+     * @param filename nombre del archivo.
+     * @throws URISyntaxException
+     * @throws InvalidKeyException
+     * @throws StorageException
+     */
     public void deleteFile(String filename) throws URISyntaxException, InvalidKeyException, StorageException {
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(connectionString);
         blobClient = storageAccount.createCloudBlobClient();

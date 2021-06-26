@@ -15,8 +15,8 @@ public interface User_Interest_Repository extends CrudRepository<RelUserInterest
 
     /**
      * Método que obtiene la puntuación dada por un usuario a un tipo de interés concreto.
-     * @param user usuario del cual se quiere obtener la puntuación
-     * @param interest interés del cual se quiere obtener la puntuación
+     * @param user usuario del cual se quiere obtener la puntuación.
+     * @param interest interés del cual se quiere obtener la puntuación.
      * @return la puntuación dada por el usuario a un tipo de interés concreto.
      */
     @Query("SELECT r FROM RelUserInterest r WHERE r.user = ?1 and r.interest = ?2")
@@ -24,8 +24,8 @@ public interface User_Interest_Repository extends CrudRepository<RelUserInterest
 
     /**
      * Método que comprueba si un usuario ha puntuado un tipo de interés concreto.
-     * @param user usuario del cual se quiere obtener las puntuaciones
-     * @param interest interés del cual se quiere obtener las puntuaciones
+     * @param user usuario del cual se quiere obtener las puntuaciones.
+     * @param interest interés del cual se quiere obtener las puntuaciones.
      * @return true si el usuario ha puntuado el interés, false en caso contrario
      */
     @Query("select case when count(r)> 0 then true else false end from RelUserInterest r where r.user = ?1 and r.interest = ?2")
@@ -33,8 +33,8 @@ public interface User_Interest_Repository extends CrudRepository<RelUserInterest
 
     /**
      * Método que obtiene la lista de puntuaciones dadas por un usuario a los distintos tipos de interés.
-     * @param user usuario del cual se quiere obtener las puntuaciones
-     * @return la lista de puntuaciones dadas por un usuario a los distintos tipos de interés
+     * @param user usuario del cual se quiere obtener las puntuaciones.
+     * @return la lista de puntuaciones dadas por un usuario a los distintos tipos de interés.
      */
     @Query("SELECT r FROM RelUserInterest r WHERE r.user = ?1")
     List<RelUserInterest> findByUser(User user);

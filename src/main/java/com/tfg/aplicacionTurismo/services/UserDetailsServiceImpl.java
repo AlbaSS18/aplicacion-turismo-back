@@ -15,11 +15,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Clase que comprueba si las credenciales de autenticación son correctas.
+ */
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository usersRepository;
 
+    /**
+     * Método que valida si el usuario existe en la base de datos y creará un objeto UserDetails.
+     * @param email correo electrónico del usuario.
+     * @return objeto UserDetails
+     * @throws UsernameNotFoundException si las credenciales no son correctas.
+     */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

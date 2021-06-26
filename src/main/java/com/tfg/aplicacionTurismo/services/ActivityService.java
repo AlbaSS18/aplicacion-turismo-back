@@ -65,7 +65,7 @@ public class ActivityService {
     }
 
     /**
-     * Método que obtiene una actividad concreto a través del repositorio utilizando su id.
+     * Método que obtiene una actividad concreta a través del repositorio utilizando su id.
      * @param id identificador de la actividad.
      * @return la actividad.
      */
