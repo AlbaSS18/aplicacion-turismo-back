@@ -21,11 +21,21 @@ import java.util.stream.Collectors;
 
 import static com.tfg.aplicacionTurismo.utils.Constants.*;
 
+/**
+ * Clase que genera el token y valida que este bien formado y no este expirado
+ */
 @Component
 public class JwtProvider {
 
     private static  final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
 
+    /**
+     * Método que construye el token asignándole el email, los roles, fecha de creación y fecha de expiración.
+     * Finalmente se firma con el algoritmo HS512 y la palabra secret.
+     * @param authentication objeto Authentication que contiene la información del usuario autenticado.
+     * @return token
+     * @throws UnsupportedEncodingException si el formato de codificación de caracteres no es soportado.
+     */
     public String generateToken(Authentication authentication) throws UnsupportedEncodingException {
 
         final String authorities = authentication.getAuthorities().stream()
@@ -47,11 +57,22 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) throws UnsupportedEncodingException {
+    /**
+     * Método que extrae el valor del campo subject del token. En este caso, el subject es el email del usuario.
+     * @param token token
+     * @return el email del usuario
+     * @throws UnsupportedEncodingException si el formato de codificación de caracteres no es soportado.
+     */
+    public String getEmailFromToken(String token) throws UnsupportedEncodingException {
         String signingKeyB64= Base64.getEncoder().encodeToString(SIGNING_KEY.getBytes("utf-8"));
         return Jwts.parser().setSigningKey(signingKeyB64).parseClaimsJws(token).getBody().getSubject();
     }
 
+    /**
+     * Método que valida el token.
+     * @param token token
+     * @return true si el token es válido, false en caso contrario.
+     */
     public boolean validateToken(String token) {
         try {
             String signingKeyB64= Base64.getEncoder().encodeToString(SIGNING_KEY.getBytes("utf-8"));
