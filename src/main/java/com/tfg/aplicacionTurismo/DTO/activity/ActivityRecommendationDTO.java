@@ -2,7 +2,6 @@ package com.tfg.aplicacionTurismo.DTO.activity;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,7 +22,7 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
     @NotBlank
     private String pathImage;
     @NotBlank
-    private String city;
+    private String locality;
     @NotBlank
     private String interest;
     @NotBlank
@@ -49,7 +48,7 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
      * @param longitude longitud de la actividad
      * @param latitude latitud de la actividad
      * @param pathImage ruta donde se encuentra la imagen de la actividad
-     * @param city localidad donde se encuentra situada la actividad
+     * @param locality localidad donde se encuentra situada la actividad
      * @param interest tipo de interés asociado a la actividad
      * @param address dirección donde se encuentra localizada la actividad
      * @param metadataImage DTO que representa los metadatos de la imagen
@@ -58,7 +57,7 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
      */
     public ActivityRecommendationDTO(@NotNull Long id, @NotBlank String name, @NotBlank String description,
                                      @NotNull double longitude, @NotNull double latitude, @NotBlank String pathImage,
-                                     @NotBlank String city, @NotBlank String interest, @NotBlank String address,
+                                     @NotBlank String locality, @NotBlank String interest, @NotBlank String address,
                                      @NotNull @Valid ImageDTO metadataImage, @NotNull double score, @NotNull double average) {
         this.id = id;
         this.name = name;
@@ -66,7 +65,7 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
         this.latitude = latitude;
         this.longitude = longitude;
         this.pathImage = pathImage;
-        this.city = city;
+        this.locality = locality;
         this.interest = interest;
         this.address = address;
         this.metadataImage = metadataImage;
@@ -122,12 +121,12 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
         this.pathImage = pathImage;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocality() {
+        return locality;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 
     public String getInterest() {

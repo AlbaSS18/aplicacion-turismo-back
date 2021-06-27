@@ -1,13 +1,12 @@
-package com.tfg.aplicacionTurismo.DTO.city;
+package com.tfg.aplicacionTurismo.DTO.locality;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para obtener localidad/es.
  */
-public class CityDTO {
+public class LocalityDTO {
 
     @NotBlank
     private String name;

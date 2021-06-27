@@ -17,7 +17,7 @@ public class ActivityDTO {
     @NotNull
     private double longitude;
     @NotBlank
-    private String city;
+    private String locality;
     @NotBlank
     private String interest;
     @NotBlank
@@ -61,12 +61,12 @@ public class ActivityDTO {
         this.longitude = longitude;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocality() {
+        return locality;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 
     public String getInterest() {

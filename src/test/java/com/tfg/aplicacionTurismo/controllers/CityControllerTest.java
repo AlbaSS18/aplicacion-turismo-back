@@ -2,8 +2,8 @@ package com.tfg.aplicacionTurismo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.tfg.aplicacionTurismo.DTO.city.CityDTO;
-import com.tfg.aplicacionTurismo.DTO.city.NewCityDTO;
+import com.tfg.aplicacionTurismo.DTO.locality.LocalityDTO;
+import com.tfg.aplicacionTurismo.DTO.locality.NewLocalityDTO;
 import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.services.CityService;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,12 +56,12 @@ class CityControllerTest {
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
     public void shouldCreate() throws Exception {
         // when
-        CityDTO cityDTO = new CityDTO();
-        cityDTO.setName("Oviedo");
+        LocalityDTO localityDTO = new LocalityDTO();
+        localityDTO.setName("Oviedo");
 
         mvc.perform(post("/api/city/add")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(cityDTO)))
+                .content(objectMapper.writeValueAsString(localityDTO)))
                 .andExpect(status().isCreated());
     }
 
@@ -69,12 +69,12 @@ class CityControllerTest {
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
     public void shouldCreate_FormInvalid() throws Exception {
         // when
-        CityDTO cityDTO = new CityDTO();
-        cityDTO.setName(null);
+        LocalityDTO localityDTO = new LocalityDTO();
+        localityDTO.setName(null);
 
         mvc.perform(post("/api/city/add")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(cityDTO)))
+                .content(objectMapper.writeValueAsString(localityDTO)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -82,14 +82,14 @@ class CityControllerTest {
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
     public void shouldCreate_NameCityRepeated() throws Exception {
         // given
-        CityDTO cityDTO = new CityDTO();
-        cityDTO.setName("Oviedo");
-        given(cityService.existByName(cityDTO.getName())).willReturn(true);
+        LocalityDTO localityDTO = new LocalityDTO();
+        localityDTO.setName("Oviedo");
+        given(cityService.existByName(localityDTO.getName())).willReturn(true);
 
         // when
         mvc.perform(post("/api/city/add")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(cityDTO)))
+                .content(objectMapper.writeValueAsString(localityDTO)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -142,12 +142,12 @@ class CityControllerTest {
         given(cityService.existById(1L)).willReturn(true);
         given(cityService.getCityById(1L)).willReturn(cities.get(0));
 
-        NewCityDTO newCityDTO = new NewCityDTO();
-        newCityDTO.setName("Gij");
+        NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
+        newLocalityDTO.setName("Gij");
 
         mvc.perform(put("/api/city/update/{id}", 1L)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isCreated());
     }
 
@@ -156,12 +156,12 @@ class CityControllerTest {
     public void shouldUpdateCity_CityNotExist() throws Exception {
         given(cityService.existById(5L)).willReturn(false);
 
-        NewCityDTO newCityDTO = new NewCityDTO();
-        newCityDTO.setName("Gij");
+        NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
+        newLocalityDTO.setName("Gij");
 
         mvc.perform(put("/api/city/update/{id}", 5L)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isNotFound());
     }
 
@@ -169,12 +169,12 @@ class CityControllerTest {
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
     public void shouldUpdateCity_FormInvalid() throws Exception {
 
-        NewCityDTO newCityDTO = new NewCityDTO();
-        newCityDTO.setName(null);
+        NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
+        newLocalityDTO.setName(null);
 
         mvc.perform(put("/api/city/update/{id}", 5L)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -184,17 +184,17 @@ class CityControllerTest {
 
         given(cityService.existById(2L)).willReturn(true);
 
-        NewCityDTO newCityDTO = new NewCityDTO();
-        newCityDTO.setName("Gijon");
+        NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
+        newLocalityDTO.setName("Gijon");
 
-        given(cityService.existByName(newCityDTO.getName())).willReturn(true);
-        given(cityService.getCityByNameCity(newCityDTO.getName())).willReturn(cities.get(0));
+        given(cityService.existByName(newLocalityDTO.getName())).willReturn(true);
+        given(cityService.getCityByNameCity(newLocalityDTO.getName())).willReturn(cities.get(0));
         System.out.println(cities.get(0).getId());
         System.out.println(cities.get(0).getNameCity());
 
         mvc.perform(put("/api/city/update/{id}", 2L)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(newCityDTO)))
+                .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isBadRequest());
     }
 }

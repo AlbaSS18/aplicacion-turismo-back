@@ -7,14 +7,12 @@ import com.tfg.aplicacionTurismo.entities.*;
 import com.tfg.aplicacionTurismo.files.FileUploadUtil;
 import com.tfg.aplicacionTurismo.services.*;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -160,7 +158,7 @@ public class ActivityController {
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(!cityService.existByName(activityDTO.getCity())){
+        if(!cityService.existByName(activityDTO.getLocality())){
             return new ResponseEntity<>(new Mensaje("La ciudad no existe"), HttpStatus.NOT_FOUND);
         }
         if(!interestService.existByName(activityDTO.getInterest())){
@@ -179,7 +177,7 @@ public class ActivityController {
         fileName = fileName.toLowerCase().replaceAll(" ", "-");
 
         Activity activity = new Activity(activityDTO.getName(), activityDTO.getDescription(), new Point(activityDTO.getLongitude(), activityDTO.getLatitude()), fileName, activityDTO.getAddress());
-        City city = cityService.getCityByNameCity(activityDTO.getCity());
+        City city = cityService.getCityByNameCity(activityDTO.getLocality());
         activity.setCity(city);
         Interest interest = interestService.getInterestByName(activityDTO.getInterest());
         activity.setInterest(interest);
@@ -257,7 +255,7 @@ public class ActivityController {
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(!cityService.existByName(activityDTO.getCity())){
+        if(!cityService.existByName(activityDTO.getLocality())){
             return new ResponseEntity<>(new Mensaje("La ciudad no existe"), HttpStatus.NOT_FOUND);
         }
         if(!interestService.existByName(activityDTO.getInterest())){
@@ -276,7 +274,7 @@ public class ActivityController {
         activity.setDescription(activityDTO.getDescription());
         activity.setCoordenates(new Point(activityDTO.getLongitude(), activityDTO.getLatitude()));
         activity.setAddress(activityDTO.getAddress());
-        City city = cityService.getCityByNameCity(activityDTO.getCity());
+        City city = cityService.getCityByNameCity(activityDTO.getLocality());
         activity.setCity(city);
 
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
