@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
 public interface LocalityMapper {
 
     /**
-     * Instancia única de la clase CityMapper
+     * Instancia única de la clase LocalityMapper
      */
     LocalityMapper INSTANCIA = Mappers.getMapper(LocalityMapper.class);
 
