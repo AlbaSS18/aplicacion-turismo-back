@@ -1,14 +1,11 @@
 package com.tfg.aplicacionTurismo.services;
 
-import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.entities.Rol;
 import com.tfg.aplicacionTurismo.entities.RolName;
-import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.repositories.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 

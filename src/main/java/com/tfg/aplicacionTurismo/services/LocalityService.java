@@ -1,10 +1,7 @@
 package com.tfg.aplicacionTurismo.services;
 
-import com.tfg.aplicacionTurismo.entities.Activity;
-import com.tfg.aplicacionTurismo.entities.City;
-import com.tfg.aplicacionTurismo.entities.Interest;
-import com.tfg.aplicacionTurismo.repositories.CityRepository;
-import com.tfg.aplicacionTurismo.repositories.InterestRepository;
+import com.tfg.aplicacionTurismo.entities.Locality;
+import com.tfg.aplicacionTurismo.repositories.LocalityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +12,17 @@ import java.util.List;
  * Servicio de localidades que implementa la lógica de negocio y suministra datos al controlador.
  */
 @Service
-public class CityService {
+public class LocalityService {
 
     @Autowired
-    private CityRepository cityRepository;
+    private LocalityRepository localityRepository;
 
     /**
      * Método que añade una nueva localidad a través del repositorio.
-     * @param city nueva localidad.
+     * @param locality nueva localidad.
      */
-    public void addCity(City city) {
-        cityRepository.save(city);
+    public void addLocality(Locality locality) {
+        localityRepository.save(locality);
     }
 
     /**
@@ -33,8 +30,8 @@ public class CityService {
      * @param name nombre de la localidad.
      * @return la localidad.
      */
-    public City getCityByNameCity(String name) {
-        return cityRepository.findByNameCity(name);
+    public Locality getLocalityByNameLocality(String name) {
+        return localityRepository.findByNameLocality(name);
     }
 
     /**
@@ -43,7 +40,7 @@ public class CityService {
      * @return true si la localidad existe, false en caso contrario.
      */
     public boolean existByName(String name){
-        return cityRepository.existsByNameCity(name);
+        return localityRepository.existsByNameLocality(name);
     }
 
     /**
@@ -52,25 +49,25 @@ public class CityService {
      * @return true si la localidad existe, false en caso contrario.
      */
     public boolean existById(Long id){
-        return cityRepository.existsById(id);
+        return localityRepository.existsById(id);
     }
 
     /**
      * Método que elimina una localidad a través del repositorio.
      * @param id identificador de la localidad que se quiere eliminar.
      */
-    public void deleteCity(Long id){
-        cityRepository.deleteById(id);
+    public void deleteLocality(Long id){
+        localityRepository.deleteById(id);
     }
 
     /**
      * Método que obtiene las localidades a través del repositorio.
      * @return la lista de localidades.
      */
-    public List<City> getCities(){
-        List<City> cities = new ArrayList<>();
-        cityRepository.findAll().forEach(cities::add);
-        return cities;
+    public List<Locality> getLocalities(){
+        List<Locality> localities = new ArrayList<>();
+        localityRepository.findAll().forEach(localities::add);
+        return localities;
     }
 
     /**
@@ -78,15 +75,15 @@ public class CityService {
      * @param id identificador de la localidad.
      * @return la localidad.
      */
-    public City getCityById(Long id){
-        return cityRepository.findById(id).get();
+    public Locality getLocalityById(Long id){
+        return localityRepository.findById(id).get();
     }
 
     /**
      * Método que modifica la información de una localidad a través del repositorio.
-     * @param city localidad
+     * @param locality localidad
      */
-    public void updateCity(City city) {
-        cityRepository.save(city);
+    public void updateLocality(Locality locality) {
+        localityRepository.save(locality);
     }
 }

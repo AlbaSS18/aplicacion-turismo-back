@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.tfg.aplicacionTurismo.DTO.locality.LocalityDTO;
 import com.tfg.aplicacionTurismo.DTO.locality.NewLocalityDTO;
-import com.tfg.aplicacionTurismo.entities.City;
-import com.tfg.aplicacionTurismo.services.CityService;
+import com.tfg.aplicacionTurismo.entities.Locality;
+import com.tfg.aplicacionTurismo.services.LocalityService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,28 +28,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class CityControllerTest {
+class LocalityControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    CityService cityService;
+    LocalityService localityService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    List<City> cities;
+    List<Locality> cities;
 
     @BeforeEach
     void setUp() {
         cities = new ArrayList<>();
-        City city1 = new City("Gijon");
-        city1.setId(1);
-        cities.add(city1);
-        City city2 = new City("Oviedo");
-        city2.setId(2);
-        cities.add(city2);
+        Locality locality1 = new Locality("Gijon");
+        locality1.setId(1);
+        cities.add(locality1);
+        Locality locality2 = new Locality("Oviedo");
+        locality2.setId(2);
+        cities.add(locality2);
     }
 
     @Test
@@ -59,7 +59,7 @@ class CityControllerTest {
         LocalityDTO localityDTO = new LocalityDTO();
         localityDTO.setName("Oviedo");
 
-        mvc.perform(post("/api/city/add")
+        mvc.perform(post("/api/locality/add")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(localityDTO)))
                 .andExpect(status().isCreated());
@@ -72,7 +72,7 @@ class CityControllerTest {
         LocalityDTO localityDTO = new LocalityDTO();
         localityDTO.setName(null);
 
-        mvc.perform(post("/api/city/add")
+        mvc.perform(post("/api/locality/add")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(localityDTO)))
                 .andExpect(status().isBadRequest());
@@ -80,14 +80,14 @@ class CityControllerTest {
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldCreate_NameCityRepeated() throws Exception {
+    public void shouldCreate_NameLocalityRepeated() throws Exception {
         // given
         LocalityDTO localityDTO = new LocalityDTO();
         localityDTO.setName("Oviedo");
-        given(cityService.existByName(localityDTO.getName())).willReturn(true);
+        given(localityService.existByName(localityDTO.getName())).willReturn(true);
 
         // when
-        mvc.perform(post("/api/city/add")
+        mvc.perform(post("/api/locality/add")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(localityDTO)))
                 .andExpect(status().isBadRequest());
@@ -95,24 +95,24 @@ class CityControllerTest {
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldDeleteCity () throws Exception {
+    public void shouldDeleteLocality() throws Exception {
         //given
-        given(cityService.existById(5L)).willReturn(true);
+        given(localityService.existById(5L)).willReturn(true);
 
         // when
-        mvc.perform(delete("/api/city/delete/{id}",5L)
+        mvc.perform(delete("/api/locality/delete/{id}",5L)
                 .contentType("application/json"))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldDeleteCity_CityNotExist() throws Exception {
+    public void shouldDeleteLocality_LocalityNotExist() throws Exception {
         //given
-        given(cityService.existById(5L)).willReturn(false);
+        given(localityService.existById(5L)).willReturn(false);
 
         // when
-        mvc.perform(delete("/api/city/delete/{id}",5L)
+        mvc.perform(delete("/api/locality/delete/{id}",5L)
                 .contentType("application/json"))
                 .andExpect(status().isNotFound());
     }
@@ -120,32 +120,32 @@ class CityControllerTest {
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
     public void shouldGetAllCities() throws Exception {
-        given(cityService.getCities()).willReturn(cities);
+        given(localityService.getLocalities()).willReturn(cities);
 
         mvc.perform(
-                get("/api/city/list"))
+                get("/api/locality/list"))
                 .andExpect(status().isOk())
                 .andDo(result -> {
                     String json = result.getResponse().getContentAsString();
 
-                    String nameCity1 = JsonPath.parse(json).read("$[0].name").toString();
-                    assertThat(nameCity1).isEqualTo("Gijon");
+                    String nameLocality1 = JsonPath.parse(json).read("$[0].name").toString();
+                    assertThat(nameLocality1).isEqualTo("Gijon");
 
-                    String nameCity2 = JsonPath.parse(json).read("$[1].name").toString();
-                    assertThat(nameCity2).isEqualTo("Oviedo");
+                    String nameLocality2 = JsonPath.parse(json).read("$[1].name").toString();
+                    assertThat(nameLocality2).isEqualTo("Oviedo");
                 });
     }
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldUpdateCity() throws Exception {
-        given(cityService.existById(1L)).willReturn(true);
-        given(cityService.getCityById(1L)).willReturn(cities.get(0));
+    public void shouldUpdateLocality() throws Exception {
+        given(localityService.existById(1L)).willReturn(true);
+        given(localityService.getLocalityById(1L)).willReturn(cities.get(0));
 
         NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
         newLocalityDTO.setName("Gij");
 
-        mvc.perform(put("/api/city/update/{id}", 1L)
+        mvc.perform(put("/api/locality/update/{id}", 1L)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isCreated());
@@ -153,13 +153,13 @@ class CityControllerTest {
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldUpdateCity_CityNotExist() throws Exception {
-        given(cityService.existById(5L)).willReturn(false);
+    public void shouldUpdateLocality_LocalityNotExist() throws Exception {
+        given(localityService.existById(5L)).willReturn(false);
 
         NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
         newLocalityDTO.setName("Gij");
 
-        mvc.perform(put("/api/city/update/{id}", 5L)
+        mvc.perform(put("/api/locality/update/{id}", 5L)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isNotFound());
@@ -167,12 +167,12 @@ class CityControllerTest {
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldUpdateCity_FormInvalid() throws Exception {
+    public void shouldUpdateLocality_FormInvalid() throws Exception {
 
         NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
         newLocalityDTO.setName(null);
 
-        mvc.perform(put("/api/city/update/{id}", 5L)
+        mvc.perform(put("/api/locality/update/{id}", 5L)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isBadRequest());
@@ -180,19 +180,19 @@ class CityControllerTest {
 
     @Test
     @WithMockUser(username="alba@email.com",roles={"USER","ADMIN"}, password = "1234567")
-    public void shouldUpdateCity_NameRepeated() throws Exception {
+    public void shouldUpdateLocality_NameRepeated() throws Exception {
 
-        given(cityService.existById(2L)).willReturn(true);
+        given(localityService.existById(2L)).willReturn(true);
 
         NewLocalityDTO newLocalityDTO = new NewLocalityDTO();
         newLocalityDTO.setName("Gijon");
 
-        given(cityService.existByName(newLocalityDTO.getName())).willReturn(true);
-        given(cityService.getCityByNameCity(newLocalityDTO.getName())).willReturn(cities.get(0));
+        given(localityService.existByName(newLocalityDTO.getName())).willReturn(true);
+        given(localityService.getLocalityByNameLocality(newLocalityDTO.getName())).willReturn(cities.get(0));
         System.out.println(cities.get(0).getId());
-        System.out.println(cities.get(0).getNameCity());
+        System.out.println(cities.get(0).getNameLocality());
 
-        mvc.perform(put("/api/city/update/{id}", 2L)
+        mvc.perform(put("/api/locality/update/{id}", 2L)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(newLocalityDTO)))
                 .andExpect(status().isBadRequest());

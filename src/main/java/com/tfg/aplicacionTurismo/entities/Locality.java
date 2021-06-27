@@ -8,29 +8,29 @@ import java.util.Set;
  * Clase que representa la localidad donde se encuentra situada una actividad.
  */
 @Entity
-public class City {
+public class Locality {
 
     @Id
     @GeneratedValue
     private long id;
     @NotEmpty
     @Column (unique = true)
-    private String nameCity;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
+    private String nameLocality;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "locality")
     private Set<Activity> activityList;
 
     /**
-     * Constructor de la clase City
+     * Constructor de la clase Locality
      */
-    public City() {
+    public Locality() {
     }
 
     /**
-     * Constructor de la clase City
-     * @param nameCity nombre de la localidad
+     * Constructor de la clase Locality
+     * @param nameLocality nombre de la localidad
      */
-    public City(@NotEmpty String nameCity) {
-        this.nameCity = nameCity;
+    public Locality(@NotEmpty String nameLocality) {
+        this.nameLocality = nameLocality;
     }
 
     public long getId() {
@@ -41,12 +41,12 @@ public class City {
         this.id = id;
     }
 
-    public String getNameCity() {
-        return nameCity;
+    public String getNameLocality() {
+        return nameLocality;
     }
 
-    public void setNameCity(String name_city) {
-        this.nameCity = name_city;
+    public void setNameLocality(String nameLocality) {
+        this.nameLocality = nameLocality;
     }
 
     public Set<Activity> getActivityList() {
@@ -63,7 +63,7 @@ public class City {
     @PreRemove
     public void checkActivityBeforeRemove() {
         if(!this.activityList.isEmpty()){
-            throw new RuntimeException("Can't remove a city that has activities");
+            throw new RuntimeException("Can't remove a locality that has activities");
         }
     }
 

@@ -1,6 +1,5 @@
 package com.tfg.aplicacionTurismo.services;
 
-import com.tfg.aplicacionTurismo.entities.City;
 import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,9 +3,9 @@ package com.tfg.aplicacionTurismo.controllers;
 import com.tfg.aplicacionTurismo.DTO.locality.LocalityDTO;
 import com.tfg.aplicacionTurismo.DTO.Mensaje;
 import com.tfg.aplicacionTurismo.DTO.locality.NewLocalityDTO;
-import com.tfg.aplicacionTurismo.entities.City;
-import com.tfg.aplicacionTurismo.mapper.city.CityMapper;
-import com.tfg.aplicacionTurismo.services.CityService;
+import com.tfg.aplicacionTurismo.entities.Locality;
+import com.tfg.aplicacionTurismo.mapper.locality.LocalityMapper;
+import com.tfg.aplicacionTurismo.services.LocalityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +27,10 @@ import java.util.List;
 @Controller
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/locality")
-public class CityController {
+public class LocalityController {
 
     @Autowired
-    private CityService cityService;
+    private LocalityService localityService;
 
     /**
      * Método que añade una nueva localidad.
@@ -41,15 +41,15 @@ public class CityController {
      */
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addCity(@Validated @RequestBody NewLocalityDTO newLocalityDTO, BindingResult result){
+    public ResponseEntity<?> addLocality(@Validated @RequestBody NewLocalityDTO newLocalityDTO, BindingResult result){
         if(result.hasErrors()){
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(cityService.existByName(newLocalityDTO.getName())){
+        if(localityService.existByName(newLocalityDTO.getName())){
             return new ResponseEntity<>(new Mensaje("Ya existe una ciudad con el mismo nombre"), HttpStatus.BAD_REQUEST);
         }
-        City city = new City(newLocalityDTO.getName());
-        cityService.addCity(city);
+        Locality locality = new Locality(newLocalityDTO.getName());
+        localityService.addLocality(locality);
         return new ResponseEntity<>(new Mensaje("Ciudad creada"), HttpStatus.CREATED);
     }
 
@@ -61,12 +61,12 @@ public class CityController {
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteCity(@PathVariable Long id){
-        if(!cityService.existById(id)){
+    public ResponseEntity<?> deleteLocality(@PathVariable Long id){
+        if(!localityService.existById(id)){
             return new ResponseEntity(new Mensaje("No existe una ciudad con el id " + id), HttpStatus.NOT_FOUND);
         }
         try {
-            cityService.deleteCity(id);
+            localityService.deleteLocality(id);
         }catch (RuntimeException e){
             return new ResponseEntity(new Mensaje("La ciudad tiene actividades asociadas"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -79,14 +79,14 @@ public class CityController {
      */
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<LocalityDTO>> getCities(){
-        List<City> listCities = cityService.getCities();
-        List<LocalityDTO> listCitiesDTO = new ArrayList<>();
-        for (City c: listCities){
-            LocalityDTO localityDTO = CityMapper.INSTANCIA.convertCityToCityDTO(c);
-            listCitiesDTO.add(localityDTO);
+    public ResponseEntity<List<LocalityDTO>> getLocalities(){
+        List<Locality> listLocalities = localityService.getLocalities();
+        List<LocalityDTO> listLocalitiesDTO = new ArrayList<>();
+        for (Locality c: listLocalities){
+            LocalityDTO localityDTO = LocalityMapper.INSTANCIA.convertLocalityToLocalityDTO(c);
+            listLocalitiesDTO.add(localityDTO);
         }
-        return new ResponseEntity<List<LocalityDTO>>(listCitiesDTO, HttpStatus.OK);
+        return new ResponseEntity<List<LocalityDTO>>(listLocalitiesDTO, HttpStatus.OK);
     }
 
     /**
@@ -104,14 +104,14 @@ public class CityController {
         if(result.hasErrors()){
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(!cityService.existById(id))
+        if(!localityService.existById(id))
             return new ResponseEntity(new Mensaje("La ciudad con id " + id + " no existe"), HttpStatus.NOT_FOUND);
-        if(cityService.existByName(newLocalityDTO.getName()) && cityService.getCityByNameCity(newLocalityDTO.getName()).getId() != id){
+        if(localityService.existByName(newLocalityDTO.getName()) && localityService.getLocalityByNameLocality(newLocalityDTO.getName()).getId() != id){
             return new ResponseEntity(new Mensaje("Ya hay una ciudad con ese nombre"), HttpStatus.BAD_REQUEST);
         }
-        City city = cityService.getCityById(id);
-        city.setNameCity(newLocalityDTO.getName());
-        cityService.updateCity(city);
+        Locality locality = localityService.getLocalityById(id);
+        locality.setNameLocality(newLocalityDTO.getName());
+        localityService.updateLocality(locality);
         return new ResponseEntity(new Mensaje("Ciudad actualizada"), HttpStatus.CREATED);
     }
 

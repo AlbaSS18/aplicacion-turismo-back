@@ -35,8 +35,8 @@ public class Activity {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city;
+    @JoinColumn(name = "locality_id")
+    private Locality locality;
 
     @NotNull
     @ManyToOne
@@ -113,12 +113,12 @@ public class Activity {
         this.relUserActivity = relUserActivity;
     }
 
-    public City getCity() {
-        return city;
+    public Locality getLocality() {
+        return locality;
     }
 
-    public void setCity(City city) {
-        this.city = city;
+    public void setLocality(Locality locality) {
+        this.locality = locality;
     }
 
     public Interest getInterest() {

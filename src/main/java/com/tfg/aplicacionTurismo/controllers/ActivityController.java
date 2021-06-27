@@ -43,7 +43,7 @@ public class ActivityController {
     private ActivityService activityService;
 
     @Autowired
-    private CityService cityService;
+    private LocalityService localityService;
 
     @Autowired
     private UsersService usersService;
@@ -74,7 +74,7 @@ public class ActivityController {
         List<Activity> listActivity = activityService.getActivities();
         List<ActivitySendDTO> listDTO = new ArrayList<>();
         for(Activity activity: listActivity){
-            ActivitySendDTO i = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity));
+            ActivitySendDTO i = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getLocality().getNameLocality(), activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity));
 
             // Add the activity
             listDTO.add(i);
@@ -100,7 +100,7 @@ public class ActivityController {
         }
         Activity activity = activityService.getById(id);
 
-        ActivitySendDTO activitySendDTO = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(), activity.getAddress(), this.getImageFromActivity(activity));
+        ActivitySendDTO activitySendDTO = new ActivitySendDTO(activity.getId(), activity.getName(), activity.getDescription(), activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getLocality().getNameLocality(), activity.getInterest().getNameInterest(), activity.getAddress(), this.getImageFromActivity(activity));
         return new ResponseEntity<ActivitySendDTO>(activitySendDTO, HttpStatus.OK);
     }
 
@@ -143,7 +143,7 @@ public class ActivityController {
      * @param result parámetro que permite validar los errores en el objeto dto.
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha añadido con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no incluye una imagen, si ya existe una actividad con el nombre de la nueva actividad,
-     * si los datos no son correctos, si la ciudad no existe o si el tipo de interés no existe.
+     * si los datos no son correctos, si la localidad no existe o si el tipo de interés no existe.
      * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
      * @throws URISyntaxException si la cadena URI no pudo ser parseada ya que no tiene el formato correcto.
      * @throws StorageException excepción del servicio de almacenamiento de Azure.
@@ -158,7 +158,7 @@ public class ActivityController {
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(!cityService.existByName(activityDTO.getLocality())){
+        if(!localityService.existByName(activityDTO.getLocality())){
             return new ResponseEntity<>(new Mensaje("La ciudad no existe"), HttpStatus.NOT_FOUND);
         }
         if(!interestService.existByName(activityDTO.getInterest())){
@@ -177,8 +177,8 @@ public class ActivityController {
         fileName = fileName.toLowerCase().replaceAll(" ", "-");
 
         Activity activity = new Activity(activityDTO.getName(), activityDTO.getDescription(), new Point(activityDTO.getLongitude(), activityDTO.getLatitude()), fileName, activityDTO.getAddress());
-        City city = cityService.getCityByNameCity(activityDTO.getLocality());
-        activity.setCity(city);
+        Locality locality = localityService.getLocalityByNameLocality(activityDTO.getLocality());
+        activity.setLocality(locality);
         Interest interest = interestService.getInterestByName(activityDTO.getInterest());
         activity.setInterest(interest);
         activityService.addActivities(activity);
@@ -237,7 +237,7 @@ public class ActivityController {
      * @param id identificador de la actividad.
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha actualizado con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no incluye una imagen, si ya existe una actividad con el nuevo nombre,
-     * si los datos no son correctos, si la ciudad no existe o si el tipo de interés no existe.
+     * si los datos no son correctos, si la localidad no existe o si el tipo de interés no existe.
      * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
      * @throws StorageException excepción del servicio de almacenamiento de Azure.
      * @throws InvalidKeyException si la key es inválida.
@@ -255,7 +255,7 @@ public class ActivityController {
         if (result.hasErrors()) {
             return new ResponseEntity(new Mensaje("Formulario inválido"), HttpStatus.BAD_REQUEST);
         }
-        if(!cityService.existByName(activityDTO.getLocality())){
+        if(!localityService.existByName(activityDTO.getLocality())){
             return new ResponseEntity<>(new Mensaje("La ciudad no existe"), HttpStatus.NOT_FOUND);
         }
         if(!interestService.existByName(activityDTO.getInterest())){
@@ -274,8 +274,8 @@ public class ActivityController {
         activity.setDescription(activityDTO.getDescription());
         activity.setCoordenates(new Point(activityDTO.getLongitude(), activityDTO.getLatitude()));
         activity.setAddress(activityDTO.getAddress());
-        City city = cityService.getCityByNameCity(activityDTO.getLocality());
-        activity.setCity(city);
+        Locality locality = localityService.getLocalityByNameLocality(activityDTO.getLocality());
+        activity.setLocality(locality);
 
         String fileName = org.springframework.util.StringUtils.cleanPath(multipartFile.getOriginalFilename());
         // Remove the accent
@@ -445,7 +445,7 @@ public class ActivityController {
             Activity activity = activityService.getActivityByNameActivity(atrName);
 
             ActivityRecommendationDTO activityRecommendation = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
-                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
+                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getLocality().getNameLocality(),
                     activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity),weightedSum/totalImpact, getAverageFromActivity(activity));
 
             finalRanks.add(activityRecommendation);
@@ -492,7 +492,7 @@ public class ActivityController {
 
                 // create the ActivityRecommendation with score with the priority and average
                 ActivityRecommendationDTO activityRecommendation = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
-                        activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(),
+                        activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getLocality().getNameLocality(),
                         activity.getInterest().getNameInterest(), activity.getAddress(), getImageFromActivity(activity), priorityFromUserToInterestOfActivity.getPriority(), getAverageFromActivity(activity));
 
                 //add to the list
@@ -582,7 +582,7 @@ public class ActivityController {
             Activity activity = relUserActivity.getActivity();
 
             ActivityRecommendationDTO activityRecommendationDTO = new ActivityRecommendationDTO(activity.getId(), activity.getName(), activity.getDescription(),
-                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getCity().getNameCity(), activity.getInterest().getNameInterest(),
+                    activity.getCoordenates().getX(), activity.getCoordenates().getY(), activity.getPathImage(), activity.getLocality().getNameLocality(), activity.getInterest().getNameInterest(),
                     activity.getAddress(), getImageFromActivity(activity), relUserActivity.getValuation(), getAverageFromActivity(activity));
 
             ratedActivities.add(activityRecommendationDTO);

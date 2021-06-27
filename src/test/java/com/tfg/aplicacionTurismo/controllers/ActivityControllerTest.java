@@ -3,7 +3,7 @@ package com.tfg.aplicacionTurismo.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tfg.aplicacionTurismo.DTO.activity.ActivityRateByUserDTO;
 import com.tfg.aplicacionTurismo.entities.Activity;
-import com.tfg.aplicacionTurismo.entities.City;
+import com.tfg.aplicacionTurismo.entities.Locality;
 import com.tfg.aplicacionTurismo.entities.Interest;
 import com.tfg.aplicacionTurismo.entities.User;
 import com.tfg.aplicacionTurismo.services.ActivityService;
@@ -51,11 +51,11 @@ class ActivityControllerTest {
     void setUp() {
         activityList = new ArrayList<>();
         Activity activity1 = new Activity("Museo del ferrocarril", "Museo de trenes", new Point(43.5409, -5.6727), "actividad1.jpg", "Plaza Estación del Nte., s/n, 33212 Gijón, Asturias");
-        activity1.setCity(new City("Gijon"));
+        activity1.setLocality(new Locality("Gijon"));
         activity1.setInterest(new Interest("Museos"));
         activityList.add(activity1);
         Activity activity2 = new Activity("Catedral de Oviedo", "Catedral de estilo gotico", new Point(43.36257, -5.84325), "actividad2.jpg", "Pl. Alfonso II el Casto, s/n, 33003 Oviedo, Asturias");
-        activity2.setCity(new City("Oviedo"));
+        activity2.setLocality(new Locality("Oviedo"));
         activity2.setInterest(new Interest("Catedral"));
         activityList.add(activity2);
     }
