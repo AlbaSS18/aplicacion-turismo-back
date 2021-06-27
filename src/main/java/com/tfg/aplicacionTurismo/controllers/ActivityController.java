@@ -126,8 +126,8 @@ public class ActivityController {
 
         // Set the data
         String pathName = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
-        byte[] fileContent = FileUtils.readFileToByteArray(new File(pathName));
-        /*byte[] fileContent = blobStorageService.getFile(activity.getPathImage()).toByteArray();*/
+        /*byte[] fileContent = FileUtils.readFileToByteArray(new File(pathName));*/
+        byte[] fileContent = blobStorageService.getFile(activity.getPathImage()).toByteArray();
         String encodedString = Base64.getEncoder().encodeToString(fileContent);
         imageDTO.setData(encodedString);
 
@@ -183,9 +183,9 @@ public class ActivityController {
         activity.setInterest(interest);
         activityService.addActivities(activity);
 
-        String folder = "/Users/alba-/Desktop/photos/";
-        FileUploadUtil.saveFile(folder, fileName, multipartFile);
-        //blobStorageService.upload(fileName, multipartFile.getInputStream(), multipartFile.getSize());
+        /*String folder = "/Users/alba-/Desktop/photos/";
+        FileUploadUtil.saveFile(folder, fileName, multipartFile);*/
+        blobStorageService.upload(fileName, multipartFile.getInputStream(), multipartFile.getSize());
 
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }
@@ -221,9 +221,9 @@ public class ActivityController {
         }
         //NOTE: Comprobar que no tiene usuarios asociados
         Activity activity = activityService.getById(id);
-        String pathImage = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
-        FileUploadUtil.removeFile(pathImage);
-        /*blobStorageService.deleteFile(activity.getPathImage());*/
+        /*String pathImage = "/Users/alba-/Desktop/photos/" + activity.getPathImage();
+        FileUploadUtil.removeFile(pathImage);*/
+        blobStorageService.deleteFile(activity.getPathImage());
         activityService.removeActivities(id);
 
         return new ResponseEntity<>(new Mensaje("Actividad eliminada"), HttpStatus.OK);
@@ -285,14 +285,14 @@ public class ActivityController {
         activity.setPathImage(fileName);
 
         //Eliminamos el archivo
-        String downloadDir = "/Users/alba-/Desktop/photos/" + previousPath;
-        FileUploadUtil.removeFile(downloadDir);
-        //blobStorageService.deleteFile(previousPath);
+        /*String downloadDir = "/Users/alba-/Desktop/photos/" + previousPath;
+        FileUploadUtil.removeFile(downloadDir);*/
+        blobStorageService.deleteFile(previousPath);
 
         //Añadimos el nuevo archivo
-        String uploadDir = "/Users/alba-/Desktop/photos/";
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        //blobStorageService.upload(fileName, multipartFile.getInputStream(), multipartFile.getSize());
+        /*String uploadDir = "/Users/alba-/Desktop/photos/";
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);*/
+        blobStorageService.upload(fileName, multipartFile.getInputStream(), multipartFile.getSize());
 
         activityService.updateActivity(activity);
 
@@ -345,7 +345,7 @@ public class ActivityController {
 
         Instance userData = dataUser.firstInstance();
 
-        //System.out.println(userData); ---> 0,0,0,0,0
+        //System.out.println(userData); //---> 0,0,0,0,0
         //System.out.println(dataUser);
 
         // Data activityRatings
