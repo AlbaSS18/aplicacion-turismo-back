@@ -19,9 +19,9 @@ public interface LocalityMapper {
     LocalityMapper INSTANCIA = Mappers.getMapper(LocalityMapper.class);
 
     /**
-     * Método que permite convertir un objeto City en CityDTO
-     * @param locality entidad City
-     * @return el objeto CityDTO
+     * Método que permite convertir un objeto Locality en LocalityDTO
+     * @param locality entidad Locality
+     * @return el objeto LocalityDTO
      */
     @Mappings({
             @Mapping(target="name", source="nameLocality")
