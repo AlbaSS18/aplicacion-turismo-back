@@ -32,6 +32,9 @@ import java.util.Set;
 
 /**
  * Clase que responde a las acciones relacionadas con la autenticación y el registro.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Controller
 @CrossOrigin(origins = "*")

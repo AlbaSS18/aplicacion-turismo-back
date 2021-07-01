@@ -6,18 +6,21 @@ import java.util.Collection;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para transmitir el token.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class JwtDTO {
     private String token; //Token para el cliente
 
     /**
-     * Constructor de la clase JwtDTO
+     * Constructor de la clase JwtDTO.
      */
     public JwtDTO() {}
 
     /**
-     * Constructor de la clase JwtDTO
-     * @param token token
+     * Constructor de la clase JwtDTO.
+     * @param token token.
      */
     public JwtDTO(String token) {
         this.token = token;

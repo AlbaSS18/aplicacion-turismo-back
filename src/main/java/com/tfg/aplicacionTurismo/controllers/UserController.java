@@ -49,7 +49,7 @@ public class UserController {
 
     /**
      * Método que devuelve la información de un usuario.
-     * @param id identificador del usuario
+     * @param id identificador del usuario.
      * @return la respuesta HTTP con la información del usuario.
      */
     @GetMapping("/details/{id}")
@@ -102,7 +102,7 @@ public class UserController {
      * Método que elimina un usuario a través de su identificador.
      * @param id identificador del usuario que se quiere eliminar.
      * @return la respuesta HTTP que contiene un mensaje indicando que el usuario se ha eliminado con éxito
-     * o la respuesta HTTP que contiene un mensaje de error si no existe un usuario con ese identificador
+     * o la respuesta HTTP que contiene un mensaje de error si no existe un usuario con ese identificador.
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")

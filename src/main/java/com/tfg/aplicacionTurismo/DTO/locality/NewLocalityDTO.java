@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para crear o actualizar una nueva localidad.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class NewLocalityDTO {
 

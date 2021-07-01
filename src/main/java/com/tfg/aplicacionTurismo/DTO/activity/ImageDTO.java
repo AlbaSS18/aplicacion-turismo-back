@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para transmitir el metadata de una imagen.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class ImageDTO {
     @NotBlank

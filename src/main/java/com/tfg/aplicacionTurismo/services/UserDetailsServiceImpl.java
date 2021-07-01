@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 
 /**
  * Clase que comprueba si las credenciales de autenticación son correctas.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -26,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * Método que valida si el usuario existe en la base de datos y creará un objeto UserDetails.
      * @param email correo electrónico del usuario.
-     * @return objeto UserDetails
+     * @return objeto UserDetails.
      * @throws UsernameNotFoundException si las credenciales no son correctas.
      */
     @Override

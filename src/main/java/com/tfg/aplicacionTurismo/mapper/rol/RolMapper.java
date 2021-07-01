@@ -7,18 +7,21 @@ import org.mapstruct.factory.Mappers;
 
 /**
  * Clase que permite convertir un objeto en otro. En este caso, los objetos están relacionados con la entidad rol.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Mapper
 public interface RolMapper {
     /**
-     * Instancia única de la clase RolMapper
+     * Instancia única de la clase RolMapper.
      */
     RolMapper INSTANCIA = Mappers.getMapper(RolMapper.class);
 
     /**
-     * Método que permite convertir un objeto Rol en RolDTO
-     * @param rol entidad Rol
-     * @return el objeto RolDTO
+     * Método que permite convertir un objeto Rol en RolDTO.
+     * @param rol entidad Rol.
+     * @return el objeto RolDTO.
      */
     RolDTO convertRolToRolDTO (Rol rol);
 }

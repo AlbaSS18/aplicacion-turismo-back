@@ -4,6 +4,9 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para añadir o actualizar la información de los tipos de interés.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class NewInterestDTO {
 
@@ -11,7 +14,7 @@ public class NewInterestDTO {
     private String nameInterest;
 
     /**
-     * Constructor de la clase NewInterestDTO
+     * Constructor de la clase NewInterestDTO.
      */
     public NewInterestDTO() {
     }

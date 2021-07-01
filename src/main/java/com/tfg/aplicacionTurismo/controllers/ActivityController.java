@@ -195,7 +195,7 @@ public class ActivityController {
 
     /**
      * Método que elimina los acentos de un texto.
-     * @param str el texto
+     * @param str el texto.
      * @return el texto sin acentos.
      */
     private static String stripDiacritics(String str) {
@@ -231,7 +231,7 @@ public class ActivityController {
 
     /**
      * Método que modifica la información de una actividad a través de su identificador.
-     * @param multipartFile la imagen
+     * @param multipartFile la imagen.
      * @param activityDTO objeto DTO que contiene la información necesaria para actualizar una actividad.
      * @param result parámetro que permite validar los errores en el objeto dto.
      * @param id identificador de la actividad.
@@ -302,7 +302,7 @@ public class ActivityController {
     /**
      * Método que devuelve la lista de actividades recomendadas a un usuario.
      * @param id identificador del usuario.
-     * @return respuesta HTTP con la lista de actividades recomendadas
+     * @return respuesta HTTP con la lista de actividades recomendadas.
      * o la respuesta HTTP que contiene un mensaje de error si el usuario no existe.
      * @throws IOException si hay algún fallo en la lectura del archivo desde el disco local.
      * @throws StorageException excepción del servicio de almacenamiento de Azure.
@@ -593,7 +593,7 @@ public class ActivityController {
 
     /**
      * Método que calcula la media de las valoraciones dadas a una actividad.
-     * @param activity actividad
+     * @param activity actividad.
      * @return media de las valoraciones de una actividad.
      */
     private double getAverageFromActivity(Activity activity){

@@ -20,6 +20,9 @@ import static com.tfg.aplicacionTurismo.utils.Constants.TOKEN_PREFIX;
 
 /**
  * Clase que filtra las peticiones que reciba el servidor para determinar si poseen token o no.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class JwtTokenFilter extends OncePerRequestFilter {
 
@@ -37,8 +40,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
      * @param req objeto HttpServletRequest que permite obtener información sobre la petición HTTP de los clientes.
      * @param res objeto HttpServletResponse que se emplea para enviar el resultado de procesar una petición HTTP a un cliente.
      * @param filterChain objeto FilterChain que se utiliza para invocar al siguiente filtro o recurso de la cadena.
-     * @throws ServletException si hay un fallo en el método doFilter
-     * @throws IOException si hay un fallo en el método doFilter
+     * @throws ServletException si hay un fallo en el método doFilter.
+     * @throws IOException si hay un fallo en el método doFilter.
      */
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
@@ -60,7 +63,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     /**
      * Método que elimina el prefijo y obtiene el token.
      * @param request objeto HttpServletRequest que permite obtener información sobre la petición HTTP de los clientes.
-     * @return token
+     * @return token.
      */
     private String getToken(HttpServletRequest request){
         String authReq = request.getHeader(HEADER_STRING);

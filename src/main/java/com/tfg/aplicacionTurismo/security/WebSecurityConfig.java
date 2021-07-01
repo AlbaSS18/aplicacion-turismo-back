@@ -19,6 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 /**
  * Clase donde se configuran las opciones de seguridad de la aplicación.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Configuration
 @EnableWebSecurity
@@ -45,8 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * Método donde se configuran las opciones de seguridad del proyecto.
      * Se indica a que recursos puede acceder cualquier usuario y a cuales hay que estar autenticado.
      * Además, también se indica el EntryPoint a utilizar y se añade el filtro.
-     * @param http objeto HttpSecurity
-     * @throws Exception si hay un fallo en el método cors
+     * @param http objeto HttpSecurity.
+     * @throws Exception si hay un fallo en el método cors.
      *
      * @see <a href="https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/builders/HttpSecurity.html">JavaDoc del objeto HttpSecurity</a>
      */

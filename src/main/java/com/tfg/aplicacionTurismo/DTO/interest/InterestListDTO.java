@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para obtener interes/es.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class InterestListDTO {
 

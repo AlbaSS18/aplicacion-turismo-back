@@ -13,6 +13,9 @@ import java.io.IOException;
 
 /**
  * Clase que rechaza una petición con unas credenciales incorrectas.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
@@ -24,7 +27,7 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
      * @param req objeto HttpServletRequest que permite obtener información sobre la petición HTTP de los clientes.
      * @param res objeto HttpServletResponse que se emplea para enviar el resultado de procesar una petición HTTP a un cliente.
      * @param e objeto AuthenticationException que causa la invocación al método.
-     * @throws IOException si hay un fallo en el método sendError
+     * @throws IOException si hay un fallo en el método sendError.
      */
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException {

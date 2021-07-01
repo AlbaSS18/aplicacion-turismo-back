@@ -14,6 +14,9 @@ import java.security.InvalidKeyException;
 
 /**
  * Servicio que se utiliza para conectar la aplicación con el contenedor de archivos almacenado en el servicio de Azure.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Service
 public class BlobStorageService {

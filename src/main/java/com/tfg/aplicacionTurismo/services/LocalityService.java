@@ -10,6 +10,9 @@ import java.util.List;
 
 /**
  * Servicio de localidades que implementa la lógica de negocio y suministra datos al controlador.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Service
 public class LocalityService {

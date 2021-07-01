@@ -22,7 +22,10 @@ import java.util.stream.Collectors;
 import static com.tfg.aplicacionTurismo.utils.Constants.*;
 
 /**
- * Clase que genera el token y valida que este bien formado y no este expirado
+ * Clase que genera el token y valida que este bien formado y no este expirado.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Component
 public class JwtProvider {
@@ -33,7 +36,7 @@ public class JwtProvider {
      * Método que construye el token asignándole el email, los roles, fecha de creación y fecha de expiración.
      * Finalmente se firma con el algoritmo HS512 y la palabra secret.
      * @param authentication objeto Authentication que contiene la información del usuario autenticado.
-     * @return token
+     * @return token.
      * @throws UnsupportedEncodingException si el formato de codificación de caracteres no es soportado.
      */
     public String generateToken(Authentication authentication) throws UnsupportedEncodingException {
@@ -59,8 +62,8 @@ public class JwtProvider {
 
     /**
      * Método que extrae el valor del campo subject del token. En este caso, el subject es el email del usuario.
-     * @param token token
-     * @return el email del usuario
+     * @param token token.
+     * @return el email del usuario.
      * @throws UnsupportedEncodingException si el formato de codificación de caracteres no es soportado.
      */
     public String getEmailFromToken(String token) throws UnsupportedEncodingException {
@@ -70,7 +73,7 @@ public class JwtProvider {
 
     /**
      * Método que valida el token.
-     * @param token token
+     * @param token token.
      * @return true si el token es válido, false en caso contrario.
      */
     public boolean validateToken(String token) {

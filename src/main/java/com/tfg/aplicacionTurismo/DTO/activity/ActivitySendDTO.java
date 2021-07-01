@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para obtener actividad/es.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class ActivitySendDTO {
 
@@ -31,23 +34,23 @@ public class ActivitySendDTO {
     private ImageDTO metadataImage;
 
     /**
-     * Constructor de la clase ActivitySendDTO
+     * Constructor de la clase ActivitySendDTO.
      */
     public ActivitySendDTO() {
     }
 
     /**
-     * Constructor de la clase ActivitySendDTO
-     * @param id identificador de la actividad
-     * @param name nombre de la actividad
-     * @param description descripción de la actividad
-     * @param longitude longitud de la actividad
-     * @param latitude latitud de la actividad
-     * @param pathImage ruta donde se encuentra la imagen de la actividad
-     * @param locality localidad donde se encuentra situada la actividad
-     * @param interest tipo de interés asociado a la actividad
-     * @param address dirección donde se encuentra localizada la actividad
-     * @param metadataImage DTO que representa los metadatos de la imagen
+     * Constructor de la clase ActivitySendDTO.
+     * @param id identificador de la actividad.
+     * @param name nombre de la actividad.
+     * @param description descripción de la actividad.
+     * @param longitude longitud de la actividad.
+     * @param latitude latitud de la actividad.
+     * @param pathImage ruta donde se encuentra la imagen de la actividad.
+     * @param locality localidad donde se encuentra situada la actividad.
+     * @param interest tipo de interés asociado a la actividad.
+     * @param address dirección donde se encuentra localizada la actividad.
+     * @param metadataImage DTO que representa los metadatos de la imagen.
      */
     public ActivitySendDTO(@NotNull Long id, @NotBlank String name, @NotBlank String description,
                            @NotNull double longitude, @NotNull double latitude, @NotBlank String pathImage,

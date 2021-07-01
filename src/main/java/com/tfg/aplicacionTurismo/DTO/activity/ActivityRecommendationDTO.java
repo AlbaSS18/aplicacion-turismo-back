@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para recomendar actividades a un usuario.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class ActivityRecommendationDTO implements Comparable<ActivityRecommendationDTO> {
 
@@ -35,25 +38,25 @@ public class ActivityRecommendationDTO implements Comparable<ActivityRecommendat
     private double average;
 
     /**
-     * Constructor de la clase ActivityRecommendationDTO
+     * Constructor de la clase ActivityRecommendationDTO.
      */
     public ActivityRecommendationDTO() {
     }
 
     /**
-     * Constructor de la clase ActivityRecommendationDTO
-     * @param id identificador de la actividad
-     * @param name nombre de la actividad
-     * @param description descripción de la actividad
-     * @param longitude longitud de la actividad
-     * @param latitude latitud de la actividad
-     * @param pathImage ruta donde se encuentra la imagen de la actividad
-     * @param locality localidad donde se encuentra situada la actividad
-     * @param interest tipo de interés asociado a la actividad
-     * @param address dirección donde se encuentra localizada la actividad
-     * @param metadataImage DTO que representa los metadatos de la imagen
-     * @param score peso de la actividad en la recomendación
-     * @param average media de las valoraciones realizadas a la actividad
+     * Constructor de la clase ActivityRecommendationDTO.
+     * @param id identificador de la actividad.
+     * @param name nombre de la actividad.
+     * @param description descripción de la actividad.
+     * @param longitude longitud de la actividad.
+     * @param latitude latitud de la actividad.
+     * @param pathImage ruta donde se encuentra la imagen de la actividad.
+     * @param locality localidad donde se encuentra situada la actividad.
+     * @param interest tipo de interés asociado a la actividad.
+     * @param address dirección donde se encuentra localizada la actividad.
+     * @param metadataImage DTO que representa los metadatos de la imagen.
+     * @param score peso de la actividad en la recomendación.
+     * @param average media de las valoraciones realizadas a la actividad.
      */
     public ActivityRecommendationDTO(@NotNull Long id, @NotBlank String name, @NotBlank String description,
                                      @NotNull double longitude, @NotNull double latitude, @NotBlank String pathImage,

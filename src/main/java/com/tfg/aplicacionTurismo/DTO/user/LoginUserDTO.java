@@ -7,6 +7,9 @@ import javax.validation.constraints.Size;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para autenticar a un usuario.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class LoginUserDTO {
     @NotBlank
@@ -17,15 +20,15 @@ public class LoginUserDTO {
     private String password;
 
     /**
-     * Constructor de la clase LoginUserDTO
+     * Constructor de la clase LoginUserDTO.
      */
     public LoginUserDTO() {
     }
 
     /**
-     * Constructor de la clase LoginUserDTO
-     * @param email email del usuario
-     * @param password contraseña
+     * Constructor de la clase LoginUserDTO.
+     * @param email email del usuario.
+     * @param password contraseña.
      */
     public LoginUserDTO(@NotBlank @Email String email, @NotBlank @Size(min = 7) String password) {
         this.email = email;

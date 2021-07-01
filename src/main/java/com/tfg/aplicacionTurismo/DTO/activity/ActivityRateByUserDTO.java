@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Clase que define los atributos del objeto que se utiliza para valorar una actividad recomendada.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class ActivityRateByUserDTO {
     @NotNull
@@ -18,16 +21,16 @@ public class ActivityRateByUserDTO {
     private int rate;
 
     /**
-     * Constructor de la clase ActivityRateByUserDTO
+     * Constructor de la clase ActivityRateByUserDTO.
      */
     public ActivityRateByUserDTO() {
     }
 
     /**
-     * Constructor de la clase ActivityRateByUserDTO
-     * @param activity_id identificador de la actividad valorada
-     * @param email_user email del usuario que valora la actividad
-     * @param rate valoración dada por el usuario
+     * Constructor de la clase ActivityRateByUserDTO.
+     * @param activity_id identificador de la actividad valorada.
+     * @param email_user email del usuario que valora la actividad.
+     * @param rate valoración dada por el usuario.
      */
     public ActivityRateByUserDTO(@NotNull Long activity_id, @NotBlank String email_user, @NotNull @Range(min = 0, max = 5) int rate) {
         this.activity_id = activity_id;

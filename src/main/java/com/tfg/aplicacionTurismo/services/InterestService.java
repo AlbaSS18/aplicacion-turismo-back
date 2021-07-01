@@ -15,6 +15,9 @@ import java.util.Set;
 
 /**
  * Servicio de intereses que implementa la lógica de negocio y suministra datos al controlador.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Service
 public class InterestService {

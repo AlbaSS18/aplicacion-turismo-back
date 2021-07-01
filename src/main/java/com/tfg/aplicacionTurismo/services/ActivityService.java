@@ -12,6 +12,9 @@ import java.util.List;
 
 /**
  * Servicio de actividades que implementa la lógica de negocio y suministra datos al controlador.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Service
 public class ActivityService {
@@ -22,7 +25,7 @@ public class ActivityService {
 
     /**
      * Método que obtiene las actividades a través del repositorio.
-     * @return la lista de actividades
+     * @return la lista de actividades.
      */
     public List<Activity> getActivities(){
         List<Activity> activities = new ArrayList<Activity>();
@@ -32,7 +35,7 @@ public class ActivityService {
 
     /**
      * Método que añade una nueva actividad a través del repositorio.
-     * @param activity nueva actividad
+     * @param activity nueva actividad.
      */
     public void addActivities(Activity activity){
         activityRepository.save(activity);

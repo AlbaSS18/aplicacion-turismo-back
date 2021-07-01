@@ -13,6 +13,9 @@ import java.util.List;
 
 /**
  *  Servicio de puntuaciones dadas por los usuarios a los distintos tipos de intereses que implementa la lógica de negocio y suministra datos al controlador.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Service
 public class RelUserInterestService {

@@ -2,6 +2,9 @@ package com.tfg.aplicacionTurismo.utils;
 
 /**
  * Clase que contiene constantes que serán utilizadas para crear el token de autenticación.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 public class Constants {
 
