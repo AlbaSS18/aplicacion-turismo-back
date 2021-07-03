@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Clase que representa el tipo de rol web.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Entity
 public class Rol {
@@ -18,14 +21,14 @@ public class Rol {
     private RolName rolName;
 
     /**
-     * Constructor de la clase Rol
+     * Constructor de la clase Rol.
      */
     public Rol() {
     }
 
     /**
-     * Constructor de la clase Rol
-     * @param rolName nombre del rol
+     * Constructor de la clase Rol.
+     * @param rolName nombre del rol.
      */
     public Rol(@NotNull RolName rolName) {
         this.rolName = rolName;

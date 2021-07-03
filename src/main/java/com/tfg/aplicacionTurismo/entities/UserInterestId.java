@@ -2,6 +2,12 @@ package com.tfg.aplicacionTurismo.entities;
 
 import java.io.Serializable;
 
+/**
+ * Clase que define una llave primaria compuesta.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
+ */
 public class UserInterestId implements Serializable {
 
     private long user;

@@ -190,6 +190,9 @@ public class ActivityController {
         return new ResponseEntity<>(new Mensaje("Actividad creada"), HttpStatus.CREATED);
     }
 
+    /**
+     * Patrón que identifica los acentos de un texto.
+     */
     public static final Pattern DIACRITICS_AND_FRIENDS
             = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
 
@@ -205,7 +208,7 @@ public class ActivityController {
     }
 
     /**
-     * Método qye elimina una actividad a través de su identificador.
+     * Método que elimina una actividad a través de su identificador.
      * @param id identificador de la actividad que se quiere eliminar.
      * @return la respuesta HTTP que contiene un mensaje indicando que la actividad se ha eliminado con éxito o
      * la respuesta HTTP que contiene un mensaje de error si no existe una actividad con ese identificador.

@@ -5,6 +5,9 @@ import java.util.Objects;
 
 /**
  * Clase que representa las valoraciones dadas por los usuarios a las distintas actividades recomendadas.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Entity
 public class RelUserActivity {

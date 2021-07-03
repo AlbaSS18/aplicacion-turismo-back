@@ -10,6 +10,9 @@ import java.util.Set;
 
 /**
  * Clase que representa las actividades que pueden ser recomendadas a un usuario.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Entity
 public class Activity {

@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 /**
  * Clase que representa las puntuaciones dadas por los usuarios a los distintos interés.
+ *
+ * @author Alba Serena Suárez
+ * @version 1.0
  */
 @Entity
 @Table(name = "rel_user_interest")
