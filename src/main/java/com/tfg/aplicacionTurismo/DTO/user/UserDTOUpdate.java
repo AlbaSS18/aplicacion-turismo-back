@@ -26,7 +26,7 @@ public class UserDTOUpdate {
     @NotEmpty
     private Set<String> roles;
 
-    @NotEmpty @Valid
+    @Valid
     private Set<InterestByUserDTO> interest;
 
     /**
@@ -42,7 +42,7 @@ public class UserDTOUpdate {
      * @param roles lista de roles del usuario.
      * @param interest lista de puntuaciones dadas por el usuario a los distintos tipos de intereses.
      */
-    public UserDTOUpdate(@NotNull Date dateBirthday, @NotBlank String userName, @NotEmpty Set<String> roles, @NotEmpty @Valid Set<InterestByUserDTO> interest) {
+    public UserDTOUpdate(@NotNull Date dateBirthday, @NotBlank String userName, @NotEmpty Set<String> roles, @Valid Set<InterestByUserDTO> interest) {
         this.dateBirthday = dateBirthday;
         this.userName = userName;
         this.roles = roles;
