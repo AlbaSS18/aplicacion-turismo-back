@@ -382,8 +382,6 @@ public class ActivityController {
         }
 
         //System.out.println(dataRatingActivities.toString());
-        //System.out.println(dataRatingActivities.toString());
-
 
         LinearNNSearch kNN = new LinearNNSearch(dataRatingActivities);
         Instances neighbors = null;
